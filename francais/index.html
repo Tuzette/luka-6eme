@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Français · Luka's sticker book</title>
+<link rel="stylesheet" href="../commun/style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script src="../commun/moteur.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU FRANÇAIS — modifier ici pour ajouter des thèmes.
+   La mécanique (exercices, autocollants) est dans ../commun/moteur.js
+   ============================================================ */
+/* ============================================================
+   FRANÇAIS — Molière et Le Médecin malgré lui
+   ============================================================ */
+THEMES.push({ id:"fm", chapitre:"Molière et Le Médecin malgré lui", nom:"Molière : la leçon", matiere:"Français", e:"🎭", c:"var(--francais)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"bilan", titre:"Bilan : qui était Molière ?", e:"🎭",
+     texte:`Le vrai nom de Molière est [Jean-Baptiste Poquelin]. C'est un [dramaturge] (= un auteur de théâtre).
+Sa pièce [Le Médecin malgré lui] a été jouée pour la première fois le 6 août [1666] au [théâtre du Palais Royal|Palais Royal] à Paris.
+Il s'agit d'une [comédie] : le but est de [faire rire] le spectateur et de [tourner en ridicule] les défauts des gens de son époque.`},
+    {id:"vie", titre:"La vie de Molière", e:"👑",
+     texte:`Molière est né en [1622]. Son père était [marchand tapissier].
+Il rencontre la famille [Béjart] et fonde la troupe de [l'Illustre Théâtre|Illustre Théâtre].
+Sa troupe parcourt la France pendant [13] ans : elle joue par exemple à Lyon, Rennes ou Rouen.
+Molière a écrit [33] pièces, dont des succès comme [L'Avare|Les Précieuses ridicules].
+Le roi à son époque est [Louis XIV]. La troupe de Molière devient la troupe du [roi] tant le roi aime ses pièces.`},
+    {id:"ruse", titre:"Le Médecin malgré lui : la ruse", e:"🩺",
+     texte:`Une ruse, c'est un [piège|stratagème|mensonge], un [stratagème|piège|mensonge], un [mensonge|piège|stratagème].
+Quelqu'un de rusé est [malin|maligne].
+Dans la pièce, c'est [Martine] qui imagine la ruse.
+La jeune fille malade d'amour est [Lucinde], promise à un homme qu'elle n'aime pas.`},
+    {id:"exemples", titre:"Des exemples de ruses", e:"🦊",
+     texte:`Le [Renard] trompe le Corbeau dans une fable de [La Fontaine].
+Le [Cheval de Troie] est une ruse racontée dans l'Odyssée d'[Homère].
+Le [Petit Poucet] utilise lui aussi des ruses.`}
+  ]});
+
+const FR = (() => {
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const BANQUE = {
+    vie:[
+      ["En quelle année Molière est-il né ?","1622",["1666","1789","1515"]],
+      ["Combien de pièces Molière a-t-il écrites ?","33",["12","50","100"]],
+      ["Quel était le métier de son père ?","marchand tapissier",["boulanger","médecin","comédien"]],
+      ["Quel est le vrai nom de Molière ?","Jean-Baptiste Poquelin",["Jean de La Fontaine","Charles Perrault","Pierre Corneille"]],
+      ["Quelle famille Molière rencontre-t-il ?","les Béjart",["les Médicis","les Perrault","les Bourbon"]],
+      ["Comment s'appelle la troupe fondée par Molière ?","l'Illustre Théâtre",["le Grand Théâtre","la Comédie-Française","le Théâtre du Soleil"]],
+      ["Pendant combien d'années sa troupe a-t-elle parcouru la France ?","13 ans",["3 ans","7 ans","25 ans"]],
+      ["Quel roi régnait à l'époque de Molière ?","Louis XIV",["Louis XVI","Henri IV","François Ier"]],
+      ["Vrai ou faux : la troupe de Molière devient la troupe du roi tant le roi aime ses pièces.","Vrai",["Faux"]],
+      ["Laquelle de ces pièces a été écrite par Molière ?",["L'Avare","Les Précieuses ridicules"],["Le Cid","Les Misérables","Le Petit Prince"]],
+      ["Qu'est-ce qu'un dramaturge ?","un auteur de théâtre",["un acteur","un poète","un médecin"]]
+    ],
+    medecin:[
+      ["Quand Le Médecin malgré lui a-t-il été joué pour la première fois ?","le 6 août 1666",["le 6 août 1622","le 14 juillet 1789","le 1er janvier 1700"]],
+      ["Où Le Médecin malgré lui a-t-il été joué pour la première fois ?","au théâtre du Palais Royal à Paris",["à Lyon","à Rouen","à Rennes"]],
+      ["Quel genre de pièce est Le Médecin malgré lui ?","une comédie",["une tragédie","une fable","un conte"]],
+      ["Quel est le but d'une comédie ?","faire rire et tourner en ridicule les défauts des gens",["faire peur au spectateur","faire pleurer le spectateur","raconter la vie du roi"]],
+      ["Dans la pièce, qui imagine la ruse ?","Martine",["Lucinde","le Renard","le Petit Poucet"]],
+      ["Comment s'appelle la jeune fille malade d'amour ?","Lucinde",["Martine","Cendrillon","Blanche-Neige"]],
+      ["Lucinde est promise à…","un homme qu'elle n'aime pas",["un prince qu'elle aime","un médecin","le roi"]]
+    ],
+    ruse:[
+      ["Une ruse, c'est…","un piège, un stratagème, un mensonge",["une maladie","une fête","une récompense"]],
+      ["Quelqu'un de rusé est…","malin",["maladroit","timide","malade"]],
+      ["Qui ruse face au Corbeau dans la fable ?","le Renard",["le Loup","le Lion","la Cigale"]],
+      ["Le Renard et le Corbeau est une fable de…","La Fontaine",["Homère","Molière","Charles Perrault"]],
+      ["Dans quelle œuvre trouve-t-on la ruse du Cheval de Troie ?","l'Odyssée d'Homère",["une fable de La Fontaine","Le Petit Poucet","Le Médecin malgré lui"]],
+      ["Quel personnage de conte utilise des ruses ?","le Petit Poucet",["la Belle au bois dormant","le Petit Chaperon rouge","Blanche-Neige"]]
+    ]
+  };
+  const gen = cle => () => {
+    const [q, b, f] = pick(BANQUE[cle]), bonne = Array.isArray(b) ? pick(b) : b;
+    return {kind:"qcm", consigne:"Choisis la bonne réponse", html:esc(q), choix:melange([bonne, ...f]), bonne, rappel:`${q} → ${bonne}`};
+  };
+  return { GEN:{ vie:gen("vie"), medecin:gen("medecin"), ruse:gen("ruse") } };
+})();
+
+THEMES.push({ id:"fq", chapitre:"Molière et Le Médecin malgré lui", nom:"Molière : le quiz", titre:"Quiz Molière", matiere:"Français", e:"❓", c:"var(--francais)", gram:true, muet:true, maitrise:5, unite:"thèmes", gen:FR.GEN,
+  mots:[ {en:"vie", fr:"La vie de Molière", e:"👑"}, {en:"medecin", fr:"Le Médecin malgré lui", e:"🩺"}, {en:"ruse", fr:"La ruse", e:"🦊"} ]});
+
+demarrer({ titre:"Français", e:"📚" });
+</script>
+</body>
+</html>

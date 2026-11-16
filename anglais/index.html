@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anglais · Luka's sticker book</title>
+<link rel="stylesheet" href="../commun/style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script src="../commun/moteur.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU ANGLAIS — modifier ici pour ajouter des thèmes.
+   La mécanique (exercices, autocollants) est dans ../commun/moteur.js
+   ============================================================ */
+/* ============================================================
+   CONTENU — modifier ici pour ajouter des mots ou un thème.
+   { en: "mot anglais", fr: "traduction", e: "emoji (facultatif)" }
+   ============================================================ */
+THEMES.push(
+  { id:"an", chapitre:"Vocabulaire des animaux", nom:"Animals", e:"🐘", c:"var(--ferme)",
+    mots:[
+      {en:"elephant",fr:"éléphant",e:"🐘"},{en:"lion",fr:"lion",e:"🦁"},{en:"monkey",fr:"singe",e:"🐒"},
+      {en:"mouse",fr:"souris",e:"🐭"},{en:"frog",fr:"grenouille",e:"🐸"},{en:"snake",fr:"serpent",e:"🐍"},
+      {en:"dog",fr:"chien",e:"🐶"},{en:"horse",fr:"cheval",e:"🐴"},{en:"turtle",fr:"tortue",e:"🐢"},
+      {en:"cow",fr:"vache",e:"🐮"},{en:"hen",fr:"poule",e:"🐔"},{en:"rooster",fr:"coq",e:"🐓"},
+      {en:"fish",fr:"poisson",e:"🐟"},{en:"goldfish",fr:"poisson rouge",e:"🐠"},{en:"cat",fr:"chat",e:"🐱"},
+      {en:"goat",fr:"chèvre",e:"🐐"},{en:"squirrel",fr:"écureuil",e:"🐿️"},{en:"rabbit",fr:"lapin",e:"🐰"},
+      {en:"bird",fr:"oiseau",e:"🐦"},{en:"chicken",fr:"poulet",e:"🐥"},{en:"duck",fr:"canard",e:"🦆"},
+      {en:"pig",fr:"cochon",e:"🐷"},{en:"bear",fr:"ours",e:"🐻"},{en:"hamster",fr:"hamster",e:"🐹"},
+      {en:"butterfly",fr:"papillon",e:"🦋"},{en:"sheep",fr:"mouton",e:"🐑"}
+    ],
+    phrases:["I have a dog","The cat is black","The frog is green"]
+  },
+  { id:"vb", chapitre:"Vocabulaire des animaux", nom:"Vocabox", e:"🦥", c:"var(--jungle)",
+    mots:[
+      {en:"sloth",fr:"paresseux",e:"🦥"},{en:"bear",fr:"ours",e:"🐻"},{en:"buffalo",fr:"buffle",e:"🐃"},
+      {en:"rabbit",fr:"lapin",e:"🐰"},{en:"monkey",fr:"singe",e:"🐒"},{en:"solve crimes",fr:"résoudre des crimes",e:"🔍"},
+      {en:"police officer",fr:"officier de police",e:"👮"},{en:"snake",fr:"serpent",e:"🐍"},{en:"tiger",fr:"tigre",e:"🐯"},
+      {en:"panther",fr:"panthère",e:"🐆"},{en:"wolf",fr:"loup",e:"🐺"},{en:"jungle",fr:"jungle",e:"🌴"},
+      {en:"want to",fr:"vouloir"},{en:"become",fr:"devenir"},{en:"eat",fr:"manger",e:"🍽️"},
+      {en:"protect",fr:"protéger",e:"🛡️"},{en:"about",fr:"à propos de"}
+    ],
+    phrases:["I want to become a police officer","The wolf wants to eat the rabbit","I want to protect the jungle"]
+  }
+);
+THEMES.push({ id:"tb", chapitre:"Le verbe To Be", nom:"Grammar: to be", e:"✍️", c:"var(--grammaire)", gram:true, maitrise:5, unite:"compétences",
+  mots:[
+    {en:"amisare", fr:"am, is ou are ?", e:"🧩"}, {en:"contractee", fr:"Forme contractée", e:"✂️"},
+    {en:"pronom", fr:"Le bon pronom", e:"👤"}, {en:"negative", fr:"Forme négative", e:"🚫"},
+    {en:"question", fr:"Forme interrogative", e:"❓"}, {en:"courte", fr:"Réponses courtes", e:"💬"},
+    {en:"ordre", fr:"Mots dans l'ordre", e:"🔀"}, {en:"erreurs", fr:"Chasse aux erreurs", e:"🕵️"},
+    {en:"traduction", fr:"Traduis en anglais", e:"🇬🇧"}
+  ]});
+
+/* ============================================================
+   GRAMMAIRE — The verb TO BE (présent)
+   Les phrases sont fabriquées au hasard à chaque question.
+   Les phrases de sa fiche d'exercices sont exclues (liste DEJA_FAIT).
+   ============================================================ */
+const GRAM = (() => {
+  const V = {I:"am",you:"are",he:"is",she:"is",it:"is",we:"are",they:"are"};
+  const CT = {am:"'m",is:"'s",are:"'re"};
+  /* k : p = personne, a = animal/créature, o = objet */
+  const SUJ = [
+    {s:"I",p:"I",k:"p",pron:1},{s:"you",p:"you",k:"p",pron:1},{s:"he",p:"he",k:"p",pron:1},
+    {s:"she",p:"she",k:"p",pron:1},{s:"it",p:"it",k:"o",pron:1},{s:"we",p:"we",k:"p",pron:1},{s:"they",p:"they",k:"p",pron:1},
+    {s:"my grandma",p:"she",k:"p"},{s:"my uncle",p:"he",k:"p"},{s:"Leo",p:"he",k:"p",nom:1},{s:"Chloé",p:"she",k:"p",nom:1},
+    {s:"my sister",p:"she",k:"p"},{s:"my brother",p:"he",k:"p"},{s:"the monkey",p:"it",k:"a"},{s:"the frog",p:"it",k:"a"},
+    {s:"the bear",p:"it",k:"a"},{s:"the sloth",p:"it",k:"a"},{s:"my cousins",p:"they",k:"p"},{s:"Max and Nina",p:"they",k:"p",nom:1},
+    {s:"the rabbits",p:"they",k:"a"},{s:"my dad and I",p:"we",k:"p"},{s:"you and Lily",p:"you",k:"p"},
+    {s:"the ball",p:"it",k:"o"},{s:"the house",p:"it",k:"o"},{s:"my bag",p:"it",k:"o"},{s:"the pencils",p:"they",k:"o"},{s:"the book",p:"it",k:"o"}
+  ];
+  const COMP = [
+    {c:"happy",k:"pa"},{c:"tired",k:"pa"},{c:"hungry",k:"pa"},{c:"sad",k:"pa"},{c:"scared",k:"pa"},{c:"funny",k:"pa"},
+    {c:"late",k:"p"},{c:"at school",k:"p"},{c:"ready",k:"p"},{c:"at home",k:"pa"},
+    {c:"in the garden",k:"pao"},{c:"in the kitchen",k:"pao"},{c:"in my bedroom",k:"pao"},
+    {c:"big",k:"ao"},{c:"small",k:"ao"},{c:"old",k:"ao"},{c:"black",k:"ao"},{c:"new",k:"o"},{c:"on the table",k:"o"}
+  ];
+  const DEJA_FAIT = new Set(["i am eleven years old","my mum is a nurse","we are in the classroom","the cat is under the table",
+    "you are my best friend","tom and lucy are english","it is cold today","my brothers are at school","i am hungry",
+    "the books are on the desk","my sister is tall","paul and i are friends","the dog is black","emma and sophie are sisters",
+    "my dad is in the garden","you and tom are late","i am french","she is happy","they are at home","the film is boring",
+    "we are in london","you are tired","he is spanish","you are ready","the shops are open","it is your bag",
+    "lisa is in your class","they are cousins","sam is my best friend","we are tired","you are hungry","the house is big",
+    "she is your teacher","she is my sister","i am sad","they are happy","we are in the park","you are late","he is tall",
+    "you are english","they are in the garden","she is late","you are eleven","the dog is hungry","i am late","your sister is at home"]);
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const pr = p => p==="I" ? "I" : p;
+
+  function modele(filtre){
+    for (let n=0; n<300; n++){
+      const s = pick(SUJ), c = pick(COMP.filter(x => x.k.includes(s.k)));
+      const m = {...s, c:c.c, v:V[s.p]};
+      if (filtre && !filtre(m)) continue;
+      if (DEJA_FAIT.has(norm(`${m.s} ${m.v} ${m.c}`))) continue;
+      return m;
+    }
+  }
+  /* toutes les bonnes façons d'écrire la phrase (la 1re est celle qu'on affiche) */
+  function aff(m){ const r=[`${m.s} ${m.v} ${m.c}`]; if (m.pron) r.push(`${m.s}${CT[m.v]} ${m.c}`); return r.map(cap); }
+  function neg(m){
+    const r = m.v==="am" ? [`I'm not ${m.c}`, `I am not ${m.c}`]
+      : [`${m.s} ${m.v}n't ${m.c}`, `${m.s} ${m.v} not ${m.c}`].concat(m.pron ? [`${m.s}${CT[m.v]} not ${m.c}`] : []);
+    return r.map(cap);
+  }
+  const ques = m => [`${cap(m.v)} ${m.s} ${m.c}?`];
+  function courte(m, oui){
+    const ap = m.s==="you" ? "I" : m.s==="I" ? "you" : m.p, v = V[ap];
+    if (oui) return [`Yes, ${pr(ap)} ${v}.`];
+    if (v==="am") return ["No, I'm not.","No, I am not."];
+    return [`No, ${ap} ${v}n't.`, `No, ${ap} ${v} not.`, `No, ${ap}${CT[v]} not.`];
+  }
+  const autreV = v => pick(["am","is","are"].filter(x => x!==v));
+
+  const TRAD = [
+    {fr:"Je suis content.", s:"I",p:"I",pron:1,c:"happy",f:"aff"},
+    {fr:"Le singe n'est pas dans la cuisine.", s:"the monkey",p:"it",c:"in the kitchen",f:"neg"},
+    {fr:"Sommes-nous en retard ?", s:"we",p:"we",pron:1,c:"late",f:"q"},
+    {fr:"Mes cousins sont à l'école.", s:"my cousins",p:"they",c:"at school",f:"aff"},
+    {fr:"Il n'est pas fatigué.", s:"he",p:"he",pron:1,c:"tired",f:"neg"},
+    {fr:"Est-elle à la maison ?", s:"she",p:"she",pron:1,c:"at home",f:"q"},
+    {fr:"Le ballon est petit.", s:"the ball",p:"it",c:"small",f:"aff"},
+    {fr:"Tu n'es pas drôle !", s:"you",p:"you",pron:1,c:"funny",f:"neg"},
+    {fr:"Les lapins sont noirs.", s:"the rabbits",p:"they",c:"black",f:"aff"},
+    {fr:"Es-tu prêt ?", s:"you",p:"you",pron:1,c:"ready",f:"q"},
+    {fr:"Je ne suis pas en retard.", s:"I",p:"I",pron:1,c:"late",f:"neg"},
+    {fr:"Le paresseux est dans le jardin.", s:"the sloth",p:"it",c:"in the garden",f:"aff"},
+    {fr:"Ma sœur a peur.", s:"my sister",p:"she",c:"scared",f:"aff"},
+    {fr:"Est-ce que les crayons sont sur la table ?", s:"the pencils",p:"they",c:"on the table",f:"q"},
+    {fr:"Nous ne sommes pas dans ma chambre.", s:"we",p:"we",pron:1,c:"in my bedroom",f:"neg"}
+  ].map(t => ({...t, v:V[t.p]}));
+
+  const souligne = (m, phrase) => phrase.replace(cap(m.s), `<u>${esc(cap(m.s))}</u>`);
+
+  const GEN = {
+    amisare(){
+      const m = modele();
+      return {kind:"qcm", consigne:"am, is ou are ?", html:`${esc(cap(m.s))} ____ ${esc(m.c)}.`,
+        choix:["am","is","are"], bonne:m.v, rappel:aff(m)[0]+".", astuce:"I → am · he / she / it → is · you / we / they → are"};
+    },
+    contractee(){
+      const p = pick(["I","you","he","she","it","we","they"]), v = V[p], n = Math.random()<.5, versCourt = Math.random()<.6;
+      const long = `${p} ${v}${n?" not":""}`;
+      const courts = n ? (v==="am" ? ["I'm not"] : [`${p} ${v}n't`, `${p}${CT[v]} not`]) : [`${p}${CT[v]}`];
+      if (versCourt) return {kind:"texte", consigne:"Écris la forme contractée", html:esc(long), ok:courts, rappel:courts.join(" ou ")};
+      const c = pick(courts);
+      return {kind:"texte", consigne:"Écris la forme longue (sans apostrophe)", html:esc(c), ok:[long], rappel:long};
+    },
+    pronom(){
+      const m = modele(m => !m.pron);
+      return {kind:"qcm", consigne:"Quel pronom remplace le groupe souligné ?", html:souligne(m, esc(aff(m)[0]))+".",
+        choix:["he","she","it","we","you","they"], bonne:m.p, rappel:`${cap(m.p)} ${m.v} ${m.c}.`,
+        astuce:"Une chose ou un animal → it · plusieurs → they · moi + quelqu'un → we"};
+    },
+    negative(){
+      const m = modele(); const ok = neg(m);
+      return {kind:"texte", consigne:"Mets la phrase à la forme négative (forme contractée)", html:esc(aff(m)[0])+".", ok, rappel:ok[0]+".",
+        astuce:"is not → isn't · are not → aren't · am not → 'm not"};
+    },
+    question(){
+      const m = modele(); const ok = ques(m);
+      return {kind:"texte", consigne:"Transforme en question. N'oublie pas le point d'interrogation !", html:esc(aff(m)[0])+".", ok, rappel:ok[0], q:true,
+        astuce:"Pour poser la question, on met le verbe devant : She is → Is she…?"};
+    },
+    courte(){
+      const m = modele(m => m.p!=="we" && m.s!=="you and Lily"), oui = Math.random()<.5, ok = courte(m, oui);
+      return {kind:"texte", consigne:`Réponds avec une réponse courte (${oui?"yes":"no"})`, html:esc(ques(m)[0])+` <span class="doux">(${oui?"yes":"no"})</span>`,
+        ok, rappel:ok[0], astuce:"Après Yes, on ne contracte jamais : « Yes, I am. »"};
+    },
+    ordre(){
+      const m = modele(), f = pick(["aff","neg","q"]);
+      let phrase = f==="aff" ? aff(m)[0] : f==="neg" ? neg(m)[0] : ques(m)[0];
+      const mots = phrase.replace("?"," ?").split(" ");
+      if (mots[0]!=="I" && !m.nom) mots[0] = mots[0].toLowerCase();
+      return {kind:"ordre", consigne:"Remets les mots dans l'ordre", mots, cible:mots.join(" "), rappel:phrase+(f==="q"?"":".")};
+    },
+    erreurs(){
+      const m = modele(), types = ["verbe","not","qverbe","yes"]; if (m.p==="I") types.push("amnt");
+      const t = pick(types);
+      let faux, ok, astuce;
+      if (t==="verbe"){ faux = `${cap(m.s)} ${autreV(m.v)} ${m.c}.`; ok = aff(m); astuce = "Vérifie l'accord : am, is ou are ?"; }
+      if (t==="not"){ faux = `${cap(m.s)} not ${m.v} ${m.c}.`; ok = neg(m); astuce = "not se place après le verbe : is not, are not…"; }
+      if (t==="qverbe"){ faux = `${cap(autreV(m.v))} ${m.s} ${m.c}?`; ok = ques(m); astuce = "Vérifie l'accord : am, is ou are ?"; }
+      if (t==="amnt"){ faux = `I amn't ${m.c}.`; ok = neg(m); astuce = "« amn't » n'existe pas : on écrit I'm not."; }
+      if (t==="yes"){ const ap = m.s==="you" ? "I" : m.s==="I" ? "you" : m.p, v = V[ap];
+        faux = `${cap(ques(m)[0])} Yes, ${pr(ap)}${CT[v]}.`; ok = [`${ques(m)[0]} Yes, ${pr(ap)} ${v}.`, `Yes, ${pr(ap)} ${v}.`];
+        astuce = "Après Yes, on ne contracte jamais."; }
+      return {kind:"texte", consigne:"Il y a une erreur : réécris la phrase correctement", html:esc(faux), ok, rappel:ok[0]+(/[.?]$/.test(ok[0])?"":"."), astuce};
+    },
+    traduction(){
+      const t = pick(TRAD); const ok = t.f==="aff" ? aff(t) : t.f==="neg" ? neg(t) : ques(t);
+      return {kind:"texte", consigne:"Traduis en anglais", html:esc(t.fr), ok, rappel:ok[0]+(t.f==="q"?"":".")};
+    }
+  };
+  return { GEN };
+})();
+
+demarrer({ titre:"Anglais", e:"🇬🇧",
+  chapitres:["Le verbe To Be", "Vocabulaire des animaux", "Vocabulaire Halloween"] });
+</script>
+</body>
+</html>

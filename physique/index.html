@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physique-chimie · Luka's sticker book</title>
+<link rel="stylesheet" href="../commun/style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script src="../commun/moteur.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU PHYSIQUE-CHIMIE — modifier ici pour ajouter des thèmes.
+   La mécanique (exercices, autocollants) est dans ../commun/moteur.js
+   ============================================================ */
+/* ============================================================
+   PHYSIQUE-CHIMIE — leçon (textes à trous) + exercices générés
+   ============================================================ */
+THEMES.push({ id:"pl", chapitre:"Les différents états physiques et les paliers de température", nom:"La leçon", matiere:"Physique-chimie", e:"📘", c:"var(--physique)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"proprietes", titre:"Solide, liquide, gaz", e:"🧊",
+     texte:`Un solide a une [forme propre|forme] et toujours le même [volume].
+Un liquide n'a pas de [forme propre] : il prend la forme du [récipient], mais il a un [volume propre].
+Un gaz n'a pas de forme propre, ni de [volume propre].`},
+    {id:"changements", titre:"Les changements d'état", e:"🔁",
+     texte:`Le passage de l'état solide à l'état liquide s'appelle la [fusion].
+Le passage de l'état liquide à l'état solide s'appelle la [solidification].
+Le passage de l'état liquide à l'état gazeux s'appelle la [vaporisation].
+Le passage de l'état gazeux à l'état liquide s'appelle la [liquéfaction].`},
+    {id:"palier", titre:"Le palier de température", e:"🌡️",
+     texte:`L'état physique (solide, liquide, gaz) de l'eau dépend de sa [température].
+Au cours des [changements d'état], la température de l'eau [ne varie pas] : on dit qu'il y a un [palier] de température.
+La température du palier est appelée [température du changement d'état|température de changement d'état].`},
+    {id:"mesures", titre:"Périmètre, aire et volume", e:"📐",
+     texte:`Pour un carré de 10 cm de côté :
+Le périmètre = 4 × 10 = [40] cm.
+L'aire (la surface) = 10 × 10 = [100] [cm²|cm2].
+Pour un cube de 10 cm de côté :
+Le volume = côté × côté × côté = 10 × 10 × 10 = [1 000|1000] [cm³|cm3].`}
+  ]});
+
+
+const PHY = (() => {
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+  const ETATS = ["solide","liquide","gaz"];
+
+  const EAU = [["la grêle","solide"],["la neige","solide"],["le verglas","solide"],["un glaçon","solide"],["le givre","solide"],
+    ["la mer","liquide"],["la pluie","liquide"],["un nuage","liquide"],["la buée","liquide"],["la rosée","liquide"],
+    ["la vapeur d'eau","gaz"]];
+  const PROPS = [["prend la forme du récipient","liquide et gaz"],["peut être saisi avec les doigts","solide"],["a une forme propre","solide"],
+    ["occupe tout l'espace qu'on lui donne","gaz"],["sa surface libre est plane et horizontale","liquide"],["a un volume propre","solide et liquide"],
+    ["n'a ni forme propre, ni volume propre","gaz"],["n'a pas de forme propre mais a un volume propre","liquide"]];
+  const CHG = {fusion:"solide → liquide", solidification:"liquide → solide", vaporisation:"liquide → gaz", "liquéfaction":"gaz → liquide"};
+  const SITU = [["Un glaçon fond dans un verre.","fusion"],["Le verglas fond au soleil.","fusion"],["L'eau gèle dans le congélateur.","solidification"],
+    ["Une flaque d'eau gèle pendant la nuit.","solidification"],["L'eau bout dans la casserole.","vaporisation"],["Le linge mouillé sèche sur le fil.","vaporisation"],
+    ["De la buée se forme sur une vitre froide.","liquéfaction"],["De petites gouttes apparaissent sur une canette sortie du frigo.","liquéfaction"]];
+
+  /* ---------- courbe de température ---------- */
+  function courbe(){
+    const type = pick(["fusion","ebullition","solidification"]);
+    let pts = [], a, b, palier, avant, pendant, apres;
+    if (type==="fusion"){ const T0 = pick([-30,-20,-10]); a = -T0/10; b = a + rnd(3,5); palier = 0;
+      for (let t=0;t<=11;t++) pts.push(t<=a ? T0+10*t : t<=b ? 0 : 10*(t-b));
+      avant = "solide"; pendant = "solide et liquide"; apres = "liquide"; }
+    if (type==="ebullition"){ const T0 = pick([20,40,60]); a = (100-T0)/20; b = Math.min(11, a + rnd(4,6)); palier = 100;
+      for (let t=0;t<=b;t++) pts.push(t<=a ? T0+20*t : 100);
+      avant = "liquide"; pendant = "liquide et gaz"; apres = null; }
+    if (type==="solidification"){ const T0 = pick([20,30,40]); a = T0/10; b = a + rnd(3,4); palier = 0;
+      for (let t=0;t<=11;t++) pts.push(t<=a ? T0-10*t : t<=b ? 0 : -10*(t-b));
+      avant = "liquide"; pendant = "solide et liquide"; apres = "solide"; }
+    const ymin = Math.floor(Math.min(...pts)/10)*10, ymax = Math.ceil(Math.max(...pts)/10)*10 + 10;
+    const W=340, H=230, L=44, R=12, T=14, B=34, X = t => L + t*(W-L-R)/11, Y = v => T + (ymax-v)*(H-T-B)/(ymax-ymin);
+    let g = "";
+    for (let t=0;t<=11;t++) g += `<line x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${H-B}" stroke="#d6dbe6"/><text x="${X(t)}" y="${H-B+16}" font-size="11" text-anchor="middle">${t}</text>`;
+    for (let v=ymin; v<=ymax; v+=10) g += `<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="${v===0?"#9aa3b8":"#d6dbe6"}"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" text-anchor="end">${v}</text>`;
+    const poly = pts.map((v,t) => `${X(t)},${Y(v)}`).join(" ");
+    const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:min(460px,100%);background:#fff;border-radius:12px;color:#222;font-family:system-ui" role="img" aria-label="Courbe de température">
+      ${g}<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#222" stroke-width="1.5"/><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#222" stroke-width="1.5"/>
+      <polyline points="${poly}" fill="none" stroke="#C0392B" stroke-width="2.5"/>${pts.map((v,t) => `<circle cx="${X(t)}" cy="${Y(v)}" r="3.2" fill="#222"/>`).join("")}
+      <text x="${L}" y="10" font-size="11" font-weight="700">Température (°C)</text><text x="${W-R}" y="${H-4}" font-size="11" font-weight="700" text-anchor="end">Temps (min)</text></svg>`;
+    const intro = type==="fusion" ? "On chauffe de la glace et on relève sa température chaque minute."
+      : type==="ebullition" ? "On chauffe de l'eau liquide jusqu'à ébullition et on relève sa température chaque minute."
+      : "On refroidit de l'eau liquide et on relève sa température chaque minute.";
+    const nomChg = type==="fusion" ? "fusion" : type==="ebullition" ? "vaporisation" : "solidification";
+    return {pts, a, b, palier, avant, pendant, apres, html:`<p style="font-size:1rem;font-weight:400">${intro}</p>${svg}`, nomChg};
+  }
+  const ETATS2 = ["solide","liquide","gaz","solide et liquide","liquide et gaz"];
+
+  /* ---------- récipients penchés ---------- */
+  function recipients(){
+    const bon = rnd(0,2), lettres = ["A","B","C"];
+    const fig = [0,1,2].map(i => {
+      const ang = pick([-22,-15,15,22]), id = "clip"+Math.random().toString(36).slice(2,8);
+      const pente = i===bon ? 0 : (i===(bon+1)%3 ? Math.tan(ang*Math.PI/180) : -Math.tan(ang*Math.PI/180)*0.8);
+      const forme = `<g transform="rotate(${ang})"><path d="M-26 -50 L-26 40 Q-26 48 -18 48 L18 48 Q26 48 26 40 L26 -50" fill="none" stroke="#222" stroke-width="2.5"/></g>`;
+      const clip = `<clipPath id="${id}"><path transform="rotate(${ang})" d="M-26 -50 L-26 40 Q-26 48 -18 48 L18 48 Q26 48 26 40 L26 -50 Z"/></clipPath>`;
+      const eau = `<g clip-path="url(#${id})"><path d="M-80 ${10-80*pente} L80 ${10+80*pente} L80 120 L-80 120 Z" fill="#7EC8E3"/><path d="M-80 ${10-80*pente} L80 ${10+80*pente}" stroke="#1F6FA8" stroke-width="2.5"/></g>`;
+      return `<svg viewBox="-60 -64 120 128" style="width:120px;background:#fff;border-radius:12px"><defs>${clip}</defs>${eau}${forme}<text x="-52" y="-48" font-size="16" font-weight="700" fill="#222">${lettres[i]}</text></svg>`;
+    }).join("");
+    return {html:`<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">${fig}</div>`, bon:lettres[bon]};
+  }
+
+  const GEN = {
+    etats(){ const [x,e] = pick(EAU);
+      return {kind:"qcm", consigne:"Dans quel état physique est l'eau ?", html:esc(x.charAt(0).toUpperCase()+x.slice(1)), choix:ETATS, bonne:e,
+        rappel:`${x.charAt(0).toUpperCase()+x.slice(1)} : ${e}.`, astuce: x.includes("nuage")||x.includes("buée") ? "Le nuage et la buée sont faits de minuscules gouttes d'eau liquide. La vapeur d'eau, elle, est invisible." : ""}; },
+    proprietes(){ const [p,e] = pick(PROPS);
+      return {kind:"qcm", consigne:"Quel(s) état(s) physique(s) correspond(ent) à cette propriété ?", html:esc(p.charAt(0).toUpperCase()+p.slice(1)),
+        choix:["solide","liquide","gaz","solide et liquide","liquide et gaz"], bonne:e, rappel:`${p} → ${e}`,
+        astuce:"Solide : forme propre et volume propre. Liquide : volume propre, pas de forme propre. Gaz : ni forme ni volume propre."}; },
+    changements(){
+      const noms = Object.keys(CHG), r = Math.random();
+      if (r<.4){ const n = pick(noms); return {kind:"qcm", consigne:"Comment s'appelle ce changement d'état ?", html:CHG[n], choix:noms, bonne:n, rappel:`${CHG[n]} : ${n}`}; }
+      if (r<.7){ const n = pick(noms); return {kind:"qcm", consigne:`Que veut dire « ${n} » ?`, html:esc(n.charAt(0).toUpperCase()+n.slice(1)), choix:noms.map(x => CHG[x]), bonne:CHG[n], rappel:`${n} : ${CHG[n]}`}; }
+      const [s,n] = pick(SITU); return {kind:"qcm", consigne:"Quel changement d'état se produit ?", html:esc(s), choix:noms, bonne:n, rappel:`${s} → ${n}`};
+    },
+    courbe(){
+      const c = courbe(), q = pick(c.apres ? ["debut","pdebut","pfin","duree","etat","tpal","nom"] : ["debut","pdebut","duree","etat","tpal","nom"]);
+      const base = {consigne:"Lis la courbe et réponds", html:c.html};
+      if (q==="debut") return {...base, kind:"texte", html:c.html+"<p>Température au début de l'expérience (en °C) ?</p>", nombre:c.pts[0], ok:[String(c.pts[0])], rappel:`${c.pts[0]} °C`};
+      if (q==="pdebut") return {...base, kind:"texte", html:c.html+"<p>À quelle minute le palier commence-t-il ?</p>", nombre:c.a, ok:[String(c.a)], rappel:`${c.a} min`};
+      if (q==="pfin") return {...base, kind:"texte", html:c.html+"<p>À quelle minute le palier se termine-t-il ?</p>", nombre:c.b, ok:[String(c.b)], rappel:`${c.b} min`};
+      if (q==="duree") return {...base, kind:"texte", html:c.html+`<p>Combien de temps dure le palier (en min) ?</p>`, nombre:c.b-c.a, ok:[String(c.b-c.a)], rappel:`${c.b-c.a} min (de ${c.a} à ${c.b} min)`, astuce:"Durée = fin du palier − début du palier."};
+      if (q==="tpal") return {...base, kind:"texte", html:c.html+"<p>Quelle est la température du palier (en °C) ?</p>", nombre:c.palier, ok:[String(c.palier)], rappel:`${c.palier} °C`};
+      if (q==="nom") return {...base, kind:"qcm", html:c.html+"<p>Quel changement d'état a lieu pendant le palier ?</p>", choix:Object.keys(CHG), bonne:c.nomChg, rappel:c.nomChg};
+      const zones = [];
+      for (let t=0; t<c.pts.length; t++){ if (t<c.a) zones.push([t,c.avant]); else if (t>c.a && t<c.b) zones.push([t,c.pendant]); else if (t>c.b && c.apres) zones.push([t,c.apres]); }
+      const [t,e] = pick(zones);
+      return {...base, kind:"qcm", html:c.html+`<p>Dans quel état est l'eau à ${t} min ?</p>`, choix:ETATS2, bonne:e, rappel:`À ${t} min : ${e}`, astuce:"Pendant le palier, les deux états sont mélangés."};
+    },
+    surface(){ const r = recipients();
+      return {kind:"qcm", consigne:"On penche ces récipients. Dans lequel la surface de l'eau est-elle dessinée correctement ?", html:r.html, choix:["A","B","C"], bonne:r.bon,
+        rappel:`Le bon dessin est le ${r.bon}`, astuce:"La surface libre d'un liquide reste toujours plane et horizontale, même quand on penche le récipient."}; },
+    mesures(){
+      const c = rnd(2,12), q = pick(["perim","aire","volume","unite"]);
+      if (q==="perim") return {kind:"texte", consigne:"Calcule (réponds en cm)", html:`Périmètre d'un carré de ${c} cm de côté ?`, nombre:4*c, ok:[String(4*c)], rappel:`4 × ${c} = ${4*c} cm`};
+      if (q==="aire") return {kind:"texte", consigne:"Calcule (réponds en cm²)", html:`Aire d'un carré de ${c} cm de côté ?`, nombre:c*c, ok:[String(c*c)], rappel:`${c} × ${c} = ${c*c} cm²`};
+      if (q==="volume") return {kind:"texte", consigne:"Calcule (réponds en cm³)", html:`Volume d'un cube de ${c} cm de côté ?`, nombre:c*c*c, ok:[String(c*c*c)], rappel:`${c} × ${c} × ${c} = ${c*c*c} cm³`, astuce:"Volume = côté × côté × côté"};
+      const [m,u] = pick([["un périmètre","cm"],["une aire","cm²"],["un volume","cm³"]]);
+      return {kind:"qcm", consigne:"Choisis la bonne unité", html:`On mesure ${m} en…`, choix:["cm","cm²","cm³"], bonne:u, rappel:`${m} → ${u}`};
+    }
+  };
+  return {GEN};
+})();
+
+THEMES.push({ id:"px", chapitre:"Les différents états physiques et les paliers de température", nom:"Exercices", titre:"Les états de l'eau", matiere:"Physique-chimie", e:"🌡️", c:"var(--physique)", gram:true, muet:true, maitrise:5, unite:"compétences", gen:PHY.GEN,
+  mots:[
+    {en:"etats", fr:"Solide, liquide ou gaz ?", e:"💧"}, {en:"proprietes", fr:"Les propriétés", e:"🫙"},
+    {en:"changements", fr:"Les changements d'état", e:"🔁"}, {en:"courbe", fr:"Lire une courbe", e:"📈"},
+    {en:"surface", fr:"La surface libre", e:"🥛"}, {en:"mesures", fr:"Périmètre, aire, volume", e:"📐"}
+  ]});
+
+demarrer({ titre:"Physique-chimie", e:"⚗️" });
+</script>
+</body>
+</html>
