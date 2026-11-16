@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luka's sticker book</title>
+<style>
+:root{
+  color-scheme:light;
+  --papier:#FBFCFF; --carreau:#DCE4F5; --marge:#F2A7B6;
+  --encre:#1F2C5C; --encre-2:#5A6488; --carte:#FFFFFF; --trait:#CFD8EE;
+  --fluo:#FFE45C; --fluo-texte:#3A3000;
+  --citrouille:#F26B1D; --jungle:#1E8C5A; --ferme:#2F6FD6; --grammaire:#7A4FD6; --svt:#3E8E2E; --physique:#1F77B4; --francais:#B8325A;
+  --bon:#1E8C5A; --bon-fond:#DDF5E8; --faux:#C8342B; --faux-fond:#FDE3E1;
+  --ombre:0 3px 0 var(--trait);
+  --f-main:"Segoe Print","Bradley Hand","Comic Neue","Chalkboard SE",cursive;
+  --f-texte:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    color-scheme:dark;
+    --papier:#151A2E; --carreau:#212842; --marge:#6B3A4A;
+    --encre:#E8ECFA; --encre-2:#A3ABCB; --carte:#1E2440; --trait:#323A5E;
+    --fluo:#E8CC3A; --fluo-texte:#2A2200;
+    --citrouille:#FF8A45; --jungle:#3FBF84; --ferme:#6E9CF0; --grammaire:#A88BF2; --svt:#7CCB6A; --physique:#5AB0EE; --francais:#F07A9C;
+    --bon:#3FBF84; --bon-fond:#173A2C; --faux:#FF7A70; --faux-fond:#43201E;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh;color:var(--encre);font-family:var(--f-texte);font-size:18px;line-height:1.45;
+  background-color:var(--papier);
+  background-image:
+    linear-gradient(90deg,transparent 54px,var(--marge) 54px,var(--marge) 56px,transparent 56px),
+    linear-gradient(var(--carreau) 1px,transparent 1px),
+    linear-gradient(90deg,var(--carreau) 1px,transparent 1px);
+  background-size:100% 100%,24px 24px,24px 24px;
+}
+#app{max-width:760px;margin:0 auto;padding:28px 20px 60px 76px}
+@media (max-width:600px){#app{padding-left:68px;padding-right:12px}}
+h1,h2{font-family:var(--f-main);font-weight:700;margin:0;line-height:1.15}
+h1{font-size:2.3rem} h2{font-size:1.6rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:3px solid var(--fluo);outline-offset:3px;border-radius:12px}
+.pile{display:flex;flex-direction:column;gap:18px}
+.doux{color:var(--encre-2)}
+.fluo{background:linear-gradient(transparent 35%,var(--fluo) 35%,var(--fluo) 90%,transparent 90%);color:inherit;padding:0 4px}
+@media (prefers-color-scheme:dark){.fluo{color:var(--fluo-texte)}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;padding:12px 20px;border-radius:14px;
+  background:var(--c,var(--ferme));color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--c,var(--ferme)) 60%,#000);transition:transform .07s,box-shadow .07s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c,var(--ferme)) 60%,#000)}
+.btn.clair{background:var(--carte);color:var(--encre);box-shadow:0 4px 0 var(--trait);border:2px solid var(--trait)}
+.retour{font-weight:700;color:var(--encre-2);padding:4px 0;align-self:flex-start}
+
+/* accueil */
+.entete{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.compteur{font-family:var(--f-main);font-size:1.1rem;background:var(--carte);border:2px dashed var(--trait);border-radius:14px;padding:8px 14px}
+.themes{display:grid;gap:16px}
+.theme{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;text-align:left;padding:16px 18px;
+  background:var(--carte);border:2px solid var(--trait);border-left:8px solid var(--c);border-radius:16px;box-shadow:var(--ombre)}
+.theme .gros{font-size:2.6rem;line-height:1}
+.theme h2{font-size:1.45rem}
+.barre{height:10px;border-radius:6px;background:var(--trait);overflow:hidden;margin-top:8px}
+.barre i{display:block;height:100%;background:var(--c);border-radius:6px}
+
+/* modes */
+.modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.mode{text-align:left;padding:14px 16px;background:var(--carte);border:2px solid var(--trait);border-radius:14px;box-shadow:var(--ombre)}
+.mode b{display:block;font-size:1.05rem}
+.mode span{font-size:.9rem;color:var(--encre-2)}
+.mode.defi{border-color:var(--c);border-width:3px;grid-column:1/-1}
+
+/* exercice */
+.haut{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.points{display:flex;gap:5px}
+.points i{width:12px;height:12px;border-radius:50%;background:var(--trait)}
+.points i.ok{background:var(--bon)} .points i.ko{background:var(--faux)} .points i.ici{outline:2px solid var(--encre);outline-offset:2px}
+.question{background:var(--carte);border:2px solid var(--trait);border-radius:18px;padding:26px 20px;text-align:center;box-shadow:var(--ombre)}
+.emo{font-size:4.2rem;line-height:1.1}
+.consigne{font-size:.95rem;color:var(--encre-2);margin-bottom:6px}
+.mot{font-family:var(--f-main);font-size:2rem;font-weight:700;margin-top:6px}
+.choix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:480px){.choix{grid-template-columns:1fr}}
+.choix button{padding:14px;border-radius:14px;background:var(--carte);border:2px solid var(--trait);box-shadow:var(--ombre);font-weight:700;font-size:1.1rem}
+.choix button.ok{background:var(--bon-fond);border-color:var(--bon)}
+.choix button.ko{background:var(--faux-fond);border-color:var(--faux)}
+.indice{font-family:ui-monospace,Consolas,monospace;font-size:1.7rem;letter-spacing:.25em;margin-top:8px}
+.saisie{display:flex;gap:10px}
+.saisie input{flex:1;min-width:0;font:inherit;font-size:1.3rem;padding:12px 14px;border-radius:14px;border:2px solid var(--trait);background:var(--carte);color:var(--encre)}
+.retourq{border-radius:14px;padding:12px 16px;font-weight:700}
+.retourq.ok{background:var(--bon-fond);color:var(--bon)}
+.retourq.ko{background:var(--faux-fond);color:var(--faux)}
+.hp{display:inline-flex;align-items:center;gap:6px;font-weight:700;padding:8px 14px;border-radius:999px;background:var(--fluo);color:var(--fluo-texte)}
+
+/* carte retournable */
+.flip{perspective:900px;cursor:pointer}
+.flip .in{position:relative;min-height:230px;transition:transform .45s;transform-style:preserve-3d}
+.flip.vu .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:var(--carte);border:2px solid var(--trait);border-radius:18px;box-shadow:var(--ombre);padding:16px}
+.face.dos{transform:rotateY(180deg);border-color:var(--c)}
+@media (prefers-reduced-motion:reduce){.flip .in{transition:none}}
+
+/* phrase */
+.ligne{min-height:62px;display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-radius:14px;border:2px dashed var(--trait);background:var(--carte)}
+.tuiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tuile{padding:8px 14px;border-radius:10px;background:var(--carte);border:2px solid var(--trait);box-shadow:var(--ombre);font-weight:700}
+.ligne .tuile{background:var(--fluo);color:var(--fluo-texte);border-color:transparent}
+
+/* album */
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.sticker{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:16px;padding:8px;text-align:center;font-size:.85rem}
+.sticker.oui{background:var(--carte);border:2px solid var(--c);box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,transparent)}
+.sticker.oui:nth-child(3n){transform:rotate(-3deg)} .sticker.oui:nth-child(3n+1){transform:rotate(2deg)}
+.sticker.oui .e{font-size:2.6rem;line-height:1}
+.sticker.non{border:2px dashed var(--trait);color:var(--encre-2)}
+.sticker.non .e{font-size:1.6rem;font-family:var(--f-main)}
+.sticker b{font-weight:700}
+.gagne{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(.4) rotate(-20deg);opacity:0}70%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+@media (prefers-reduced-motion:reduce){.gagne{animation:none}}
+.bilan{text-align:center}
+.bilan .score{font-family:var(--f-main);font-size:3rem}
+.nouveaux{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;font-size:2.6rem}
+.pied{display:flex;gap:10px;flex-wrap:wrap;border-top:2px dashed var(--trait);padding-top:18px;margin-top:12px}
+.pied .btn{font-size:.9rem;padding:9px 14px}
+.regle{width:100%;border-collapse:collapse;background:var(--carte);border-radius:14px;overflow:hidden;font-size:.95rem}
+.regle th,.regle td{padding:8px 10px;border-bottom:1px solid var(--trait);text-align:left}
+.regle thead th{background:color-mix(in srgb,var(--c) 18%,var(--carte))}
+.note{background:var(--carte);border:2px solid var(--trait);border-left:6px solid var(--c);border-radius:12px;padding:12px 14px}
+.question .phr{font-size:1.5rem;font-weight:700;margin-top:6px}
+.question u{text-decoration-color:var(--c);text-decoration-thickness:3px;text-underline-offset:4px}
+.choix.six{grid-template-columns:repeat(3,1fr)}
+.matiere{font-family:var(--f-main);font-size:1.3rem;margin:8px 0 -4px}
+.niveaux{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.niveaux .btn{padding:8px 14px;font-size:.95rem}
+.banque{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:58px;padding:12px;border-radius:14px;
+  background:color-mix(in srgb,var(--c) 14%,var(--papier));border:2px solid var(--c)}
+.puce{padding:6px 12px;border-radius:10px;background:var(--carte);border:2px solid var(--trait);box-shadow:var(--ombre);font-weight:700;cursor:grab;font-size:1rem}
+.puce.sel{outline:3px solid var(--c);outline-offset:2px}
+.texte{background:var(--carte);border:2px solid var(--trait);border-radius:16px;padding:18px 20px;line-height:2.4;font-size:1.08rem;box-shadow:var(--ombre)}
+.trou{display:inline-block;min-width:10ch;min-height:1.9em;vertical-align:middle;border-bottom:3px dashed var(--c);border-radius:8px;padding:0 4px;cursor:pointer;line-height:1.6}
+.trou.survol{background:color-mix(in srgb,var(--c) 20%,transparent)}
+.trou.plein{border-bottom-style:solid}
+.trou .puce{box-shadow:none;background:var(--fluo);color:var(--fluo-texte);border-color:transparent;cursor:pointer}
+.trou-in{font:inherit;font-weight:700;padding:2px 8px;border:0;border-bottom:3px dashed var(--c);border-radius:8px 8px 0 0;background:color-mix(in srgb,var(--c) 8%,var(--carte));color:var(--encre);max-width:100%}
+.trou.ok,.trou-in.ok{background:var(--bon-fond);border-bottom:3px solid var(--bon)}
+.trou.ko,.trou-in.ko{background:var(--faux-fond);border-bottom:3px solid var(--faux);text-decoration:line-through}
+.trou.ok .puce,.trou.ko .puce{background:transparent;color:inherit}
+.corrige{color:var(--bon);font-weight:700;margin-left:6px}
+.corrige::before{content:"→ "}
+.fig{width:min(380px,100%);margin:6px auto 0}
+.fig img{width:100%;border-radius:14px;display:block}
+.fig img ~ svg{display:none}
+.fig svg,.mini svg{width:100%;height:auto;display:block;border-radius:12px}
+.mini{display:block;width:100%}
+.pas{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.9rem;color:var(--encre-2)}
+.pas span{background:var(--carte);border:2px solid var(--c);border-radius:8px;padding:2px 8px;color:var(--encre)}
+.cle{overflow-x:auto;background:var(--carte);border:2px solid var(--trait);border-radius:16px;padding:14px;font-size:.88rem;box-shadow:var(--ombre)}
+.noeud{display:flex;flex-direction:column;gap:4px}
+.noeud>.q{font-weight:700;color:var(--encre-2);font-size:.82rem}
+.branches{display:flex;flex-direction:column;gap:8px;border-left:3px solid var(--c);padding-left:10px}
+.branche{display:flex;align-items:center;gap:8px}
+.crit{border:2px solid var(--encre);border-radius:8px;padding:4px 8px;background:var(--papier);min-width:110px;max-width:190px}
+.feuille{border:2px solid var(--c);border-radius:8px;padding:4px 10px;font-weight:700;background:color-mix(in srgb,var(--c) 15%,var(--carte));white-space:nowrap}
+.fl{color:var(--encre-2);font-weight:700}
+.crit.on,.feuille.on{background:var(--fluo);color:var(--fluo-texte);border-color:var(--fluo-texte)}
+.fl.on{color:var(--encre)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--encre);color:var(--papier);padding:10px 18px;border-radius:12px;font-weight:700}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU — modifier ici pour ajouter des mots ou un thème.
+   { en: "mot anglais", fr: "traduction", e: "emoji (facultatif)" }
+   ============================================================ */
+const THEMES = [
+  { id:"an", nom:"Animals", e:"🐘", c:"var(--ferme)",
+    mots:[
+      {en:"elephant",fr:"éléphant",e:"🐘"},{en:"lion",fr:"lion",e:"🦁"},{en:"monkey",fr:"singe",e:"🐒"},
+      {en:"mouse",fr:"souris",e:"🐭"},{en:"frog",fr:"grenouille",e:"🐸"},{en:"snake",fr:"serpent",e:"🐍"},
+      {en:"dog",fr:"chien",e:"🐶"},{en:"horse",fr:"cheval",e:"🐴"},{en:"turtle",fr:"tortue",e:"🐢"},
+      {en:"cow",fr:"vache",e:"🐮"},{en:"hen",fr:"poule",e:"🐔"},{en:"rooster",fr:"coq",e:"🐓"},
+      {en:"fish",fr:"poisson",e:"🐟"},{en:"goldfish",fr:"poisson rouge",e:"🐠"},{en:"cat",fr:"chat",e:"🐱"},
+      {en:"goat",fr:"chèvre",e:"🐐"},{en:"squirrel",fr:"écureuil",e:"🐿️"},{en:"rabbit",fr:"lapin",e:"🐰"},
+      {en:"bird",fr:"oiseau",e:"🐦"},{en:"chicken",fr:"poulet",e:"🐥"},{en:"duck",fr:"canard",e:"🦆"},
+      {en:"pig",fr:"cochon",e:"🐷"},{en:"bear",fr:"ours",e:"🐻"},{en:"hamster",fr:"hamster",e:"🐹"},
+      {en:"butterfly",fr:"papillon",e:"🦋"},{en:"sheep",fr:"mouton",e:"🐑"}
+    ],
+    phrases:["I have a dog","The cat is black","The frog is green"]
+  },
+  { id:"vb", nom:"Vocabox", e:"🦥", c:"var(--jungle)",
+    mots:[
+      {en:"sloth",fr:"paresseux",e:"🦥"},{en:"bear",fr:"ours",e:"🐻"},{en:"buffalo",fr:"buffle",e:"🐃"},
+      {en:"rabbit",fr:"lapin",e:"🐰"},{en:"monkey",fr:"singe",e:"🐒"},{en:"solve crimes",fr:"résoudre des crimes",e:"🔍"},
+      {en:"police officer",fr:"officier de police",e:"👮"},{en:"snake",fr:"serpent",e:"🐍"},{en:"tiger",fr:"tigre",e:"🐯"},
+      {en:"panther",fr:"panthère",e:"🐆"},{en:"wolf",fr:"loup",e:"🐺"},{en:"jungle",fr:"jungle",e:"🌴"},
+      {en:"want to",fr:"vouloir"},{en:"become",fr:"devenir"},{en:"eat",fr:"manger",e:"🍽️"},
+      {en:"protect",fr:"protéger",e:"🛡️"},{en:"about",fr:"à propos de"}
+    ],
+    phrases:["I want to become a police officer","The wolf wants to eat the rabbit","I want to protect the jungle"]
+  }
+];
+THEMES.push({ id:"tb", nom:"Grammar: to be", e:"✍️", c:"var(--grammaire)", gram:true, maitrise:5, unite:"compétences",
+  mots:[
+    {en:"amisare", fr:"am, is ou are ?", e:"🧩"}, {en:"contractee", fr:"Forme contractée", e:"✂️"},
+    {en:"pronom", fr:"Le bon pronom", e:"👤"}, {en:"negative", fr:"Forme négative", e:"🚫"},
+    {en:"question", fr:"Forme interrogative", e:"❓"}, {en:"courte", fr:"Réponses courtes", e:"💬"},
+    {en:"ordre", fr:"Mots dans l'ordre", e:"🔀"}, {en:"erreurs", fr:"Chasse aux erreurs", e:"🕵️"},
+    {en:"traduction", fr:"Traduis en anglais", e:"🇬🇧"}
+  ]});
+/* ============================================================
+   SVT — textes à trous. Écrire les mots à trouver entre [crochets].
+   [mot|autre écriture acceptée] : la 1re forme est celle affichée.
+   ============================================================ */
+THEMES.push({ id:"sv", nom:"Les espèces", matiere:"SVT", e:"🦆", c:"var(--svt)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"espece", titre:"Qu'est-ce qu'une espèce ?", e:"🦆",
+     texte:`Deux individus font partie de la même espèce si :
+– ils partagent les mêmes [caractéristiques physiques] ;
+– ils peuvent [se reproduire] et avoir [une descendance fertile].`},
+    {id:"diversite", titre:"La diversité dans une espèce", e:"🦒",
+     texte:`Cependant, à l'intérieur d'une même espèce, il existe une diversité [intraspécifique] qui est causée par différents phénomènes :
+– [la sélection sexuelle], comme chez le canard colvert ;
+– [le comportement], comme les chants différents chez le pouillot verdâtre ;
+– l'adaptation aux contraintes de [l'environnement] selon les différentes [aires de répartition] de l'espèce, comme pour la girafe ;
+– les capacités à se camoufler face à [la pression de prédation|la prédation|la (pression) de prédation], comme celle de la grive musicienne mangeant les escargots des haies.`},
+    {id:"retenir", titre:"À retenir", e:"📌",
+     texte:`Une même espèce regroupe sous le même [nom], des êtres vivants qui [se ressemblent] et peuvent [se reproduire entre eux] pour donner une [descendance] qui à son tour pourra [se reproduire].`},
+    {id:"mots", titre:"Les 4 définitions : le mot", e:"📚",
+     texte:`[Une espèce|espèce] : groupe d'êtres vivants qui peuvent se reproduire ensemble et dont la descendance n'est pas stérile.
+[Un hybride|hybride] : être vivant issu de la fécondation de deux espèces différentes. Il est le plus souvent stérile.
+[Une race|race] : groupe d'animaux domestiques qui appartiennent à la même espèce, mais qui présentent des différences.
+[Une famille|famille] : groupe de plusieurs espèces partageant des caractères communs.`},
+    {id:"defs", titre:"Les 4 définitions : par cœur", e:"🔍",
+     texte:`Une espèce : groupe d'êtres vivants qui peuvent [se reproduire] ensemble et dont la descendance n'est pas [stérile].
+Un hybride : être vivant issu de la [fécondation] de deux [espèces différentes]. Il est le plus souvent [stérile].
+Une race : groupe d'animaux [domestiques] qui appartiennent à la [même espèce], mais qui présentent des [différences].
+Une famille : groupe de plusieurs [espèces] partageant des [caractères communs].`}
+  ]});
+THEMES.forEach(t => { if (t.trous) t.mots = t.textes.map(x => ({en:x.id, fr:x.titre, e:x.e})); });
+
+/* découpe un texte en morceaux : {txt} ou {ok:[...]} */
+function decoupe(texte){
+  const parts = []; let n = 0;
+  texte.replace(/\[([^\]]+)\]|([^\[]+)/g, (m, trou, txt) => { parts.push(trou ? {i:n++, ok:trou.split("|")} : {txt}); return ""; });
+  return parts;
+}
+const sansAccent = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const normT = s => s.toLowerCase().replace(/[’`]/g,"'").replace(/[()]/g,"").replace(/\s+/g," ").trim();
+
+function ecranSvt(t){
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← Accueil</button>
+    <div class="entete"><h1>${t.e} ${t.nom}</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
+    <p class="doux">Facile : glisse les mots dans les trous. Difficile : tape-les toi-même. Réussis le niveau difficile sans faute pour gagner l'autocollant.</p>
+    <div class="themes">${t.textes.map(x => { const n = etat.m[t.id+":"+x.id] || 0; return `
+      <div class="theme" style="--c:${t.c};grid-template-columns:auto 1fr auto">
+        <span class="gros" aria-hidden="true">${n>=2 ? x.e : "📝"}</span>
+        <span><h2 style="font-size:1.2rem">${esc(x.titre)}</h2><span class="doux">${n>=2 ? "Maîtrisé ⭐" : n===1 ? "Facile réussi, essaie le difficile !" : "À apprendre"}</span></span>
+        <span class="niveaux"><button class="btn clair" data-t="${x.id}" data-n="facile">Facile</button><button class="btn" style="--c:${t.c}" data-t="${x.id}" data-n="dur">Difficile</button></span>
+      </div>`; }).join("")}
+    </div>
+    <button class="mode" id="alb"><b>🗂️ Mon album</b><span>Une leçon maîtrisée = un autocollant</span></button>
+  </div>`;
+  $("#ret").onclick = accueil; $("#alb").onclick = () => album(t);
+  app.querySelectorAll("[data-t]").forEach(b => b.onclick = () => trous(t, t.textes.find(x => x.id===b.dataset.t), b.dataset.n));
+}
+
+function trous(t, x, niveau){
+  const parts = decoupe(x.texte), blancs = parts.filter(p => p.ok);
+  let html = "";
+  if (niveau==="facile"){
+    const autres = melange(t.textes.filter(y => y!==x).flatMap(y => decoupe(y.texte).filter(p => p.ok).map(p => p.ok[0]))
+      .filter(m => !blancs.some(b => normT(b.ok[0])===normT(m))));
+    const pioche = melange(blancs.map(b => b.ok[0]).concat([...new Set(autres)].slice(0, 2)));
+    html = `<div class="banque" id="banque" aria-label="Mots à placer">${pioche.map((m,n) => `<button class="puce" draggable="true" id="p${n}">${esc(m)}</button>`).join("")}</div>`;
+  }
+  const corps = parts.map(p => p.txt !== undefined ? esc(p.txt).replace(/\n/g,"<br>")
+    : niveau==="facile" ? `<span class="trou" data-i="${p.i}" tabindex="0" role="button" aria-label="Trou ${p.i+1}"></span>`
+    : `<input class="trou-in" data-i="${p.i}" autocomplete="off" spellcheck="false" style="width:${Math.max(6, p.ok[0].length+2)}ch" aria-label="Trou ${p.i+1}">`).join("");
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <div class="haut"><button class="retour" id="ret">← ${t.nom}</button><span class="hp">${niveau==="facile" ? "Facile" : "Difficile"}</span></div>
+    <h2>${x.e} ${esc(x.titre)}</h2>
+    <p class="doux">${niveau==="facile" ? "Glisse chaque mot dans le bon trou avec la souris (ou clique sur un mot, puis sur un trou). Attention, il y a des mots en trop !" : "Tape le mot qui manque dans chaque trou. Les majuscules ne comptent pas."}</p>
+    ${html}
+    <div class="texte">${corps}</div>
+    <div class="haut"><span></span><button class="btn" style="--c:${t.c}" id="ok">Vérifier</button></div>
+    <div id="fb"></div>
+  </div>`;
+  $("#ret").onclick = () => ecranTheme(t);
+
+  if (niveau==="facile"){
+    const banque = $("#banque"); let choisi = null;
+    const place = (puce, trou) => {
+      if (trou.firstChild) banque.appendChild(trou.firstChild);
+      trou.appendChild(puce); trou.classList.add("plein"); puce.classList.remove("sel"); choisi = null;
+    };
+    const vide = trou => { if (trou.firstChild){ banque.appendChild(trou.firstChild); trou.classList.remove("plein"); } };
+    app.querySelectorAll(".puce").forEach(p => {
+      p.ondragstart = e => { e.dataTransfer.setData("text/plain", p.id); e.dataTransfer.effectAllowed = "move"; };
+      p.onclick = e => { e.stopPropagation(); if (p.parentElement.classList.contains("trou")) { vide(p.parentElement); return; }
+        app.querySelectorAll(".puce.sel").forEach(q => q.classList.remove("sel")); p.classList.add("sel"); choisi = p; };
+    });
+    app.querySelectorAll(".trou").forEach(tr => {
+      tr.ondragover = e => { e.preventDefault(); tr.classList.add("survol"); };
+      tr.ondragleave = () => tr.classList.remove("survol");
+      tr.ondrop = e => { e.preventDefault(); tr.classList.remove("survol"); const p = document.getElementById(e.dataTransfer.getData("text/plain"));
+        if (p){ const ancien = p.parentElement; place(p, tr); if (ancien.classList.contains("trou") && ancien!==tr) ancien.classList.remove("plein"); } };
+      const act = () => choisi ? place(choisi, tr) : vide(tr);
+      tr.onclick = act; tr.onkeydown = e => { if (e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); } };
+    });
+    banque.ondragover = e => e.preventDefault();
+    banque.ondrop = e => { e.preventDefault(); const p = document.getElementById(e.dataTransfer.getData("text/plain"));
+      if (p && p.parentElement.classList.contains("trou")) vide(p.parentElement); };
+  } else {
+    const ins = [...app.querySelectorAll(".trou-in")]; ins[0].focus();
+    ins.forEach((inp, n) => inp.onkeydown = e => { if (e.key==="Enter"){ e.preventDefault(); n < ins.length-1 ? ins[n+1].focus() : $("#ok").click(); } });
+  }
+
+  $("#ok").onclick = () => {
+    let bons = 0, accents = false;
+    const reps = blancs.map(b => {
+      const z = app.querySelector(`[data-i="${b.i}"]`);
+      return niveau==="facile" ? (z.textContent || "") : z.value;
+    });
+    if (reps.some(r => !r.trim())) { toast("Il reste des trous à remplir"); return; }
+    blancs.forEach((b, n) => {
+      const z = app.querySelector(`[data-i="${b.i}"]`), r = normT(reps[n]);
+      const art = v => v.replace(/^(le |la |les |l'|un |une |des )/,"");
+      let juste = b.ok.some(o => normT(o)===r || (niveau==="dur" && art(normT(o))===art(r)));
+      if (!juste && niveau==="dur" && b.ok.some(o => sansAccent(normT(o))===sansAccent(r))) { juste = true; accents = true; }
+      z.classList.remove("plein"); z.classList.add(juste ? "ok" : "ko");
+      if (juste) bons++;
+      else z.insertAdjacentHTML("afterend", `<span class="corrige">${esc(b.ok[0])}</span>`);
+      if (niveau==="dur") z.disabled = true;
+    });
+    app.querySelectorAll(".puce").forEach(p => p.disabled = true);
+    $("#ok").remove();
+    const parfait = bons===blancs.length, cle = t.id+":"+x.id, avant = etat.m[cle] || 0;
+    let gagne = false;
+    if (parfait){ const val = niveau==="dur" ? 2 : 1; if (val > avant){ etat.m[cle] = val; sauver(); gagne = val===2; } }
+    $("#fb").innerHTML = `<div class="pile">
+      <div class="retourq ${parfait?"ok":"ko"}">${bons} / ${blancs.length} ${parfait ? (gagne ? `Bravo, nouvel autocollant : <span class="gagne" style="display:inline-block">${x.e}</span>` : "Bravo, sans faute !") : "Les bonnes réponses sont écrites en vert à côté des erreurs."}
+      ${accents ? `<br><span style="font-weight:400">💡 Attention aux accents : c'est compté juste, mais regarde bien l'orthographe dans ta leçon.</span>` : ""}</div>
+      <div class="haut" style="justify-content:flex-end;flex-wrap:wrap;gap:10px">
+        <button class="btn clair" id="encore">Recommencer</button>
+        ${niveau==="facile" && parfait ? `<button class="btn" style="--c:${t.c}" id="dur">Passer au difficile →</button>` : `<button class="btn" style="--c:${t.c}" id="liste">Autres leçons</button>`}
+      </div></div>`;
+    $("#encore").onclick = () => trous(t, x, niveau);
+    if ($("#dur")) $("#dur").onclick = () => trous(t, x, "dur");
+    if ($("#liste")) $("#liste").onclick = () => ecranTheme(t);
+  };
+}
+
+/* ============================================================
+   DESSINS des animaux (SVG fait maison, 200 x 140).
+   Pour utiliser une vraie photo : mettre un fichier photos/<id>.jpg
+   à côté de ce fichier HTML, la photo remplace alors le dessin.
+   ============================================================ */
+const DESSINS = (() => {
+  const K = 'stroke="#2b2b2b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
+  const svg = (c, fond="#EAF4FB") => `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="200" height="140" rx="14" fill="${fond}"/>${c}</svg>`;
+  const sol = `<rect y="118" width="200" height="22" fill="#CBB89A"/>`;
+  const herbe = `<rect y="118" width="200" height="22" fill="#9CC97A"/>`;
+  const eau = `<rect y="0" width="200" height="140" rx="14" fill="#BFE3F2"/>`;
+  /* pattes d'insecte vues de dessus : n de chaque côté, réparties sur [y1,y2] autour de x */
+  function pattes(n, x, y1, y2, larg, long){
+    let s = "";
+    for (let i=0;i<n;i++){
+      const y = n===1 ? y1 : y1 + (y2-y1)*i/(n-1), dy = (i-(n-1)/2)*6;
+      s += `<path d="M${x-larg} ${y} l${-long*.6} ${dy-6} l${-long*.4} ${dy+4}" fill="none" ${K}/>`;
+      s += `<path d="M${x+larg} ${y} l${long*.6} ${dy-6} l${long*.4} ${dy+4}" fill="none" ${K}/>`;
+    }
+    return s;
+  }
+  const D = {};
+
+  /* ---------- petites bêtes ---------- */
+  D.escargot = svg(`${sol}
+    <path d="M24 118 Q30 94 58 96 L150 104 Q176 108 180 118 Z" fill="#C9B08F" ${K}/>
+    <path d="M40 98 L28 66 M48 97 L44 64 M34 104 L18 94 M38 101 L24 88" fill="none" ${K}/>
+    <circle cx="28" cy="64" r="4" fill="#2b2b2b"/><circle cx="44" cy="62" r="4" fill="#2b2b2b"/>
+    <circle cx="112" cy="72" r="38" fill="#C98A3C" ${K}/>
+    <path d="M112 72 m-4 0 a4 4 0 1 1 8 0 a10 10 0 1 1 -18 2 a18 18 0 1 1 30 -12 a28 28 0 1 1 -42 -10" fill="none" ${K}/>`);
+  D.limace = svg(`${sol}
+    <path d="M22 118 Q24 92 60 92 L160 102 Q190 108 176 118 Z" fill="#8A6A48" ${K}/>
+    <ellipse cx="78" cy="98" rx="32" ry="10" fill="#76583A" ${K}/>
+    <circle cx="70" cy="99" r="3" fill="#3b2a18"/>
+    <path d="M36 96 L24 64 M44 94 L40 62 M30 102 L14 92 M34 99 L20 86" fill="none" ${K}/>
+    <circle cx="24" cy="62" r="4" fill="#2b2b2b"/><circle cx="40" cy="60" r="4" fill="#2b2b2b"/>`);
+  D["ver-de-terre"] = svg(`${sol}
+    <path d="M18 92 C46 54 78 126 108 90 S166 64 184 96" fill="none" stroke="#2b2b2b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M18 92 C46 54 78 126 108 90 S166 64 184 96" fill="none" stroke="#E39A97" stroke-width="14" stroke-linecap="round"/>
+    <path d="M18 92 C46 54 78 126 108 90 S166 64 184 96" fill="none" stroke="#B9676A" stroke-width="14" stroke-dasharray="1.5 6"/>
+    <path d="M58 88 C64 96 70 104 76 106" fill="none" stroke="#C97A78" stroke-width="15"/>`);
+  D.papillon = svg(`
+    <path d="M100 56 C64 8 18 24 34 68 Q58 80 100 70 Z" fill="#F2A33A" ${K}/>
+    <path d="M100 56 C136 8 182 24 166 68 Q142 80 100 70 Z" fill="#F2A33A" ${K}/>
+    <path d="M100 72 C70 74 46 92 60 114 Q82 120 100 90 Z" fill="#E36A2E" ${K}/>
+    <path d="M100 72 C130 74 154 92 140 114 Q118 120 100 90 Z" fill="#E36A2E" ${K}/>
+    <circle cx="56" cy="44" r="7" fill="#2b2b2b"/><circle cx="144" cy="44" r="7" fill="#2b2b2b"/>
+    <circle cx="70" cy="98" r="5" fill="#FFF3C4" ${K}/><circle cx="130" cy="98" r="5" fill="#FFF3C4" ${K}/>
+    <ellipse cx="100" cy="74" rx="5" ry="30" fill="#4a3426" ${K}/>
+    ${pattes(3, 100, 66, 84, 4, 16)}
+    <path d="M98 46 Q90 26 84 20 M102 46 Q110 26 116 20" fill="none" ${K}/>
+    <circle cx="84" cy="20" r="3" fill="#2b2b2b"/><circle cx="116" cy="20" r="3" fill="#2b2b2b"/>`);
+  D.coccinelle = svg(`${herbe}
+    ${pattes(3, 100, 62, 98, 30, 22)}
+    <path d="M86 34 Q78 20 70 16 M114 34 Q122 20 130 16" fill="none" ${K}/>
+    <path d="M78 40 A22 16 0 0 1 122 40 Z" fill="#2b2b2b" ${K}/>
+    <circle cx="92" cy="34" r="3" fill="#fff"/><circle cx="108" cy="34" r="3" fill="#fff"/>
+    <ellipse cx="100" cy="80" rx="40" ry="42" fill="#D9322B" ${K}/>
+    <path d="M100 38 L100 122" ${K}/>
+    <circle cx="80" cy="62" r="7" fill="#2b2b2b"/><circle cx="120" cy="62" r="7" fill="#2b2b2b"/>
+    <circle cx="78" cy="94" r="7" fill="#2b2b2b"/><circle cx="122" cy="94" r="7" fill="#2b2b2b"/>
+    <circle cx="100" cy="46" r="7" fill="#2b2b2b"/>`);
+  D.fourmi = svg(`${sol}
+    ${pattes(3, 100, 54, 70, 6, 34)}
+    <path d="M95 22 Q90 10 82 4 M105 22 Q110 10 118 4" fill="none" ${K}/>
+    <circle cx="100" cy="32" r="12" fill="#5A2E1B" ${K}/>
+    <ellipse cx="100" cy="62" rx="8" ry="16" fill="#5A2E1B" ${K}/>
+    <circle cx="100" cy="82" r="4" fill="#5A2E1B" ${K}/>
+    <ellipse cx="100" cy="104" rx="16" ry="20" fill="#5A2E1B" ${K}/>`);
+  D.araignee = svg(`
+    <path d="M100 0 L100 46" stroke="#999" stroke-width="1"/>
+    ${pattes(4, 100, 50, 68, 10, 46)}
+    <ellipse cx="100" cy="58" rx="16" ry="14" fill="#3B3B3B" ${K}/>
+    <ellipse cx="100" cy="96" rx="24" ry="28" fill="#4E4E4E" ${K}/>
+    <path d="M100 78 l-8 10 l8 10 l8 -10 Z" fill="#C9B08F"/>
+    <circle cx="95" cy="50" r="2.5" fill="#fff"/><circle cx="105" cy="50" r="2.5" fill="#fff"/>`);
+  D.cloporte = svg(`${sol}
+    ${pattes(7, 100, 42, 102, 26, 14)}
+    <path d="M90 26 Q80 14 70 12 M110 26 Q120 14 130 12" fill="none" ${K}/>
+    <ellipse cx="100" cy="72" rx="30" ry="48" fill="#8C8F96" ${K}/>
+    ${[0,1,2,3,4,5,6,7].map(i => `<path d="M${74+Math.abs(i-3.5)*1.5} ${38+i*9} Q100 ${42+i*9} ${126-Math.abs(i-3.5)*1.5} ${38+i*9}" fill="none" stroke="#5f6268" stroke-width="2"/>`).join("")}`);
+  D["mille-pattes"] = svg(`${sol}
+    ${Array.from({length:22}, (_,i) => { const x = 22+i*7.4, y = 74+Math.sin(i/3)*10;
+      return `<path d="M${x} ${y-6} l-2 -12 M${x} ${y-6} l2 -12 M${x} ${y+6} l-2 12 M${x} ${y+6} l2 12" stroke="#2b2b2b" stroke-width="1.5" stroke-linecap="round"/>`; }).join("")}
+    ${Array.from({length:22}, (_,i) => `<circle cx="${22+i*7.4}" cy="${74+Math.sin(i/3)*10}" r="7" fill="#6B3B22" stroke="#2b2b2b" stroke-width="1.5"/>`).join("")}
+    <path d="M18 70 Q8 56 4 54 M18 76 Q8 70 2 72" fill="none" ${K}/>`);
+
+  /* ---------- vertébrés ---------- */
+  const poils = (x,y,n,l=6) => Array.from({length:n}, (_,i) => `<path d="M${x+i*7} ${y+(i%2)*4} l3 ${l}" stroke="#00000055" stroke-width="1.5"/>`).join("");
+  const ecailles = (x,y,cols,rows,r=5,col="#00000040") => { let s=""; for(let j=0;j<rows;j++) for(let i=0;i<cols;i++)
+    s += `<path d="M${x+i*r*2+(j%2)*r} ${y+j*r*1.4} a${r} ${r} 0 0 0 ${r*2} 0" fill="none" stroke="${col}" stroke-width="1.3"/>`; return s; };
+
+  D["chauve-souris"] = svg(`
+    <path d="M100 52 L60 40 L20 58 Q30 70 26 84 Q40 76 50 88 Q60 78 72 90 Q80 78 98 84 Z" fill="#5B4A44" ${K}/>
+    <path d="M100 52 L140 40 L180 58 Q170 70 174 84 Q160 76 150 88 Q140 78 128 90 Q120 78 102 84 Z" fill="#5B4A44" ${K}/>
+    <path d="M60 40 L26 84 M60 40 L50 88 M60 40 L72 90 M140 40 L174 84 M140 40 L150 88 M140 40 L128 90" stroke="#2b2b2b" stroke-width="1.5"/>
+    <ellipse cx="100" cy="72" rx="15" ry="24" fill="#7A6158" ${K}/>
+    ${poils(90,58,4,8)}${poils(90,74,4,8)}
+    <circle cx="100" cy="44" r="12" fill="#7A6158" ${K}/>
+    <path d="M90 36 L86 20 L96 32 M110 36 L114 20 L104 32" fill="#7A6158" ${K}/>
+    <circle cx="95" cy="43" r="2.5" fill="#111"/><circle cx="105" cy="43" r="2.5" fill="#111"/>`, "#2E3A5C");
+  D.phoque = svg(`${eau}<rect y="104" width="200" height="36" fill="#D8CBB0"/>
+    <path d="M30 104 Q24 70 56 62 Q92 52 130 70 Q160 84 178 98 L190 92 L186 108 L172 106 Q120 112 30 104 Z" fill="#8E9BA6" ${K}/>
+    ${[50,70,90,110,130].map(x => `<circle cx="${x}" cy="${86+(x%3)*4}" r="3" fill="#5f6b75"/>`).join("")}
+    ${poils(44,74,14,5)}
+    <path d="M80 100 Q86 116 100 116 Q96 104 92 98" fill="#7C8994" ${K}/>
+    <circle cx="44" cy="74" r="3.5" fill="#111"/><circle cx="32" cy="84" r="3" fill="#111"/>
+    <path d="M32 88 l-14 -2 M32 90 l-14 4" stroke="#2b2b2b" stroke-width="1"/>`);
+  D.renard = svg(`${herbe}
+    <path d="M150 74 Q186 70 192 46 Q186 86 152 92 Z" fill="#E07A2F" ${K}/>
+    <path d="M186 58 Q194 48 192 42 Q184 54 180 62 Z" fill="#fff" ${K}/>
+    <path d="M62 120 L66 92 M82 120 L82 94 M132 120 L130 92 M148 120 L150 90" stroke="#2b2b2b" stroke-width="7" stroke-linecap="round"/>
+    <path d="M60 70 Q100 56 152 70 Q158 92 136 96 L70 96 Q54 92 60 70 Z" fill="#E07A2F" ${K}/>
+    ${poils(76,66,9,7)}
+    <path d="M62 72 L40 66 L18 76 L40 86 Q56 88 66 84 Z" fill="#E07A2F" ${K}/>
+    <path d="M18 76 L40 86 Q30 88 22 82 Z" fill="#fff"/>
+    <path d="M40 66 L44 46 L54 66 M52 68 L58 50 L64 70" fill="#E07A2F" ${K}/>
+    <circle cx="36" cy="72" r="2.8" fill="#111"/><circle cx="18" cy="76" r="3" fill="#111"/>`);
+  D["mesange"] = svg(`
+    <path d="M10 104 Q100 96 190 110" stroke="#7a5230" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M118 74 L170 90 L160 98 L116 86 Z" fill="#5E7F9A" ${K}/>
+    <ellipse cx="100" cy="74" rx="32" ry="26" fill="#F2D33A" ${K}/>
+    <path d="M100 52 Q96 76 100 98" stroke="#1d1d1d" stroke-width="7" fill="none"/>
+    <path d="M100 62 Q130 58 136 82 Q120 92 104 84 Z" fill="#6E8FA8" ${K}/>
+    <path d="M110 66 l16 4 M110 74 l18 2" stroke="#ffffff99" stroke-width="2"/>
+    <circle cx="74" cy="48" r="20" fill="#1d1d1d" ${K}/>
+    <ellipse cx="72" cy="54" rx="11" ry="8" fill="#fff"/>
+    <path d="M56 46 L44 50 L56 52 Z" fill="#2b2b2b" ${K}/>
+    <circle cx="66" cy="44" r="2.5" fill="#fff"/>
+    <path d="M92 98 l-4 8 M104 98 l2 8" stroke="#2b2b2b" stroke-width="2.5"/>`);
+  D.manchot = svg(`<rect y="112" width="200" height="28" fill="#F4F7FA"/>
+    <path d="M100 18 Q132 22 134 70 Q136 108 118 118 L82 118 Q64 108 66 70 Q68 22 100 18 Z" fill="#1f2328" ${K}/>
+    <path d="M100 42 Q120 48 120 80 Q120 108 108 116 L92 116 Q80 108 80 80 Q80 48 100 42 Z" fill="#fff"/>
+    <path d="M70 58 Q50 80 54 100 Q64 90 72 78 Z M130 58 Q150 80 146 100 Q136 90 128 78 Z" fill="#1f2328" ${K}/>
+    <path d="M92 34 L76 40 L92 42 Z" fill="#F29A2E" ${K}/>
+    <circle cx="96" cy="32" r="2.5" fill="#fff"/>
+    <path d="M84 118 l-8 4 l14 0 M116 118 l8 4 l-14 0" fill="#F29A2E" ${K}/>`, "#D9EEF7");
+  D.truite = svg(`${eau}
+    <path d="M30 70 Q80 36 140 60 L176 40 L170 70 L178 100 L140 80 Q80 104 30 70 Z" fill="#9AA77A" ${K}/>
+    <path d="M40 74 Q90 92 140 76 Q90 86 40 74 Z" fill="#E8B4A8"/>
+    ${ecailles(62,58,9,3,4)}
+    ${[[70,58],[88,52],[104,62],[120,56],[96,72],[128,68],[78,70]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="2.5" fill="#3a2a1a"/>`).join("")}
+    <path d="M96 50 L104 38 L116 48 Z M88 88 L96 100 L104 88 Z" fill="#8A976A" ${K}/>
+    <circle cx="44" cy="64" r="4" fill="#fff" ${K}/><circle cx="44" cy="64" r="2" fill="#111"/>
+    <path d="M56 58 Q62 70 56 80" fill="none" ${K}/>`);
+  D.lezard = svg(`<rect width="200" height="140" rx="14" fill="#E3D3B4"/>
+    <path d="M104 92 Q140 120 190 104" fill="none" stroke="#2b2b2b" stroke-width="12" stroke-linecap="round"/>
+    <path d="M104 92 Q140 120 190 104" fill="none" stroke="#7A9A4A" stroke-width="8" stroke-linecap="round"/>
+    <path d="M70 58 L52 44 L44 50 M70 82 L50 98 L44 92 M108 60 L126 46 L134 52 M108 86 L126 100 L134 94" fill="none" stroke="#2b2b2b" stroke-width="5"/>
+    <ellipse cx="90" cy="72" rx="26" ry="16" fill="#7A9A4A" ${K}/>
+    ${ecailles(70,62,4,3,4,"#00000045")}
+    <path d="M64 66 Q40 56 26 72 Q40 88 64 78 Z" fill="#7A9A4A" ${K}/>
+    <circle cx="40" cy="66" r="2.5" fill="#111"/><circle cx="40" cy="78" r="2.5" fill="#111"/>`);
+  D.couleuvre = svg(`<rect width="200" height="140" rx="14" fill="#E3D3B4"/>
+    <path d="M178 112 C140 120 120 92 140 74 S150 30 100 40 S40 92 60 108 S30 116 24 102" fill="none" stroke="#2b2b2b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M178 112 C140 120 120 92 140 74 S150 30 100 40 S40 92 60 108 S30 116 24 102" fill="none" stroke="#7E8B55" stroke-width="14" stroke-linecap="round"/>
+    <path d="M178 112 C140 120 120 92 140 74 S150 30 100 40 S40 92 60 108 S30 116 24 102" fill="none" stroke="#5C6A38" stroke-width="14" stroke-dasharray="2 5"/>
+    <ellipse cx="22" cy="98" rx="12" ry="9" fill="#7E8B55" ${K}/>
+    <circle cx="18" cy="94" r="2.2" fill="#111"/>
+    <path d="M10 100 l-6 2 l-2 -3 M4 102 l-3 3" stroke="#C0392B" stroke-width="1.5" fill="none"/>`);
+  D.grenouille = svg(`${herbe}
+    <path d="M58 108 Q30 112 34 92 Q46 86 64 96 M142 108 Q170 112 166 92 Q154 86 136 96" fill="#5DAA4A" ${K}/>
+    <ellipse cx="100" cy="88" rx="44" ry="30" fill="#6CBF55" ${K}/>
+    <path d="M74 108 l-10 12 M126 108 l10 12" stroke="#2b2b2b" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="80" cy="60" r="12" fill="#6CBF55" ${K}/><circle cx="120" cy="60" r="12" fill="#6CBF55" ${K}/>
+    <circle cx="80" cy="58" r="6" fill="#111"/><circle cx="120" cy="58" r="6" fill="#111"/>
+    <path d="M80 82 Q100 94 120 82" fill="none" ${K}/>
+    <circle cx="96" cy="100" r="4" fill="#4E9A3E"/><circle cx="112" cy="96" r="3" fill="#4E9A3E"/>`);
+  D.salamandre = svg(`<rect width="200" height="140" rx="14" fill="#B7A27E"/>
+    <path d="M118 74 Q160 70 190 96" fill="none" stroke="#2b2b2b" stroke-width="14" stroke-linecap="round"/>
+    <path d="M118 74 Q160 70 190 96" fill="none" stroke="#1b1b1b" stroke-width="10" stroke-linecap="round"/>
+    <path d="M60 64 L46 46 M60 84 L44 104 M110 66 L126 48 M110 84 L124 104" stroke="#1b1b1b" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="86" cy="74" rx="34" ry="15" fill="#1b1b1b" ${K}/>
+    <ellipse cx="44" cy="74" rx="16" ry="12" fill="#1b1b1b" ${K}/>
+    ${[[40,68,4],[48,80,3],[66,66,5],[80,82,4],[96,64,5],[110,80,4],[134,72,4],[156,76,3],[172,84,3]].map(([x,y,r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#F5C518"/>`).join("")}
+    <circle cx="36" cy="72" r="2.2" fill="#555"/>`);
+  return D;
+})();
+
+/* ============================================================
+   SVT — CLÉS DE DÉTERMINATION
+   Chaque nœud : { q: "question", opts: [ { t:"critère", n: nœud suivant } ou { t:"critère", a:"id de l'animal" } ] }
+   ============================================================ */
+const ANIMAUX = {
+  "escargot":{nom:"Escargot"}, "limace":{nom:"Limace"}, "ver-de-terre":{nom:"Ver de terre"},
+  "papillon":{nom:"Papillon"}, "coccinelle":{nom:"Coccinelle"}, "fourmi":{nom:"Fourmi"},
+  "araignee":{nom:"Araignée"}, "cloporte":{nom:"Cloporte"}, "mille-pattes":{nom:"Mille-pattes", alt:["mille pattes"]},
+  "chauve-souris":{nom:"Chauve-souris", alt:["chauve souris"]}, "phoque":{nom:"Phoque"}, "renard":{nom:"Renard"},
+  "mesange":{nom:"Mésange charbonnière", alt:["mésange"]}, "manchot":{nom:"Manchot"},
+  "truite":{nom:"Truite"}, "lezard":{nom:"Lézard"}, "couleuvre":{nom:"Couleuvre", alt:["serpent"]},
+  "grenouille":{nom:"Grenouille"}, "salamandre":{nom:"Salamandre", alt:["salamandre tachetée"]}
+};
+const CLES = [
+  { id:"betes", titre:"Les petites bêtes du jardin", e:"🐞",
+    racine:{ q:"Combien a-t-il de pattes ?", opts:[
+      {t:"Pas de pattes", n:{ q:"A-t-il une coquille ?", opts:[
+        {t:"Avec une coquille", a:"escargot"},
+        {t:"Sans coquille", n:{ q:"A-t-il des tentacules ?", opts:[
+          {t:"4 tentacules sur la tête", a:"limace"},
+          {t:"Pas de tentacules, corps formé d'anneaux", a:"ver-de-terre"} ]}} ]}},
+      {t:"6 pattes", n:{ q:"Comment sont ses ailes ?", opts:[
+        {t:"2 paires de grandes ailes colorées", a:"papillon"},
+        {t:"Ailes dures (élytres) rouges à points noirs", a:"coccinelle"},
+        {t:"Pas d'ailes", a:"fourmi"} ]}},
+      {t:"8 pattes", a:"araignee"},
+      {t:"14 pattes", a:"cloporte"},
+      {t:"Plus de 30 pattes", a:"mille-pattes"} ]}},
+  { id:"vertebres", titre:"Les vertébrés", e:"🦊",
+    racine:{ q:"Sa peau est couverte de…", opts:[
+      {t:"Poils", n:{ q:"Comment sont ses membres ?", opts:[
+        {t:"Membres avant transformés en ailes de peau", a:"chauve-souris"},
+        {t:"Membres en forme de nageoires", a:"phoque"},
+        {t:"4 pattes pour marcher", a:"renard"} ]}},
+      {t:"Plumes", n:{ q:"Peut-il voler ?", opts:[
+        {t:"Ailes qui lui permettent de voler", a:"mesange"},
+        {t:"Ailes en forme de nageoires : il ne vole pas", a:"manchot"} ]}},
+      {t:"Écailles", n:{ q:"Comment sont ses membres ?", opts:[
+        {t:"Des nageoires", a:"truite"},
+        {t:"4 pattes", a:"lezard"},
+        {t:"Pas de membres", a:"couleuvre"} ]}},
+      {t:"Peau nue et humide", n:{ q:"Adulte, a-t-il une queue ?", opts:[
+        {t:"Pas de queue", a:"grenouille"},
+        {t:"Une queue", a:"salamandre"} ]}} ]}}
+];
+const feuilles = n => n.opts.flatMap(o => o.a ? [o.a] : feuilles(o.n));
+CLES.forEach(c => c.animaux = feuilles(c.racine));
+function chemin(n, id){ for (const o of n.opts){ if (o.a===id) return [o]; if (o.n){ const r = chemin(o.n, id); if (r) return [o, ...r]; } } return null; }
+
+THEMES.push({ id:"cl", nom:"Clés de détermination", matiere:"SVT", e:"🔑", c:"var(--svt)", cle:true, maitrise:2, unite:"animaux",
+  mots: CLES.flatMap(c => c.animaux).map(id => ({en:id, fr:ANIMAUX[id].nom})) });
+
+const figure = id => `<div class="fig"><img src="photos/${id}.jpg" alt="" onerror="this.remove()">${DESSINS[id]}</div>`;
+
+function arbre(n, surligne){
+  return `<div class="noeud"><div class="q">${esc(n.q)}</div><div class="branches">${n.opts.map(o => {
+    const on = surligne && surligne.includes(o);
+    return `<div class="branche"><div class="crit ${on?"on":""}">${esc(o.t)}</div><span class="fl ${on?"on":""}" aria-hidden="true">→</span>${o.n ? arbre(o.n, surligne) : `<div class="feuille ${on?"on":""}">${esc(ANIMAUX[o.a].nom)}</div>`}</div>`;
+  }).join("")}</div></div>`;
+}
+
+function ecranCles(t){
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← Accueil</button>
+    <div class="entete"><h1>🔑 Clés de détermination</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
+    <p class="doux">Facile : on te pose les questions de la clé une par une. Difficile : tu lis la clé tout seul et tu écris le nom de l'animal. Réussis le difficile pour gagner l'autocollant de l'animal.</p>
+    <div class="themes">${CLES.map(c => { const n = c.animaux.filter(id => niv(t,{en:id})>=2).length; return `
+      <div class="theme" style="--c:${t.c};grid-template-columns:auto 1fr auto">
+        <span class="gros" aria-hidden="true">${c.e}</span>
+        <span><h2 style="font-size:1.2rem">${esc(c.titre)}</h2><span class="doux">${n} / ${c.animaux.length} animaux trouvés</span></span>
+        <span class="niveaux"><button class="btn clair" data-c="${c.id}" data-n="voir">Voir la clé</button><button class="btn clair" data-c="${c.id}" data-n="facile">Facile</button><button class="btn" style="--c:${t.c}" data-c="${c.id}" data-n="dur">Difficile</button></span>
+      </div>`; }).join("")}
+    </div>
+    <button class="mode" id="alb"><b>🗂️ Mon album</b><span>Un animal identifié sans aide = un autocollant</span></button>
+  </div>`;
+  $("#ret").onclick = accueil; $("#alb").onclick = () => album(t);
+  app.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
+    const c = CLES.find(x => x.id===b.dataset.c);
+    if (b.dataset.n==="voir") return voirCle(t, c);
+    identifie({ t, c, niveau:b.dataset.n, qs:melange(c.animaux), i:0, res:[], nouveaux:[] });
+  });
+}
+
+function voirCle(t, c){
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← Clés de détermination</button>
+    <h1>${c.e} ${esc(c.titre)}</h1>
+    <p class="doux">On lit la clé de gauche à droite : à chaque étape, on choisit la case qui correspond à l'animal observé.</p>
+    <div class="cle">${arbre(c.racine)}</div>
+    <div class="album">${c.animaux.map(id => `<div class="sticker oui" style="aspect-ratio:auto"><span class="mini">${DESSINS[id]}</span><b>${esc(ANIMAUX[id].nom)}</b></div>`).join("")}</div>
+  </div>`;
+  $("#ret").onclick = () => ecranTheme(t);
+}
+
+function entCle(s){
+  return `<div class="haut"><button class="retour" id="ret">← Clés</button>
+    <div class="points">${s.qs.map((q,n) => `<i class="${n<s.res.length ? (s.res[n]?"ok":"ko") : (n===s.i?"ici":"")}"></i>`).join("")}</div></div>`;
+}
+
+function identifie(s){
+  const id = s.qs[s.i], t = s.t;
+  if (s.niveau==="facile"){
+    let noeud = s.c.racine, erreurs = 0, pas = [];
+    const etape = () => {
+      app.innerHTML = `<div class="pile" style="--c:${t.c}">${entCle(s)}
+        <div class="question"><p class="consigne">Observe bien cet animal et suis la clé « ${esc(s.c.titre)} »</p>${figure(id)}</div>
+        ${pas.length ? `<div class="pas">${pas.map(p => `<span>${esc(p)}</span>`).join(" → ")}</div>` : ""}
+        <h2 style="font-size:1.3rem">${esc(noeud.q)}</h2>
+        <div class="choix">${noeud.opts.map((o,n) => `<button data-o="${n}">${esc(o.t)}</button>`).join("")}</div>
+        <div id="fb"></div></div>`;
+      $("#ret").onclick = () => ecranTheme(t);
+      const bon = chemin(noeud, id)[0];
+      app.querySelectorAll("[data-o]").forEach(b => b.onclick = () => {
+        const o = noeud.opts[+b.dataset.o];
+        if (o!==bon){ erreurs++; b.classList.add("ko"); b.disabled = true;
+          $("#fb").innerHTML = `<div class="retourq ko">Ce n'est pas ça. Regarde encore le dessin et essaie une autre case.</div>`; return; }
+        pas.push(o.t);
+        if (o.n){ noeud = o.n; etape(); return; }
+        app.querySelectorAll("[data-o]").forEach(x => x.disabled = true); b.classList.add("ok");
+        const juste = erreurs===0; s.res.push(juste);
+        if (juste){ const k2 = t.id+":"+id; if ((etat.m[k2]||0) < 1){ etat.m[k2] = 1; sauver(); } }
+        $("#fb").innerHTML = `<div class="pile"><div class="retourq ${juste?"ok":"ko"}">C'est : ${esc(ANIMAUX[id].nom)} ! ${juste ? "Sans erreur, bravo." : "Trouvé, avec un peu d'aide."}</div>
+          <button class="btn" style="--c:${t.c};align-self:flex-end" id="next">${s.i===s.qs.length-1 ? "Voir mon score" : "Animal suivant →"}</button></div>`;
+        suite(s);
+      });
+    };
+    etape();
+  } else {
+    app.innerHTML = `<div class="pile" style="--c:${t.c}">${entCle(s)}
+      <div class="question"><p class="consigne">Utilise la clé pour trouver le nom de cet animal, puis écris-le</p>${figure(id)}</div>
+      <div class="cle" id="cle">${arbre(s.c.racine)}</div>
+      <div class="saisie"><input id="rep" autocomplete="off" spellcheck="false" placeholder="Nom de l'animal…" aria-label="Nom de l'animal"><button class="btn" style="--c:${t.c}" id="ok">Valider</button></div>
+      <div id="fb"></div></div>`;
+    $("#ret").onclick = () => ecranTheme(t);
+    const inp = $("#rep"); inp.focus();
+    const valide = () => {
+      if (!inp.value.trim()) return;
+      inp.disabled = true; $("#ok").disabled = true;
+      const a = ANIMAUX[id], art = v => v.replace(/^(le |la |les |l'|un |une |des )/,"");
+      const r = sansAccent(art(normT(inp.value)));
+      const juste = [a.nom].concat(a.alt||[]).some(x => sansAccent(art(normT(x)))===r);
+      s.res.push(juste);
+      if (juste){ const k2 = t.id+":"+id, av = etat.m[k2]||0; if (av < 2){ etat.m[k2] = 2; sauver(); s.nouveaux.push(id); } }
+      $("#cle").innerHTML = arbre(s.c.racine, chemin(s.c.racine, id));
+      $("#fb").innerHTML = `<div class="pile"><div class="retourq ${juste?"ok":"ko"}">${juste ? `Bravo ! C'est bien : ${esc(a.nom)}.` : `Non, c'est : ${esc(a.nom)}.`} <span class="doux">Le bon chemin est surligné dans la clé.</span>
+        ${juste && s.nouveaux.includes(id) ? `<br>Nouvel autocollant : <span class="mini gagne" style="display:inline-block;width:70px;vertical-align:middle">${DESSINS[id]}</span>` : ""}</div>
+        <button class="btn" style="--c:${t.c};align-self:flex-end" id="next">${s.i===s.qs.length-1 ? "Voir mon score" : "Animal suivant →"}</button></div>`;
+      suite(s);
+    };
+    $("#ok").onclick = valide; inp.onkeydown = e => { if (e.key==="Enter") valide(); };
+  }
+}
+
+function suite(s){
+  const n = $("#next"); n.focus();
+  n.onclick = () => { s.i++; if (s.i < s.qs.length) return identifie(s);
+    const bons = s.res.filter(Boolean).length;
+    app.innerHTML = `<div class="pile bilan" style="--c:${s.t.c}">
+      <h2>${bons===s.res.length ? "Parfait, tu sais utiliser cette clé !" : bons >= s.res.length*0.6 ? "Bien joué !" : "Regarde la clé encore une fois, puis réessaie."}</h2>
+      <div class="score">${bons} / ${s.res.length}</div>
+      ${s.nouveaux.length ? `<p>Nouveaux autocollants :</p><div class="nouveaux">${s.nouveaux.map(id => `<span class="mini gagne" style="width:80px">${DESSINS[id]}</span>`).join("")}</div>` : ""}
+      <div class="haut" style="justify-content:center;flex-wrap:wrap">
+        <button class="btn clair" id="th">← Clés</button>
+        ${s.niveau==="facile" ? `<button class="btn" style="--c:${s.t.c}" id="dur">Essayer en difficile</button>` : ""}
+        <button class="btn" style="--c:${s.t.c}" id="enc">Rejouer</button>
+      </div></div>`;
+    $("#th").onclick = () => ecranTheme(s.t);
+    $("#enc").onclick = () => identifie({...s, qs:melange(s.c.animaux), i:0, res:[], nouveaux:[]});
+    if ($("#dur")) $("#dur").onclick = () => identifie({...s, niveau:"dur", qs:melange(s.c.animaux), i:0, res:[], nouveaux:[]});
+  };
+}
+
+/* ============================================================
+   PHYSIQUE-CHIMIE — leçon (textes à trous) + exercices générés
+   ============================================================ */
+THEMES.push({ id:"pl", nom:"La leçon", matiere:"Physique-chimie", e:"📘", c:"var(--physique)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"proprietes", titre:"Solide, liquide, gaz", e:"🧊",
+     texte:`Un solide a une [forme propre|forme] et toujours le même [volume].
+Un liquide n'a pas de [forme propre] : il prend la forme du [récipient], mais il a un [volume propre].
+Un gaz n'a pas de forme propre, ni de [volume propre].`},
+    {id:"changements", titre:"Les changements d'état", e:"🔁",
+     texte:`Le passage de l'état solide à l'état liquide s'appelle la [fusion].
+Le passage de l'état liquide à l'état solide s'appelle la [solidification].
+Le passage de l'état liquide à l'état gazeux s'appelle la [vaporisation].
+Le passage de l'état gazeux à l'état liquide s'appelle la [liquéfaction].`},
+    {id:"palier", titre:"Le palier de température", e:"🌡️",
+     texte:`L'état physique (solide, liquide, gaz) de l'eau dépend de sa [température].
+Au cours des [changements d'état], la température de l'eau [ne varie pas] : on dit qu'il y a un [palier] de température.
+La température du palier est appelée [température du changement d'état|température de changement d'état].`},
+    {id:"mesures", titre:"Périmètre, aire et volume", e:"📐",
+     texte:`Pour un carré de 10 cm de côté :
+Le périmètre = 4 × 10 = [40] cm.
+L'aire (la surface) = 10 × 10 = [100] [cm²|cm2].
+Pour un cube de 10 cm de côté :
+Le volume = côté × côté × côté = 10 × 10 × 10 = [1 000|1000] [cm³|cm3].`}
+  ]});
+
+THEMES.forEach(t => { if (t.trous && !t.mots) t.mots = t.textes.map(x => ({en:x.id, fr:x.titre, e:x.e})); });
+const PHY = (() => {
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+  const ETATS = ["solide","liquide","gaz"];
+
+  const EAU = [["la grêle","solide"],["la neige","solide"],["le verglas","solide"],["un glaçon","solide"],["le givre","solide"],
+    ["la mer","liquide"],["la pluie","liquide"],["un nuage","liquide"],["la buée","liquide"],["la rosée","liquide"],
+    ["la vapeur d'eau","gaz"]];
+  const PROPS = [["prend la forme du récipient","liquide et gaz"],["peut être saisi avec les doigts","solide"],["a une forme propre","solide"],
+    ["occupe tout l'espace qu'on lui donne","gaz"],["sa surface libre est plane et horizontale","liquide"],["a un volume propre","solide et liquide"],
+    ["n'a ni forme propre, ni volume propre","gaz"],["n'a pas de forme propre mais a un volume propre","liquide"]];
+  const CHG = {fusion:"solide → liquide", solidification:"liquide → solide", vaporisation:"liquide → gaz", "liquéfaction":"gaz → liquide"};
+  const SITU = [["Un glaçon fond dans un verre.","fusion"],["Le verglas fond au soleil.","fusion"],["L'eau gèle dans le congélateur.","solidification"],
+    ["Une flaque d'eau gèle pendant la nuit.","solidification"],["L'eau bout dans la casserole.","vaporisation"],["Le linge mouillé sèche sur le fil.","vaporisation"],
+    ["De la buée se forme sur une vitre froide.","liquéfaction"],["De petites gouttes apparaissent sur une canette sortie du frigo.","liquéfaction"]];
+
+  /* ---------- courbe de température ---------- */
+  function courbe(){
+    const type = pick(["fusion","ebullition","solidification"]);
+    let pts = [], a, b, palier, avant, pendant, apres;
+    if (type==="fusion"){ const T0 = pick([-30,-20,-10]); a = -T0/10; b = a + rnd(3,5); palier = 0;
+      for (let t=0;t<=11;t++) pts.push(t<=a ? T0+10*t : t<=b ? 0 : 10*(t-b));
+      avant = "solide"; pendant = "solide et liquide"; apres = "liquide"; }
+    if (type==="ebullition"){ const T0 = pick([20,40,60]); a = (100-T0)/20; b = Math.min(11, a + rnd(4,6)); palier = 100;
+      for (let t=0;t<=b;t++) pts.push(t<=a ? T0+20*t : 100);
+      avant = "liquide"; pendant = "liquide et gaz"; apres = null; }
+    if (type==="solidification"){ const T0 = pick([20,30,40]); a = T0/10; b = a + rnd(3,4); palier = 0;
+      for (let t=0;t<=11;t++) pts.push(t<=a ? T0-10*t : t<=b ? 0 : -10*(t-b));
+      avant = "liquide"; pendant = "solide et liquide"; apres = "solide"; }
+    const ymin = Math.floor(Math.min(...pts)/10)*10, ymax = Math.ceil(Math.max(...pts)/10)*10 + 10;
+    const W=340, H=230, L=44, R=12, T=14, B=34, X = t => L + t*(W-L-R)/11, Y = v => T + (ymax-v)*(H-T-B)/(ymax-ymin);
+    let g = "";
+    for (let t=0;t<=11;t++) g += `<line x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${H-B}" stroke="#d6dbe6"/><text x="${X(t)}" y="${H-B+16}" font-size="11" text-anchor="middle">${t}</text>`;
+    for (let v=ymin; v<=ymax; v+=10) g += `<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="${v===0?"#9aa3b8":"#d6dbe6"}"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" text-anchor="end">${v}</text>`;
+    const poly = pts.map((v,t) => `${X(t)},${Y(v)}`).join(" ");
+    const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:min(460px,100%);background:#fff;border-radius:12px;color:#222;font-family:system-ui" role="img" aria-label="Courbe de température">
+      ${g}<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#222" stroke-width="1.5"/><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#222" stroke-width="1.5"/>
+      <polyline points="${poly}" fill="none" stroke="#C0392B" stroke-width="2.5"/>${pts.map((v,t) => `<circle cx="${X(t)}" cy="${Y(v)}" r="3.2" fill="#222"/>`).join("")}
+      <text x="${L}" y="10" font-size="11" font-weight="700">Température (°C)</text><text x="${W-R}" y="${H-4}" font-size="11" font-weight="700" text-anchor="end">Temps (min)</text></svg>`;
+    const intro = type==="fusion" ? "On chauffe de la glace et on relève sa température chaque minute."
+      : type==="ebullition" ? "On chauffe de l'eau liquide jusqu'à ébullition et on relève sa température chaque minute."
+      : "On refroidit de l'eau liquide et on relève sa température chaque minute.";
+    const nomChg = type==="fusion" ? "fusion" : type==="ebullition" ? "vaporisation" : "solidification";
+    return {pts, a, b, palier, avant, pendant, apres, html:`<p style="font-size:1rem;font-weight:400">${intro}</p>${svg}`, nomChg};
+  }
+  const ETATS2 = ["solide","liquide","gaz","solide et liquide","liquide et gaz"];
+
+  /* ---------- récipients penchés ---------- */
+  function recipients(){
+    const bon = rnd(0,2), lettres = ["A","B","C"];
+    const fig = [0,1,2].map(i => {
+      const ang = pick([-22,-15,15,22]), id = "clip"+Math.random().toString(36).slice(2,8);
+      const pente = i===bon ? 0 : (i===(bon+1)%3 ? Math.tan(ang*Math.PI/180) : -Math.tan(ang*Math.PI/180)*0.8);
+      const forme = `<g transform="rotate(${ang})"><path d="M-26 -50 L-26 40 Q-26 48 -18 48 L18 48 Q26 48 26 40 L26 -50" fill="none" stroke="#222" stroke-width="2.5"/></g>`;
+      const clip = `<clipPath id="${id}"><path transform="rotate(${ang})" d="M-26 -50 L-26 40 Q-26 48 -18 48 L18 48 Q26 48 26 40 L26 -50 Z"/></clipPath>`;
+      const eau = `<g clip-path="url(#${id})"><path d="M-80 ${10-80*pente} L80 ${10+80*pente} L80 120 L-80 120 Z" fill="#7EC8E3"/><path d="M-80 ${10-80*pente} L80 ${10+80*pente}" stroke="#1F6FA8" stroke-width="2.5"/></g>`;
+      return `<svg viewBox="-60 -64 120 128" style="width:120px;background:#fff;border-radius:12px"><defs>${clip}</defs>${eau}${forme}<text x="-52" y="-48" font-size="16" font-weight="700" fill="#222">${lettres[i]}</text></svg>`;
+    }).join("");
+    return {html:`<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">${fig}</div>`, bon:lettres[bon]};
+  }
+
+  const GEN = {
+    etats(){ const [x,e] = pick(EAU);
+      return {kind:"qcm", consigne:"Dans quel état physique est l'eau ?", html:esc(x.charAt(0).toUpperCase()+x.slice(1)), choix:ETATS, bonne:e,
+        rappel:`${x.charAt(0).toUpperCase()+x.slice(1)} : ${e}.`, astuce: x.includes("nuage")||x.includes("buée") ? "Le nuage et la buée sont faits de minuscules gouttes d'eau liquide. La vapeur d'eau, elle, est invisible." : ""}; },
+    proprietes(){ const [p,e] = pick(PROPS);
+      return {kind:"qcm", consigne:"Quel(s) état(s) physique(s) correspond(ent) à cette propriété ?", html:esc(p.charAt(0).toUpperCase()+p.slice(1)),
+        choix:["solide","liquide","gaz","solide et liquide","liquide et gaz"], bonne:e, rappel:`${p} → ${e}`,
+        astuce:"Solide : forme propre et volume propre. Liquide : volume propre, pas de forme propre. Gaz : ni forme ni volume propre."}; },
+    changements(){
+      const noms = Object.keys(CHG), r = Math.random();
+      if (r<.4){ const n = pick(noms); return {kind:"qcm", consigne:"Comment s'appelle ce changement d'état ?", html:CHG[n], choix:noms, bonne:n, rappel:`${CHG[n]} : ${n}`}; }
+      if (r<.7){ const n = pick(noms); return {kind:"qcm", consigne:`Que veut dire « ${n} » ?`, html:esc(n.charAt(0).toUpperCase()+n.slice(1)), choix:noms.map(x => CHG[x]), bonne:CHG[n], rappel:`${n} : ${CHG[n]}`}; }
+      const [s,n] = pick(SITU); return {kind:"qcm", consigne:"Quel changement d'état se produit ?", html:esc(s), choix:noms, bonne:n, rappel:`${s} → ${n}`};
+    },
+    courbe(){
+      const c = courbe(), q = pick(c.apres ? ["debut","pdebut","pfin","duree","etat","tpal","nom"] : ["debut","pdebut","duree","etat","tpal","nom"]);
+      const base = {consigne:"Lis la courbe et réponds", html:c.html};
+      if (q==="debut") return {...base, kind:"texte", html:c.html+"<p>Température au début de l'expérience (en °C) ?</p>", nombre:c.pts[0], ok:[String(c.pts[0])], rappel:`${c.pts[0]} °C`};
+      if (q==="pdebut") return {...base, kind:"texte", html:c.html+"<p>À quelle minute le palier commence-t-il ?</p>", nombre:c.a, ok:[String(c.a)], rappel:`${c.a} min`};
+      if (q==="pfin") return {...base, kind:"texte", html:c.html+"<p>À quelle minute le palier se termine-t-il ?</p>", nombre:c.b, ok:[String(c.b)], rappel:`${c.b} min`};
+      if (q==="duree") return {...base, kind:"texte", html:c.html+`<p>Combien de temps dure le palier (en min) ?</p>`, nombre:c.b-c.a, ok:[String(c.b-c.a)], rappel:`${c.b-c.a} min (de ${c.a} à ${c.b} min)`, astuce:"Durée = fin du palier − début du palier."};
+      if (q==="tpal") return {...base, kind:"texte", html:c.html+"<p>Quelle est la température du palier (en °C) ?</p>", nombre:c.palier, ok:[String(c.palier)], rappel:`${c.palier} °C`};
+      if (q==="nom") return {...base, kind:"qcm", html:c.html+"<p>Quel changement d'état a lieu pendant le palier ?</p>", choix:Object.keys(CHG), bonne:c.nomChg, rappel:c.nomChg};
+      const zones = [];
+      for (let t=0; t<c.pts.length; t++){ if (t<c.a) zones.push([t,c.avant]); else if (t>c.a && t<c.b) zones.push([t,c.pendant]); else if (t>c.b && c.apres) zones.push([t,c.apres]); }
+      const [t,e] = pick(zones);
+      return {...base, kind:"qcm", html:c.html+`<p>Dans quel état est l'eau à ${t} min ?</p>`, choix:ETATS2, bonne:e, rappel:`À ${t} min : ${e}`, astuce:"Pendant le palier, les deux états sont mélangés."};
+    },
+    surface(){ const r = recipients();
+      return {kind:"qcm", consigne:"On penche ces récipients. Dans lequel la surface de l'eau est-elle dessinée correctement ?", html:r.html, choix:["A","B","C"], bonne:r.bon,
+        rappel:`Le bon dessin est le ${r.bon}`, astuce:"La surface libre d'un liquide reste toujours plane et horizontale, même quand on penche le récipient."}; },
+    mesures(){
+      const c = rnd(2,12), q = pick(["perim","aire","volume","unite"]);
+      if (q==="perim") return {kind:"texte", consigne:"Calcule (réponds en cm)", html:`Périmètre d'un carré de ${c} cm de côté ?`, nombre:4*c, ok:[String(4*c)], rappel:`4 × ${c} = ${4*c} cm`};
+      if (q==="aire") return {kind:"texte", consigne:"Calcule (réponds en cm²)", html:`Aire d'un carré de ${c} cm de côté ?`, nombre:c*c, ok:[String(c*c)], rappel:`${c} × ${c} = ${c*c} cm²`};
+      if (q==="volume") return {kind:"texte", consigne:"Calcule (réponds en cm³)", html:`Volume d'un cube de ${c} cm de côté ?`, nombre:c*c*c, ok:[String(c*c*c)], rappel:`${c} × ${c} × ${c} = ${c*c*c} cm³`, astuce:"Volume = côté × côté × côté"};
+      const [m,u] = pick([["un périmètre","cm"],["une aire","cm²"],["un volume","cm³"]]);
+      return {kind:"qcm", consigne:"Choisis la bonne unité", html:`On mesure ${m} en…`, choix:["cm","cm²","cm³"], bonne:u, rappel:`${m} → ${u}`};
+    }
+  };
+  return {GEN};
+})();
+
+THEMES.push({ id:"px", nom:"Exercices", titre:"Les états de l'eau", matiere:"Physique-chimie", e:"🌡️", c:"var(--physique)", gram:true, muet:true, maitrise:5, unite:"compétences", gen:PHY.GEN,
+  mots:[
+    {en:"etats", fr:"Solide, liquide ou gaz ?", e:"💧"}, {en:"proprietes", fr:"Les propriétés", e:"🫙"},
+    {en:"changements", fr:"Les changements d'état", e:"🔁"}, {en:"courbe", fr:"Lire une courbe", e:"📈"},
+    {en:"surface", fr:"La surface libre", e:"🥛"}, {en:"mesures", fr:"Périmètre, aire, volume", e:"📐"}
+  ]});
+
+/* ============================================================
+   FRANÇAIS — Molière et Le Médecin malgré lui
+   ============================================================ */
+THEMES.push({ id:"fm", nom:"Molière : la leçon", matiere:"Français", e:"🎭", c:"var(--francais)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"bilan", titre:"Bilan : qui était Molière ?", e:"🎭",
+     texte:`Le vrai nom de Molière est [Jean-Baptiste Poquelin]. C'est un [dramaturge] (= un auteur de théâtre).
+Sa pièce [Le Médecin malgré lui] a été jouée pour la première fois le 6 août [1666] au [théâtre du Palais Royal|Palais Royal] à Paris.
+Il s'agit d'une [comédie] : le but est de [faire rire] le spectateur et de [tourner en ridicule] les défauts des gens de son époque.`},
+    {id:"vie", titre:"La vie de Molière", e:"👑",
+     texte:`Molière est né en [1622]. Son père était [marchand tapissier].
+Il rencontre la famille [Béjart] et fonde la troupe de [l'Illustre Théâtre|Illustre Théâtre].
+Sa troupe parcourt la France pendant [13] ans : elle joue par exemple à Lyon, Rennes ou Rouen.
+Molière a écrit [33] pièces, dont des succès comme [L'Avare|Les Précieuses ridicules].
+Le roi à son époque est [Louis XIV]. La troupe de Molière devient la troupe du [roi] tant le roi aime ses pièces.`},
+    {id:"ruse", titre:"Le Médecin malgré lui : la ruse", e:"🩺",
+     texte:`Une ruse, c'est un [piège|stratagème|mensonge], un [stratagème|piège|mensonge], un [mensonge|piège|stratagème].
+Quelqu'un de rusé est [malin|maligne].
+Dans la pièce, c'est [Martine] qui imagine la ruse.
+La jeune fille malade d'amour est [Lucinde], promise à un homme qu'elle n'aime pas.`},
+    {id:"exemples", titre:"Des exemples de ruses", e:"🦊",
+     texte:`Le [Renard] trompe le Corbeau dans une fable de [La Fontaine].
+Le [Cheval de Troie] est une ruse racontée dans l'Odyssée d'[Homère].
+Le [Petit Poucet] utilise lui aussi des ruses.`}
+  ]});
+THEMES.forEach(t => { if (t.trous && !t.mots) t.mots = t.textes.map(x => ({en:x.id, fr:x.titre, e:x.e})); });
+
+const FR = (() => {
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const BANQUE = {
+    vie:[
+      ["En quelle année Molière est-il né ?","1622",["1666","1789","1515"]],
+      ["Combien de pièces Molière a-t-il écrites ?","33",["12","50","100"]],
+      ["Quel était le métier de son père ?","marchand tapissier",["boulanger","médecin","comédien"]],
+      ["Quel est le vrai nom de Molière ?","Jean-Baptiste Poquelin",["Jean de La Fontaine","Charles Perrault","Pierre Corneille"]],
+      ["Quelle famille Molière rencontre-t-il ?","les Béjart",["les Médicis","les Perrault","les Bourbon"]],
+      ["Comment s'appelle la troupe fondée par Molière ?","l'Illustre Théâtre",["le Grand Théâtre","la Comédie-Française","le Théâtre du Soleil"]],
+      ["Pendant combien d'années sa troupe a-t-elle parcouru la France ?","13 ans",["3 ans","7 ans","25 ans"]],
+      ["Quel roi régnait à l'époque de Molière ?","Louis XIV",["Louis XVI","Henri IV","François Ier"]],
+      ["Vrai ou faux : la troupe de Molière devient la troupe du roi tant le roi aime ses pièces.","Vrai",["Faux"]],
+      ["Laquelle de ces pièces a été écrite par Molière ?",["L'Avare","Les Précieuses ridicules"],["Le Cid","Les Misérables","Le Petit Prince"]],
+      ["Qu'est-ce qu'un dramaturge ?","un auteur de théâtre",["un acteur","un poète","un médecin"]]
+    ],
+    medecin:[
+      ["Quand Le Médecin malgré lui a-t-il été joué pour la première fois ?","le 6 août 1666",["le 6 août 1622","le 14 juillet 1789","le 1er janvier 1700"]],
+      ["Où Le Médecin malgré lui a-t-il été joué pour la première fois ?","au théâtre du Palais Royal à Paris",["à Lyon","à Rouen","à Rennes"]],
+      ["Quel genre de pièce est Le Médecin malgré lui ?","une comédie",["une tragédie","une fable","un conte"]],
+      ["Quel est le but d'une comédie ?","faire rire et tourner en ridicule les défauts des gens",["faire peur au spectateur","faire pleurer le spectateur","raconter la vie du roi"]],
+      ["Dans la pièce, qui imagine la ruse ?","Martine",["Lucinde","le Renard","le Petit Poucet"]],
+      ["Comment s'appelle la jeune fille malade d'amour ?","Lucinde",["Martine","Cendrillon","Blanche-Neige"]],
+      ["Lucinde est promise à…","un homme qu'elle n'aime pas",["un prince qu'elle aime","un médecin","le roi"]]
+    ],
+    ruse:[
+      ["Une ruse, c'est…","un piège, un stratagème, un mensonge",["une maladie","une fête","une récompense"]],
+      ["Quelqu'un de rusé est…","malin",["maladroit","timide","malade"]],
+      ["Qui ruse face au Corbeau dans la fable ?","le Renard",["le Loup","le Lion","la Cigale"]],
+      ["Le Renard et le Corbeau est une fable de…","La Fontaine",["Homère","Molière","Charles Perrault"]],
+      ["Dans quelle œuvre trouve-t-on la ruse du Cheval de Troie ?","l'Odyssée d'Homère",["une fable de La Fontaine","Le Petit Poucet","Le Médecin malgré lui"]],
+      ["Quel personnage de conte utilise des ruses ?","le Petit Poucet",["la Belle au bois dormant","le Petit Chaperon rouge","Blanche-Neige"]]
+    ]
+  };
+  const gen = cle => () => {
+    const [q, b, f] = pick(BANQUE[cle]), bonne = Array.isArray(b) ? pick(b) : b;
+    return {kind:"qcm", consigne:"Choisis la bonne réponse", html:esc(q), choix:melange([bonne, ...f]), bonne, rappel:`${q} → ${bonne}`};
+  };
+  return { GEN:{ vie:gen("vie"), medecin:gen("medecin"), ruse:gen("ruse") } };
+})();
+
+THEMES.push({ id:"fq", nom:"Molière : le quiz", titre:"Quiz Molière", matiere:"Français", e:"❓", c:"var(--francais)", gram:true, muet:true, maitrise:5, unite:"thèmes", gen:FR.GEN,
+  mots:[ {en:"vie", fr:"La vie de Molière", e:"👑"}, {en:"medecin", fr:"Le Médecin malgré lui", e:"🩺"}, {en:"ruse", fr:"La ruse", e:"🦊"} ]});
+
+const MAITRISE = 3;      // bonnes réponses pour gagner l'autocollant d'un mot
+const NB_Q = 10;         // questions par série
+const CLE = "lukaEnglish.v1";
+
+/* ============================================================
+   GRAMMAIRE — The verb TO BE (présent)
+   Les phrases sont fabriquées au hasard à chaque question.
+   Les phrases de sa fiche d'exercices sont exclues (liste DEJA_FAIT).
+   ============================================================ */
+const GRAM = (() => {
+  const V = {I:"am",you:"are",he:"is",she:"is",it:"is",we:"are",they:"are"};
+  const CT = {am:"'m",is:"'s",are:"'re"};
+  /* k : p = personne, a = animal/créature, o = objet */
+  const SUJ = [
+    {s:"I",p:"I",k:"p",pron:1},{s:"you",p:"you",k:"p",pron:1},{s:"he",p:"he",k:"p",pron:1},
+    {s:"she",p:"she",k:"p",pron:1},{s:"it",p:"it",k:"o",pron:1},{s:"we",p:"we",k:"p",pron:1},{s:"they",p:"they",k:"p",pron:1},
+    {s:"my grandma",p:"she",k:"p"},{s:"my uncle",p:"he",k:"p"},{s:"Leo",p:"he",k:"p",nom:1},{s:"Chloé",p:"she",k:"p",nom:1},
+    {s:"my sister",p:"she",k:"p"},{s:"my brother",p:"he",k:"p"},{s:"the monkey",p:"it",k:"a"},{s:"the frog",p:"it",k:"a"},
+    {s:"the bear",p:"it",k:"a"},{s:"the sloth",p:"it",k:"a"},{s:"my cousins",p:"they",k:"p"},{s:"Max and Nina",p:"they",k:"p",nom:1},
+    {s:"the rabbits",p:"they",k:"a"},{s:"my dad and I",p:"we",k:"p"},{s:"you and Lily",p:"you",k:"p"},
+    {s:"the ball",p:"it",k:"o"},{s:"the house",p:"it",k:"o"},{s:"my bag",p:"it",k:"o"},{s:"the pencils",p:"they",k:"o"},{s:"the book",p:"it",k:"o"}
+  ];
+  const COMP = [
+    {c:"happy",k:"pa"},{c:"tired",k:"pa"},{c:"hungry",k:"pa"},{c:"sad",k:"pa"},{c:"scared",k:"pa"},{c:"funny",k:"pa"},
+    {c:"late",k:"p"},{c:"at school",k:"p"},{c:"ready",k:"p"},{c:"at home",k:"pa"},
+    {c:"in the garden",k:"pao"},{c:"in the kitchen",k:"pao"},{c:"in my bedroom",k:"pao"},
+    {c:"big",k:"ao"},{c:"small",k:"ao"},{c:"old",k:"ao"},{c:"black",k:"ao"},{c:"new",k:"o"},{c:"on the table",k:"o"}
+  ];
+  const DEJA_FAIT = new Set(["i am eleven years old","my mum is a nurse","we are in the classroom","the cat is under the table",
+    "you are my best friend","tom and lucy are english","it is cold today","my brothers are at school","i am hungry",
+    "the books are on the desk","my sister is tall","paul and i are friends","the dog is black","emma and sophie are sisters",
+    "my dad is in the garden","you and tom are late","i am french","she is happy","they are at home","the film is boring",
+    "we are in london","you are tired","he is spanish","you are ready","the shops are open","it is your bag",
+    "lisa is in your class","they are cousins","sam is my best friend","we are tired","you are hungry","the house is big",
+    "she is your teacher","she is my sister","i am sad","they are happy","we are in the park","you are late","he is tall",
+    "you are english","they are in the garden","she is late","you are eleven","the dog is hungry","i am late","your sister is at home"]);
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const pr = p => p==="I" ? "I" : p;
+
+  function modele(filtre){
+    for (let n=0; n<300; n++){
+      const s = pick(SUJ), c = pick(COMP.filter(x => x.k.includes(s.k)));
+      const m = {...s, c:c.c, v:V[s.p]};
+      if (filtre && !filtre(m)) continue;
+      if (DEJA_FAIT.has(norm(`${m.s} ${m.v} ${m.c}`))) continue;
+      return m;
+    }
+  }
+  /* toutes les bonnes façons d'écrire la phrase (la 1re est celle qu'on affiche) */
+  function aff(m){ const r=[`${m.s} ${m.v} ${m.c}`]; if (m.pron) r.push(`${m.s}${CT[m.v]} ${m.c}`); return r.map(cap); }
+  function neg(m){
+    const r = m.v==="am" ? [`I'm not ${m.c}`, `I am not ${m.c}`]
+      : [`${m.s} ${m.v}n't ${m.c}`, `${m.s} ${m.v} not ${m.c}`].concat(m.pron ? [`${m.s}${CT[m.v]} not ${m.c}`] : []);
+    return r.map(cap);
+  }
+  const ques = m => [`${cap(m.v)} ${m.s} ${m.c}?`];
+  function courte(m, oui){
+    const ap = m.s==="you" ? "I" : m.s==="I" ? "you" : m.p, v = V[ap];
+    if (oui) return [`Yes, ${pr(ap)} ${v}.`];
+    if (v==="am") return ["No, I'm not.","No, I am not."];
+    return [`No, ${ap} ${v}n't.`, `No, ${ap} ${v} not.`, `No, ${ap}${CT[v]} not.`];
+  }
+  const autreV = v => pick(["am","is","are"].filter(x => x!==v));
+
+  const TRAD = [
+    {fr:"Je suis content.", s:"I",p:"I",pron:1,c:"happy",f:"aff"},
+    {fr:"Le singe n'est pas dans la cuisine.", s:"the monkey",p:"it",c:"in the kitchen",f:"neg"},
+    {fr:"Sommes-nous en retard ?", s:"we",p:"we",pron:1,c:"late",f:"q"},
+    {fr:"Mes cousins sont à l'école.", s:"my cousins",p:"they",c:"at school",f:"aff"},
+    {fr:"Il n'est pas fatigué.", s:"he",p:"he",pron:1,c:"tired",f:"neg"},
+    {fr:"Est-elle à la maison ?", s:"she",p:"she",pron:1,c:"at home",f:"q"},
+    {fr:"Le ballon est petit.", s:"the ball",p:"it",c:"small",f:"aff"},
+    {fr:"Tu n'es pas drôle !", s:"you",p:"you",pron:1,c:"funny",f:"neg"},
+    {fr:"Les lapins sont noirs.", s:"the rabbits",p:"they",c:"black",f:"aff"},
+    {fr:"Es-tu prêt ?", s:"you",p:"you",pron:1,c:"ready",f:"q"},
+    {fr:"Je ne suis pas en retard.", s:"I",p:"I",pron:1,c:"late",f:"neg"},
+    {fr:"Le paresseux est dans le jardin.", s:"the sloth",p:"it",c:"in the garden",f:"aff"},
+    {fr:"Ma sœur a peur.", s:"my sister",p:"she",c:"scared",f:"aff"},
+    {fr:"Est-ce que les crayons sont sur la table ?", s:"the pencils",p:"they",c:"on the table",f:"q"},
+    {fr:"Nous ne sommes pas dans ma chambre.", s:"we",p:"we",pron:1,c:"in my bedroom",f:"neg"}
+  ].map(t => ({...t, v:V[t.p]}));
+
+  const souligne = (m, phrase) => phrase.replace(cap(m.s), `<u>${esc(cap(m.s))}</u>`);
+
+  const GEN = {
+    amisare(){
+      const m = modele();
+      return {kind:"qcm", consigne:"am, is ou are ?", html:`${esc(cap(m.s))} ____ ${esc(m.c)}.`,
+        choix:["am","is","are"], bonne:m.v, rappel:aff(m)[0]+".", astuce:"I → am · he / she / it → is · you / we / they → are"};
+    },
+    contractee(){
+      const p = pick(["I","you","he","she","it","we","they"]), v = V[p], n = Math.random()<.5, versCourt = Math.random()<.6;
+      const long = `${p} ${v}${n?" not":""}`;
+      const courts = n ? (v==="am" ? ["I'm not"] : [`${p} ${v}n't`, `${p}${CT[v]} not`]) : [`${p}${CT[v]}`];
+      if (versCourt) return {kind:"texte", consigne:"Écris la forme contractée", html:esc(long), ok:courts, rappel:courts.join(" ou ")};
+      const c = pick(courts);
+      return {kind:"texte", consigne:"Écris la forme longue (sans apostrophe)", html:esc(c), ok:[long], rappel:long};
+    },
+    pronom(){
+      const m = modele(m => !m.pron);
+      return {kind:"qcm", consigne:"Quel pronom remplace le groupe souligné ?", html:souligne(m, esc(aff(m)[0]))+".",
+        choix:["he","she","it","we","you","they"], bonne:m.p, rappel:`${cap(m.p)} ${m.v} ${m.c}.`,
+        astuce:"Une chose ou un animal → it · plusieurs → they · moi + quelqu'un → we"};
+    },
+    negative(){
+      const m = modele(); const ok = neg(m);
+      return {kind:"texte", consigne:"Mets la phrase à la forme négative (forme contractée)", html:esc(aff(m)[0])+".", ok, rappel:ok[0]+".",
+        astuce:"is not → isn't · are not → aren't · am not → 'm not"};
+    },
+    question(){
+      const m = modele(); const ok = ques(m);
+      return {kind:"texte", consigne:"Transforme en question. N'oublie pas le point d'interrogation !", html:esc(aff(m)[0])+".", ok, rappel:ok[0], q:true,
+        astuce:"Pour poser la question, on met le verbe devant : She is → Is she…?"};
+    },
+    courte(){
+      const m = modele(m => m.p!=="we" && m.s!=="you and Lily"), oui = Math.random()<.5, ok = courte(m, oui);
+      return {kind:"texte", consigne:`Réponds avec une réponse courte (${oui?"yes":"no"})`, html:esc(ques(m)[0])+` <span class="doux">(${oui?"yes":"no"})</span>`,
+        ok, rappel:ok[0], astuce:"Après Yes, on ne contracte jamais : « Yes, I am. »"};
+    },
+    ordre(){
+      const m = modele(), f = pick(["aff","neg","q"]);
+      let phrase = f==="aff" ? aff(m)[0] : f==="neg" ? neg(m)[0] : ques(m)[0];
+      const mots = phrase.replace("?"," ?").split(" ");
+      if (mots[0]!=="I" && !m.nom) mots[0] = mots[0].toLowerCase();
+      return {kind:"ordre", consigne:"Remets les mots dans l'ordre", mots, cible:mots.join(" "), rappel:phrase+(f==="q"?"":".")};
+    },
+    erreurs(){
+      const m = modele(), types = ["verbe","not","qverbe","yes"]; if (m.p==="I") types.push("amnt");
+      const t = pick(types);
+      let faux, ok, astuce;
+      if (t==="verbe"){ faux = `${cap(m.s)} ${autreV(m.v)} ${m.c}.`; ok = aff(m); astuce = "Vérifie l'accord : am, is ou are ?"; }
+      if (t==="not"){ faux = `${cap(m.s)} not ${m.v} ${m.c}.`; ok = neg(m); astuce = "not se place après le verbe : is not, are not…"; }
+      if (t==="qverbe"){ faux = `${cap(autreV(m.v))} ${m.s} ${m.c}?`; ok = ques(m); astuce = "Vérifie l'accord : am, is ou are ?"; }
+      if (t==="amnt"){ faux = `I amn't ${m.c}.`; ok = neg(m); astuce = "« amn't » n'existe pas : on écrit I'm not."; }
+      if (t==="yes"){ const ap = m.s==="you" ? "I" : m.s==="I" ? "you" : m.p, v = V[ap];
+        faux = `${cap(ques(m)[0])} Yes, ${pr(ap)}${CT[v]}.`; ok = [`${ques(m)[0]} Yes, ${pr(ap)} ${v}.`, `Yes, ${pr(ap)} ${v}.`];
+        astuce = "Après Yes, on ne contracte jamais."; }
+      return {kind:"texte", consigne:"Il y a une erreur : réécris la phrase correctement", html:esc(faux), ok, rappel:ok[0]+(/[.?]$/.test(ok[0])?"":"."), astuce};
+    },
+    traduction(){
+      const t = pick(TRAD); const ok = t.f==="aff" ? aff(t) : t.f==="neg" ? neg(t) : ques(t);
+      return {kind:"texte", consigne:"Traduis en anglais", html:esc(t.fr), ok, rappel:ok[0]+(t.f==="q"?"":".")};
+    }
+  };
+  return { GEN };
+})();
+
+/* ---------- sauvegarde ---------- */
+let etat = { m:{} };     // m["an:dog"] = nombre de bonnes réponses (0..3)
+try { const s = JSON.parse(localStorage.getItem(CLE) || "null"); if (s && s.m) etat = s; } catch(e) {}
+function sauver(){ try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch(e) {} }
+const k = (t,w) => t.id + ":" + w.en;
+const niv = (t,w) => etat.m[k(t,w)] || 0;
+const seuil = t => t.maitrise || MAITRISE;
+const acquis = t => t.mots.filter(w => niv(t,w) >= seuil(t)).length;
+const totalAcquis = () => THEMES.reduce((s,t) => s + acquis(t), 0);
+const totalMots = () => THEMES.reduce((s,t) => s + t.mots.length, 0);
+
+/* ---------- outils ---------- */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+const melange = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const norm = s => s.toLowerCase().replace(/[’`]/g,"'").replace(/[.!?,"]/g,"").replace(/\s+/g," ").trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); }
+
+/* ---------- voix anglaise ---------- */
+let voix = null;
+const parle = "speechSynthesis" in window;
+function chercheVoix(){ if(!parle) return; const v = speechSynthesis.getVoices();
+  voix = v.find(x=>/en-GB/i.test(x.lang)) || v.find(x=>/^en/i.test(x.lang)) || null; }
+if (parle){ chercheVoix(); speechSynthesis.onvoiceschanged = chercheVoix; }
+function dire(t){ if(!parle) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t);
+  u.lang="en-GB"; if(voix) u.voice=voix; u.rate=.85; speechSynthesis.speak(u); }
+const boutonSon = t => parle ? `<button class="hp" data-dire="${esc(t)}" aria-label="Écouter ${esc(t)}">🔊 Écouter</button>` : "";
+document.addEventListener("click", e => { const b=e.target.closest("[data-dire]"); if(b){ e.stopPropagation(); dire(b.dataset.dire); } });
+
+/* ---------- choix des mots : les moins connus d'abord ---------- */
+function tirage(t, n){
+  const tri = melange(t.mots).sort((a,b) => niv(t,a) - niv(t,b));
+  const pris = tri.slice(0, Math.min(n, tri.length));
+  while (pris.length < n) pris.push(t.mots[Math.floor(Math.random()*t.mots.length)]);
+  return melange(pris);
+}
+function intrus(t, w, champ){
+  const autres = melange(t.mots.filter(x => x[champ] !== w[champ])).slice(0,3);
+  return melange([w, ...autres]);
+}
+
+/* ============================================================
+   ÉCRANS
+   ============================================================ */
+function accueil(){
+  app.innerHTML = `<div class="pile">
+    <div class="entete">
+      <div><h1>Luka's sticker book</h1><p class="doux">Chaque mot ou règle que tu maîtrises te rapporte un autocollant.</p></div>
+      <div class="compteur">⭐ ${totalAcquis()} / ${totalMots()} autocollants</div>
+    </div>
+    ${[...new Set(THEMES.map(t => t.matiere||"Anglais"))].map(mat => `<h2 class="matiere">${mat==="Anglais" ? "🇬🇧 Anglais" : mat==="SVT" ? "🌿 SVT" : mat==="Physique-chimie" ? "⚗️ Physique-chimie" : mat==="Français" ? "📚 Français" : mat}</h2>
+    <div class="themes">${THEMES.filter(t => (t.matiere||"Anglais")===mat).map(t => `
+      <button class="theme" style="--c:${t.c}" data-theme="${t.id}">
+        <span class="gros" aria-hidden="true">${t.e}</span>
+        <span><h2>${t.nom}</h2><span class="doux">${acquis(t)} / ${t.mots.length} autocollants</span>
+        <span class="barre"><i style="width:${Math.round(acquis(t)/t.mots.length*100)}%"></i></span></span>
+      </button>`).join("")}
+    </div>`).join("")}
+    <div class="pied">
+      <button class="btn clair" id="exp">💾 Sauvegarder ma progression</button>
+      <button class="btn clair" id="imp">📂 Restaurer une sauvegarde</button>
+    </div>
+  </div>`;
+  app.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => ecranTheme(THEMES.find(t=>t.id===b.dataset.theme)));
+  $("#exp").onclick = exporter; $("#imp").onclick = () => $("#fichier").click();
+}
+
+const MODES = [
+  {id:"carte", nom:"📖 Apprendre", d:"Retourne les cartes pour réviser"},
+  {id:"choix", nom:"🔤 Trouve le mot", d:"Choisis le bon mot anglais"},
+  {id:"sens",  nom:"🇫🇷 Ça veut dire…", d:"Choisis la bonne traduction"},
+  {id:"ecrire",nom:"✏️ Lettres manquantes", d:"Écris le mot en entier"},
+  {id:"ecoute",nom:"👂 Dictée", d:"Écoute et écris le mot", son:true},
+  {id:"phrase",nom:"🧩 Remets la phrase", d:"Clique les mots dans l'ordre"},
+];
+
+function ecranTheme(t){
+  if (t.cle) return ecranCles(t);
+  if (t.trous) return ecranSvt(t);
+  if (t.gram) return ecranGram(t);
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← Accueil</button>
+    <div class="entete"><h1>${t.e} ${t.nom}</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
+    <div class="modes">
+      <button class="mode defi" data-mode="defi"><b>🏆 Le grand défi</b><span>${NB_Q} questions mélangées : c'est là qu'on gagne le plus d'autocollants</span></button>
+      ${MODES.filter(m => !m.son || parle).map(m => `<button class="mode" data-mode="${m.id}"><b>${m.nom}</b><span>${m.d}</span></button>`).join("")}
+      <button class="mode" data-mode="album"><b>🗂️ Mon album</b><span>Tous les autocollants du thème</span></button>
+    </div>
+  </div>`;
+  $("#ret").onclick = accueil;
+  app.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
+    const m = b.dataset.mode;
+    if (m==="album") album(t); else if (m==="carte") cartes(t, 0, melange(t.mots)); else serie(t, m);
+  });
+}
+
+/* ---------- cartes ---------- */
+function cartes(t, i, liste){
+  const w = liste[i];
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <div class="haut"><button class="retour" id="ret">← ${t.nom}</button><span class="doux">${i+1} / ${liste.length}</span></div>
+    <div class="flip" id="flip" role="button" tabindex="0" aria-label="Retourner la carte">
+      <div class="in">
+        <div class="face"><div class="emo">${w.e||"❓"}</div><div class="mot">${esc(w.fr)}</div><p class="doux">Clique pour voir en anglais</p></div>
+        <div class="face dos"><div class="emo">${w.e||"🇬🇧"}</div><div class="mot">${esc(w.en)}</div>${boutonSon(w.en)}</div>
+      </div>
+    </div>
+    <div class="haut">
+      <button class="btn clair" id="prec" ${i===0?"disabled":""}>← Précédente</button>
+      <button class="btn" style="--c:${t.c}" id="suiv">${i===liste.length-1?"Terminer":"Suivante →"}</button>
+    </div>
+  </div>`;
+  const f = $("#flip");
+  const tourne = () => { f.classList.toggle("vu"); if (f.classList.contains("vu")) dire(w.en); };
+  f.onclick = tourne; f.onkeydown = e => { if (e.key===" "||e.key==="Enter"){ e.preventDefault(); tourne(); } };
+  $("#ret").onclick = () => ecranTheme(t);
+  $("#prec").onclick = () => cartes(t, i-1, liste);
+  $("#suiv").onclick = () => i===liste.length-1 ? ecranTheme(t) : cartes(t, i+1, liste);
+}
+
+/* ---------- séries notées ---------- */
+function serie(t, mode){
+  if (t.gram){
+    const comp = mode==="defi" ? melange(t.mots) : [t.mots.find(w => w.en===mode)];
+    const qs = Array.from({length:NB_Q}, (_,n) => { const w = comp[n % comp.length]; return {w, g:(t.gen||GRAM.GEN)[w.en]()}; });
+    return question({ t, mode, qs: mode==="defi" ? melange(qs) : qs, i:0, res:[], nouveaux:[] });
+  }
+  const types = mode==="defi" ? ["choix","sens","ecrire"].concat(parle?["ecoute"]:[]) : [mode];
+  let qs;
+  if (mode==="phrase") qs = melange(t.phrases).map(p => ({type:"phrase", p}));
+  else qs = tirage(t, NB_Q).map((w,n) => ({type: types[n % types.length], w}));
+  if (mode==="defi"){ qs = melange(qs); const p = melange(t.phrases)[0]; qs.splice(NB_Q-1, 1, {type:"phrase", p}); }
+  const s = { t, mode, qs, i:0, res:[], nouveaux:[] };
+  question(s);
+}
+
+function entete(s){
+  return `<div class="haut"><button class="retour" id="ret">← ${s.t.nom}</button>
+    <div class="points">${s.qs.map((q,n) => `<i class="${n<s.res.length ? (s.res[n]?"ok":"ko") : (n===s.i?"ici":"")}"></i>`).join("")}</div></div>`;
+}
+
+function question(s){
+  if (s.t.gram) return questionGram(s);
+  const q = s.qs[s.i], w = q.w, t = s.t;
+  let corps = "";
+  if (q.type==="choix"){
+    const ops = intrus(t, w, "en");
+    corps = `<div class="question"><p class="consigne">Comment dit-on en anglais ?</p><div class="emo">${w.e||""}</div><div class="mot">${esc(w.fr)}</div></div>
+      <div class="choix">${ops.map(o => `<button data-v="${esc(o.en)}">${esc(o.en)}</button>`).join("")}</div>`;
+  } else if (q.type==="sens"){
+    const ops = intrus(t, w, "fr");
+    corps = `<div class="question"><p class="consigne">Que veut dire ce mot ?</p><div class="mot">${esc(w.en)}</div>${boutonSon(w.en)}</div>
+      <div class="choix">${ops.map(o => `<button data-v="${esc(o.fr)}">${esc(o.fr)}</button>`).join("")}</div>`;
+  } else if (q.type==="ecrire" || q.type==="ecoute"){
+    const indice = q.type==="ecrire" ? lettresCachees(w.en) : "";
+    corps = `<div class="question">${q.type==="ecrire"
+        ? `<p class="consigne">Écris le mot anglais en entier</p><div class="emo">${w.e||""}</div><div class="mot">${esc(w.fr)}</div><div class="indice" aria-label="Indice">${indice}</div>`
+        : `<p class="consigne">Écoute bien, puis écris le mot</p><div class="emo">🎧</div>${boutonSon(w.en)}`}</div>
+      <div class="saisie"><input id="rep" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Écris ici…" aria-label="Ta réponse"><button class="btn" style="--c:${t.c}" id="ok">Valider</button></div>`;
+  } else {
+    corps = `<div class="question"><p class="consigne">Clique sur les mots pour remettre la phrase dans l'ordre</p>${boutonSon(q.p)}</div>
+      <div class="ligne" id="ligne" aria-label="Ta phrase"></div>
+      <div class="tuiles" id="tuiles">${melange(q.p.split(" ").map((m,n)=>({m,n}))).map(o => `<button class="tuile" data-n="${o.n}">${esc(o.m)}</button>`).join("")}</div>
+      <button class="btn" style="--c:${t.c}; align-self:center" id="ok">Valider</button>`;
+  }
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">${entete(s)}${corps}<div id="fb"></div></div>`;
+  $("#ret").onclick = () => ecranTheme(t);
+
+  if (q.type==="choix" || q.type==="sens"){
+    const bonne = q.type==="choix" ? w.en : w.fr;
+    app.querySelectorAll(".choix button").forEach(b => b.onclick = () => {
+      app.querySelectorAll(".choix button").forEach(x => { x.disabled = true; if (x.dataset.v===bonne) x.classList.add("ok"); });
+      const juste = b.dataset.v === bonne; if (!juste) b.classList.add("ko");
+      fin(s, juste, `${esc(w.en)} = ${esc(w.fr)}`, w.en);
+    });
+  } else if (q.type==="ecrire" || q.type==="ecoute"){
+    const inp = $("#rep"); inp.focus();
+    if (q.type==="ecoute") setTimeout(() => dire(w.en), 300);
+    const valide = () => { if (!inp.value.trim()) return; inp.disabled = true; $("#ok").disabled = true;
+      fin(s, norm(inp.value)===norm(w.en), `${esc(w.en)} = ${esc(w.fr)}`, w.en); };
+    $("#ok").onclick = valide; inp.onkeydown = e => { if (e.key==="Enter") valide(); };
+  } else {
+    const ligne = $("#ligne"), tuiles = $("#tuiles");
+    [ligne, tuiles].forEach(z => z.onclick = e => { const b = e.target.closest(".tuile"); if (!b || b.disabled) return;
+      (b.parentElement===tuiles ? ligne : tuiles).appendChild(b); });
+    $("#ok").onclick = () => {
+      const rep = [...ligne.querySelectorAll(".tuile")].map(b => b.textContent).join(" ");
+      if (!rep) return;
+      app.querySelectorAll(".tuile").forEach(b => b.disabled = true); $("#ok").disabled = true;
+      fin(s, norm(rep)===norm(q.p), esc(q.p), q.p);
+    };
+  }
+}
+
+function lettresCachees(mot){
+  let lettres = [...mot].map((c,n) => /[a-z]/i.test(c) ? n : -1).filter(n => n>0);
+  const cache = new Set(melange(lettres).slice(0, Math.max(1, Math.round(lettres.length*0.45))));
+  return [...mot].map((c,n) => c===" " ? "&nbsp;" : cache.has(n) ? "_" : esc(c.toUpperCase())).join(" ");
+}
+
+function fin(s, juste, rappel, aDire, astuce){
+  const q = s.qs[s.i];
+  s.res.push(juste);
+  if (juste && q.w){
+    const cle = k(s.t, q.w), avant = etat.m[cle] || 0;
+    const max = seuil(s.t);
+    etat.m[cle] = Math.min(max, avant + 1); sauver();
+    if (avant < max && etat.m[cle] === max) s.nouveaux.push(q.w);
+  }
+  if (!juste && !s.t.muet) dire(aDire);
+  const gagne = juste && q.w && s.nouveaux.includes(q.w) && s.nouveaux[s.nouveaux.length-1]===q.w;
+  $("#fb").innerHTML = `<div class="pile">
+    <div class="retourq ${juste?"ok":"ko"}">${juste ? (gagne ? `Bravo ! Nouvel autocollant : <span class="gagne" style="display:inline-block">${q.w.e||"⭐"}</span>` : "Bravo !") : "Pas tout à fait. La bonne réponse :"} <span class="doux">${rappel}</span>${!juste && astuce ? `<br><span style="font-weight:400">💡 ${esc(astuce)}</span>` : ""}</div>
+    <button class="btn" style="--c:${s.t.c}; align-self:flex-end" id="next">${s.i===s.qs.length-1 ? "Voir mon score" : "Question suivante →"}</button></div>`;
+  const n = $("#next"); n.focus();
+  n.onclick = () => { s.i++; s.i < s.qs.length ? question(s) : bilan(s); };
+}
+
+function bilan(s){
+  const bons = s.res.filter(Boolean).length, tot = s.res.length;
+  const msg = bons===tot ? "Parfait, rien à redire !" : bons >= tot*0.7 ? "Très bien joué !" : bons >= tot*0.4 ? "Pas mal, encore un petit effort." : "On recommence ? Tu peux réviser avec les cartes.";
+  app.innerHTML = `<div class="pile bilan" style="--c:${s.t.c}">
+    <h2>${msg}</h2><div class="score">${bons} / ${tot}</div>
+    ${s.nouveaux.length ? `<p>Nouveaux autocollants :</p><div class="nouveaux">${s.nouveaux.map(w => `<span class="gagne" title="${esc(w.en)}">${w.e||"⭐"}</span>`).join("")}</div>` : ""}
+    <div class="haut" style="justify-content:center;flex-wrap:wrap">
+      <button class="btn clair" id="th">← ${s.t.nom}</button>
+      <button class="btn" style="--c:${s.t.c}" id="enc">Rejouer</button>
+    </div></div>`;
+  $("#th").onclick = () => ecranTheme(s.t); $("#enc").onclick = () => serie(s.t, s.mode);
+}
+
+
+/* ---------- écrans de grammaire ---------- */
+function ecranGram(t){
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← Accueil</button>
+    <div class="entete"><h1>${t.e} ${t.titre||"The verb to be"}</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
+    <div class="modes">
+      ${t.id==="tb" ? `<button class="mode" data-mode="regle"><b>📖 La règle</b><span>Le tableau à connaître</span></button>` : ""}
+      <button class="mode defi" data-mode="defi"><b>🏆 Le grand défi</b><span>${NB_Q} questions de tous les types, comme une évaluation</span></button>
+      ${t.mots.map(w => `<button class="mode" data-mode="${w.en}"><b>${w.e} ${esc(w.fr)}</b><span>${"●".repeat(niv(t,w))}${"○".repeat(seuil(t)-niv(t,w))}</span></button>`).join("")}
+      <button class="mode" data-mode="album"><b>🗂️ Mon album</b><span>Une règle maîtrisée = un autocollant</span></button>
+    </div></div>`;
+  $("#ret").onclick = accueil;
+  app.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
+    const m = b.dataset.mode; m==="album" ? album(t) : m==="regle" ? regle(t) : serie(t, m);
+  });
+}
+
+function regle(t){
+  const L = [["I","am","'m","am not","'m not","Am I…?"],["You","are","'re","are not","aren't","Are you…?"],
+    ["He / She / It","is","'s","is not","isn't","Is he / she / it…?"],["We","are","'re","are not","aren't","Are we…?"],
+    ["You","are","'re","are not","aren't","Are you…?"],["They","are","'re","are not","aren't","Are they…?"]];
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← To be</button>
+    <h1>To be = être</h1>
+    <div style="overflow-x:auto"><table class="regle">
+      <thead><tr><th></th><th>Affirmative</th><th>Contractée</th><th>Négative</th><th>Contractée</th><th>Question</th></tr></thead>
+      <tbody>${L.map(l => `<tr>${l.map((c,n) => n===0 ? `<th>${c}</th>` : `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table></div>
+    <div class="note"><b>Réponses courtes</b><br>Are you happy? <b>Yes, I am.</b> / <b>No, I'm not.</b><br>Is she French? <b>Yes, she is.</b> / <b>No, she isn't.</b></div>
+    <div class="note"><b>Attention</b><br>Après Yes, on ne contracte jamais : « Yes, I am. » et pas « Yes, I'm. »<br>« amn't » n'existe pas !</div>
+    <button class="btn" style="--c:${t.c};align-self:flex-start" id="go">Je m'entraîne →</button>
+  </div>`;
+  $("#ret").onclick = () => ecranTheme(t); $("#go").onclick = () => serie(t, "defi");
+}
+
+function questionGram(s){
+  const q = s.qs[s.i], g = q.g, t = s.t;
+  let corps = `<div class="question"><p class="consigne">${esc(g.consigne)}</p>${g.kind!=="ordre" ? `<div class="phr">${g.html}</div>` : ""}</div>`;
+  if (g.kind==="qcm") corps += `<div class="choix ${g.choix.length>4?"six":""}">${g.choix.map(c => `<button data-v="${c}">${c}</button>`).join("")}</div>`;
+  if (g.kind==="texte") corps += `<div class="saisie"><input id="rep" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Écris ici…" aria-label="Ta réponse"><button class="btn" style="--c:${t.c}" id="ok">Valider</button></div>`;
+  if (g.kind==="ordre") corps += `<div class="ligne" id="ligne" aria-label="Ta phrase"></div>
+    <div class="tuiles" id="tuiles">${melange(g.mots.map((m,n)=>({m,n}))).map(o => `<button class="tuile">${esc(o.m)}</button>`).join("")}</div>
+    <button class="btn" style="--c:${t.c};align-self:center" id="ok">Valider</button>`;
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">${entete(s)}${corps}<div id="fb"></div></div>`;
+  $("#ret").onclick = () => ecranTheme(t);
+
+  if (g.kind==="qcm"){
+    app.querySelectorAll(".choix button").forEach(b => b.onclick = () => {
+      app.querySelectorAll(".choix button").forEach(x => { x.disabled = true; if (x.dataset.v===g.bonne) x.classList.add("ok"); });
+      const juste = b.dataset.v===g.bonne; if (!juste) b.classList.add("ko");
+      fin(s, juste, esc(g.rappel), g.rappel, g.astuce);
+    });
+  }
+  if (g.kind==="texte"){
+    const inp = $("#rep"); inp.focus();
+    const valide = () => {
+      const v = inp.value.trim(); if (!v) return;
+      inp.disabled = true; $("#ok").disabled = true;
+      const bon = g.nombre!==undefined ? Math.abs(parseFloat(v.replace(",",".").replace(/\s/g,"")) - g.nombre) < 1e-9 : g.ok.some(o => norm(o)===norm(v));
+      if (bon && g.q && !/\?\s*$/.test(v)) return fin(s, false, esc(g.rappel), g.rappel, "Presque ! Il manquait le point d'interrogation.");
+      fin(s, bon, esc(g.rappel), g.rappel, g.astuce);
+    };
+    $("#ok").onclick = valide; inp.onkeydown = e => { if (e.key==="Enter") valide(); };
+  }
+  if (g.kind==="ordre"){
+    const ligne = $("#ligne"), tuiles = $("#tuiles");
+    [ligne, tuiles].forEach(z => z.onclick = e => { const b = e.target.closest(".tuile"); if (!b || b.disabled) return;
+      (b.parentElement===tuiles ? ligne : tuiles).appendChild(b); });
+    $("#ok").onclick = () => {
+      const rep = [...ligne.querySelectorAll(".tuile")].map(b => b.textContent).join(" ");
+      if (!rep) return;
+      app.querySelectorAll(".tuile").forEach(b => b.disabled = true); $("#ok").disabled = true;
+      fin(s, rep.toLowerCase()===g.cible.toLowerCase(), esc(g.rappel), g.rappel);
+    };
+  }
+}
+
+/* ---------- album ---------- */
+function album(t){
+  app.innerHTML = `<div class="pile" style="--c:${t.c}">
+    <button class="retour" id="ret">← ${t.nom}</button>
+    <div class="entete"><h1>Mon album ${t.e}</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
+    <p class="doux">${t.cle ? "Une case se remplit quand tu trouves le nom de l'animal au niveau difficile." : t.trous ? "Une case se remplit quand tu réussis la leçon au niveau difficile sans faute." : `Les cases en pointillés se remplissent quand tu réponds juste ${seuil(t)} fois${t.gram?" à ce type d'exercice":" au mot"}.`}</p>
+    <div class="album">${t.mots.map(w => { const n = niv(t,w), max = seuil(t); return n >= max
+      ? `<div class="sticker oui">${t.cle ? `<span class="mini">${DESSINS[w.en]}</span>` : `<span class="e">${w.e||"⭐"}</span>`}<b>${esc(t.gram||t.trous||t.cle ? w.fr : w.en)}</b>${t.gram||t.trous||t.cle ? "" : `<span class="doux">${esc(w.fr)}</span>`}</div>`
+      : `<div class="sticker non"><span class="e">?</span><span>${esc(w.fr)}</span><span aria-label="${n} sur ${max}">${"●".repeat(n)}${"○".repeat(max-n)}</span></div>`; }).join("")}
+    </div></div>`;
+  $("#ret").onclick = () => ecranTheme(t);
+}
+
+/* ---------- export / import ---------- */
+function exporter(){
+  const blob = new Blob([JSON.stringify(etat, null, 1)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "progression-anglais-luka-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a); a.click(); a.remove(); toast("Progression sauvegardée ✔");
+}
+$("#fichier").onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { try { const d = JSON.parse(r.result); if (!d.m) throw 0; etat = d; sauver(); accueil(); toast("Progression restaurée ✔"); }
+    catch(err){ toast("Ce fichier n'est pas une sauvegarde valide"); } };
+  r.readAsText(f); e.target.value = "";
+};
+
+accueil();
+</script>
+</body>
+</html>
