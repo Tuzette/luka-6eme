@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Histoire-géo · Luka's sticker book</title>
+<link rel="stylesheet" href="../commun/style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script src="../commun/moteur.js"></script>
+<script src="carte-monde.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU HISTOIRE-GÉO — modifier ici pour ajouter des thèmes.
+   La mécanique (exercices, autocollants) est dans ../commun/moteur.js
+   Leçons à trous : [mot|autre écriture acceptée], la 1re forme est affichée.
+   Quiz : [question, bonne réponse (ou liste de bonnes), [mauvaises réponses]]
+   ============================================================ */
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function quiz(BANQUE){
+  const gen = cle => () => {
+    const [q, b, f] = pick(BANQUE[cle]), bonne = Array.isArray(b) ? pick(b) : b;
+    return {kind:"qcm", consigne:"Choisis la bonne réponse", html:esc(q), choix:melange([bonne, ...f]), bonne, rappel:`${q} → ${bonne}`};
+  };
+  return Object.fromEntries(Object.keys(BANQUE).map(k => [k, gen(k)]));
+}
+
+const CH1 = "Chapitre 1 · Les débuts de l'humanité";
+const CH2 = "Chapitre 2 · La révolution du Néolithique";
+const CH3 = "Chapitre 3 · Premiers États, premières écritures";
+const CH5 = "Chapitre 5 · Les métropoles et leurs habitants";
+
+/* ============================================================
+   CHAPITRE 1 · Les débuts de l'humanité
+   ============================================================ */
+THEMES.push({ id:"hl", chapitre:CH1, nom:"Débuts de l'humanité : la leçon", matiere:"Histoire-géo", e:"🦴", c:"var(--histoire)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"apparition", titre:"L'apparition des humains", e:"🦴",
+     texte:`L'humanité apparaît au [Paléolithique], la première période de la [Préhistoire].
+Les [préhumains], comme [Toumaï] il y a 7 millions d'années ou [Lucy] l'australopithèque, sont [bipèdes].
+Plusieurs [espèces humaines] ont cohabité à la Préhistoire.
+[Homo habilis] est la première espèce humaine, apparue il y a [2,5 millions|2.5 millions] d'années en [Afrique].
+[Homo erectus] développe le [langage].
+[Homo sapiens] apparaît il y a [200 000|200000] ans : c'est la [seule] espèce humaine désormais.`},
+    {id:"peuplement", titre:"Les humains peuplent la Terre", e:"🌍",
+     texte:`Les espèces humaines, surtout [Homo sapiens], [migrent] à [pied|pieds] et peuplent très [progressivement] la [planète|Terre].`},
+    {id:"nomades", titre:"Quel mode de vie ? Des nomades", e:"🏕️",
+     texte:`Les hommes du Paléolithique sont [nomades] : ils n'ont pas d'[habitat fixe] mais se déplacent régulièrement, pour [chasser].
+Ils vivent dans des [campements] fabriqués avec ce qu'ils trouvent ([bois|pierres|peaux], [pierres|bois|peaux], [peaux|bois|pierres]).
+Les premiers hommes se nourrissent de la [chasse|pêche|cueillette], la [pêche|chasse|cueillette] et la [cueillette|chasse|pêche].`},
+    {id:"feu", titre:"Quel mode de vie ? Outils, feu et croyances", e:"🔥",
+     texte:`Ils fabriquent des [outils] en pierre et en bois.
+Le [feu] améliore leur vie et permet de [cuire] les aliments.
+Les humains du Paléolithique développent des [croyances] : ils [enterrent] leurs morts, [peignent] sur les grottes et [sculptent] des statues.`}
+  ]});
+
+THEMES.push({ id:"hq", chapitre:CH1, nom:"Débuts de l'humanité : le quiz", titre:"Quiz : les débuts de l'humanité", matiere:"Histoire-géo", e:"❓", c:"var(--histoire)", gram:true, muet:true, maitrise:5, unite:"thèmes",
+  gen:quiz({
+    apparition:[
+      ["L'humanité apparaît au…","Paléolithique",["Moyen Âge","Temps modernes","XXe siècle"]],
+      ["Qu'est-ce que le Paléolithique ?","la première période de la Préhistoire",["la dernière période de la Préhistoire","une espèce humaine","un préhumain"]],
+      ["Toumaï et Lucy sont des…","préhumains",["Homo sapiens","Homo erectus","Homo habilis"]],
+      ["Toumaï vivait il y a…","7 millions d'années",["2,5 millions d'années","200 000 ans","2 000 ans"]],
+      ["Lucy est une…","australopithèque",["Homo sapiens","Homo habilis","Homo erectus"]],
+      ["Vrai ou faux : les préhumains sont bipèdes.","Vrai",["Faux"]],
+      ["Vrai ou faux : plusieurs espèces humaines ont cohabité à la Préhistoire.","Vrai",["Faux"]],
+      ["Quelle est la première espèce humaine ?","Homo habilis",["Homo erectus","Homo sapiens","Lucy"]],
+      ["Homo habilis apparaît il y a…","2,5 millions d'années",["7 millions d'années","200 000 ans","2 000 ans"]],
+      ["Sur quel continent Homo habilis apparaît-il ?","en Afrique",["en Europe","en Asie","en Amérique"]],
+      ["Quelle espèce humaine développe le langage ?","Homo erectus",["Homo habilis","Homo sapiens","Toumaï"]],
+      ["Homo sapiens apparaît il y a…","200 000 ans",["7 millions d'années","2,5 millions d'années","2 000 ans"]],
+      ["Quelle est la seule espèce humaine aujourd'hui ?","Homo sapiens",["Homo habilis","Homo erectus","Lucy"]]
+    ],
+    peuplement:[
+      ["Quelle espèce humaine a surtout peuplé la planète ?","Homo sapiens",["Homo habilis","Lucy","Toumaï"]],
+      ["Comment les humains se déplacent-ils pour peupler la planète ?","à pied",["en avion","en voiture","en train"]],
+      ["Les humains peuplent la planète…","très progressivement",["en quelques jours","en une seule année","d'un seul coup"]],
+      ["Vrai ou faux : les espèces humaines migrent pour peupler la Terre.","Vrai",["Faux"]],
+      ["Vrai ou faux : seule l'espèce Homo sapiens a migré.","Faux",["Vrai"]]
+    ],
+    vie:[
+      ["Les hommes du Paléolithique sont nomades : cela veut dire…","qu'ils n'ont pas d'habitat fixe et se déplacent régulièrement",["qu'ils vivent toujours au même endroit","qu'ils vivent dans des villes","qu'ils ne chassent jamais"]],
+      ["Comment appelle-t-on des humains qui n'ont pas d'habitat fixe et se déplacent régulièrement ?","des nomades",["des préhumains","des bipèdes","des australopithèques"]],
+      ["Pourquoi les hommes du Paléolithique se déplacent-ils régulièrement ?","pour chasser",["pour faire du commerce","pour visiter le monde","pour aller à l'école"]],
+      ["Où vivent les hommes du Paléolithique ?","dans des campements",["dans des villes","dans des châteaux","dans des immeubles"]],
+      ["Avec quoi fabriquent-ils leurs campements ?","du bois, des pierres et des peaux",["des briques et du ciment","du métal et du verre","du plastique"]],
+      ["De quoi se nourrissent les premiers hommes ?","de la chasse, la pêche et la cueillette",["uniquement de la pêche","de pain et de fromage","de repas achetés au marché"]],
+      ["En quoi fabriquent-ils leurs outils ?","en pierre et en bois",["en fer","en plastique","en or"]],
+      ["Que permet le feu ?","d'améliorer leur vie et de cuire les aliments",["de voyager plus vite","de fabriquer des outils en fer","de parler"]],
+      ["Les humains du Paléolithique développent des croyances. Lequel de ces gestes le montre ?",["ils enterrent leurs morts","ils peignent sur les grottes","ils sculptent des statues"],["ils chassent","ils pêchent","ils cueillent des fruits"]],
+      ["Où les humains du Paléolithique peignent-ils ?","sur les grottes",["sur du papier","sur des tableaux","sur les murs des maisons"]]
+    ]
+  }),
+  mots:[ {en:"apparition", fr:"L'apparition des humains", e:"🦴"}, {en:"peuplement", fr:"Les humains peuplent la Terre", e:"🌍"}, {en:"vie", fr:"Quel mode de vie ?", e:"🔥"} ]});
+
+/* ============================================================
+   CHAPITRE 2 · La révolution du Néolithique
+   ============================================================ */
+THEMES.push({ id:"h2l", chapitre:CH2, nom:"Néolithique : la leçon", matiere:"Histoire-géo", e:"🌾", c:"var(--histoire)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"mode", titre:"Un nouveau mode de vie", e:"🌾",
+     texte:`Le Néolithique va de [10 000|10000] av. J.-C. à [3 300|3300] av. J.-C.
+Au [Proche-Orient] vers 10 000 av. J.-C., des humains deviennent [sédentaires] : ils restent dans un [village].
+Ils inventent l'[élevage|agriculture] et l'[agriculture|élevage], [défrichent] et [irriguent] leurs terres.`},
+    {id:"societe", titre:"Une nouvelle société", e:"🏺",
+     texte:`Un [artisanat] se développe : [métallurgie|poterie|tissage], [poterie|métallurgie|tissage], [tissage|métallurgie|poterie]...
+Des [chefs] dirigent les villages et les [guerres] sont plus fréquentes.
+Les [croyances] poussent à construire des [menhirs] comme à [Carnac], des [dolmens], des [cercles de pierre] comme à [Stonehenge] et des [tumulus] (tombeaux).`},
+    {id:"connaitre", titre:"Connaître la Préhistoire", e:"🔍",
+     texte:`Les [fouilles archéologiques] révèlent des [ossements|outils|œuvres|oeuvres], [outils|ossements|œuvres|oeuvres], [œuvres|oeuvres|ossements|outils]... qui permettent de connaître la Préhistoire.
+Mais ces traces sont [rares] et l'[écriture] n'existait pas.
+L'[archéologie expérimentale] [reconstitue] des gestes du passé pour mieux les comprendre.`},
+    {id:"frise", titre:"La frise de la Préhistoire", e:"📏",
+     texte:`La Préhistoire commence avec les [premiers humains], il y a [2,5 millions|2.5 millions] d'années.
+Au [Paléolithique], les humains sont [chasseurs|cueilleurs], [cueilleurs|chasseurs] et [nomades].
+Au [Néolithique], à partir de 10 000 av. J.-C., ils sont [éleveurs|agriculteurs], [agriculteurs|éleveurs] et [sédentaires].
+Vers 3 300 av. J.-C., l'[écriture] marque le début de l'[Histoire].`}
+  ]});
+
+THEMES.push({ id:"h2q", chapitre:CH2, nom:"Néolithique : le quiz", titre:"Quiz : la révolution du Néolithique", matiere:"Histoire-géo", e:"❓", c:"var(--histoire)", gram:true, muet:true, maitrise:5, unite:"thèmes",
+  gen:quiz({
+    mode:[
+      ["Quand commence le Néolithique ?","vers 10 000 av. J.-C.",["vers 3 300 av. J.-C.","il y a 2,5 millions d'années","il y a 200 000 ans"]],
+      ["Quand se termine le Néolithique ?","vers 3 300 av. J.-C.",["vers 10 000 av. J.-C.","il y a 2,5 millions d'années","il y a 200 000 ans"]],
+      ["Où des humains deviennent-ils sédentaires vers 10 000 av. J.-C. ?","au Proche-Orient",["en Europe","en Amérique","en Océanie"]],
+      ["Des humains sédentaires…","restent dans un village",["se déplacent sans arrêt","vivent dans des campements","n'ont pas d'habitat fixe"]],
+      ["Qu'inventent les humains du Néolithique ?","l'élevage et l'agriculture",["le feu","l'écriture","la chasse"]],
+      ["Que font-ils de leurs terres ?","ils les défrichent et les irriguent",["ils les abandonnent","ils y construisent des villes","ils les vendent"]],
+      ["Vrai ou faux : au Néolithique, des humains deviennent nomades.","Faux",["Vrai"]]
+    ],
+    societe:[
+      ["Quel artisanat se développe au Néolithique ?",["la métallurgie","la poterie","le tissage"],["l'imprimerie","l'informatique","l'automobile"]],
+      ["Qui dirige les villages au Néolithique ?","des chefs",["des pharaons","des députés","personne"]],
+      ["Au Néolithique, les guerres sont…","plus fréquentes",["moins fréquentes","inexistantes"]],
+      ["Qu'est-ce qui pousse à construire des menhirs et des dolmens ?","les croyances",["le commerce","la chasse","l'écriture"]],
+      ["Où trouve-t-on des menhirs, d'après la leçon ?","à Carnac",["à Uruk","à Londres","au Caire"]],
+      ["Stonehenge est un…","cercle de pierre",["tumulus","village","temple"]],
+      ["Qu'est-ce qu'un tumulus ?","un tombeau",["un outil","un village","un cercle de pierre"]],
+      ["Quel monument les croyances poussent-elles à construire au Néolithique ?",["des menhirs","des dolmens","des cercles de pierre","des tumulus"],["des châteaux forts","des cathédrales","des gratte-ciel"]]
+    ],
+    connaitre:[
+      ["Qu'est-ce qui permet de connaître la Préhistoire ?","les fouilles archéologiques",["les livres écrits à l'époque","les journaux","les photos"]],
+      ["Que révèlent les fouilles archéologiques ?",["des ossements","des outils","des œuvres"],["des livres","des lettres","des photos"]],
+      ["Pourquoi est-il difficile de connaître la Préhistoire ?","les traces sont rares et l'écriture n'existait pas",["il n'y a aucune trace","personne ne s'y intéresse","les livres de l'époque sont perdus"]],
+      ["Que fait l'archéologie expérimentale ?","elle reconstitue des gestes du passé pour mieux les comprendre",["elle invente des légendes","elle écrit l'histoire des rois","elle fouille uniquement les tombeaux"]]
+    ],
+    frise:[
+      ["Quelle est la première période de la Préhistoire ?","le Paléolithique",["le Néolithique","l'Antiquité","le Moyen Âge"]],
+      ["Quelle période vient après le Paléolithique ?","le Néolithique",["l'Antiquité","le Moyen Âge","les Temps modernes"]],
+      ["Au Paléolithique, les humains sont…","chasseurs, cueilleurs et nomades",["éleveurs, agriculteurs et sédentaires","éleveurs, cueilleurs et sédentaires","agriculteurs, chasseurs et nomades"]],
+      ["Au Néolithique, les humains deviennent…","éleveurs, agriculteurs et sédentaires",["chasseurs, cueilleurs et nomades","chasseurs, agriculteurs et nomades","cueilleurs, éleveurs et nomades"]],
+      ["Qu'est-ce qui marque la fin de la Préhistoire et le début de l'Histoire ?","l'écriture",["l'agriculture","le feu","l'élevage"]],
+      ["La Préhistoire commence avec les premiers humains, il y a…","2,5 millions d'années",["10 000 ans","3 300 ans","200 ans"]]
+    ]
+  }),
+  mots:[ {en:"mode", fr:"Un nouveau mode de vie", e:"🌾"}, {en:"societe", fr:"Une nouvelle société", e:"🏺"}, {en:"connaitre", fr:"Connaître la Préhistoire", e:"🔍"}, {en:"frise", fr:"La frise", e:"📏"} ]});
+
+/* ============================================================
+   CHAPITRE 3 · Premiers États, premières écritures
+   ============================================================ */
+THEMES.push({ id:"h3l", chapitre:CH3, nom:"Premiers États : la leçon", matiere:"Histoire-géo", e:"🏛️", c:"var(--histoire)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"uruk", titre:"L'exemple d'Uruk", e:"🏛️",
+     texte:`Uruk est l'une des premières [cités-États|cité-États|cités-Etats|cité-Etats|cites-etats], en [Mésopotamie].
+Un [roi] dirige la cité, les habitants payent des [impôts], ils achètent et vendent au [marché].
+La ville est protégée par une [muraille].
+Uruk est aussi un centre [religieux] : on y trouve des [temples].
+L'épopée de [Gilgamesh], plus ancienne [légende] connue, raconte les aventures de ce roi légendaire.`},
+    {id:"croissant", titre:"Le Croissant fertile : la Mésopotamie", e:"🗺️",
+     texte:`La Mésopotamie et l'Égypte se trouvent dans le [Croissant fertile].
+Les fleuves de Mésopotamie sont le [Tigre|Euphrate] et l'[Euphrate|Tigre].
+En Mésopotamie vers [3500|3 500] av. J.-C. se développent des [cités-États|cité-États|cités-Etats|cité-Etats|cites-etats] (comme Uruk, [Ur|Mari], [Mari|Ur]).
+Ce sont de petits États composés d'une [ville] et de la [campagne] qui l'entoure.`},
+    {id:"egypte", titre:"Le Croissant fertile : l'Égypte", e:"🔺",
+     texte:`L'Égypte est organisée autour du [Nil].
+Le [pharaon] (roi) dirige le pays, aidé des [fonctionnaires].
+Il fait construire [temples|pyramides] et [pyramides|temples].
+À sa mort, son corps est [momifié] : les Égyptiens croient qu'il rejoint les [dieux].`},
+    {id:"ecritures", titre:"Les premières écritures", e:"✍️",
+     texte:`Dans l'ordre, on trouve : les [pictogrammes], le [cunéiforme], les [hiéroglyphes], puis l'[alphabet].
+Les pictogrammes, inventés en [Mésopotamie], sont des [dessins].
+Le cunéiforme utilise des [signes], les hiéroglyphes des signes et dessins : tous les deux fonctionnent comme des [rébus].
+L'alphabet, inventé en [Phénicie], suit le principe : 1 [lettre] = 1 [son].`},
+    {id:"pourquoi", titre:"Pourquoi écrire ?", e:"📜",
+     texte:`On écrit pour [compter] : les [récoltes|impôts] et les [impôts|récoltes].
+On écrit pour [gouverner] : les [décisions|lois] et les [lois|décisions].
+On écrit pour [raconter] : les [évènements|événements|croyances] et les [croyances|évènements|événements].`},
+    {id:"scribes", titre:"Les scribes et la fin de la Préhistoire", e:"🪶",
+     texte:`Les premières écritures sont [compliquées] : seuls les [scribes] les maîtrisent.
+On écrit sur l'[argile|pierre|papyrus], la [pierre|argile|papyrus], le [papyrus|argile|pierre].
+La naissance de l'écriture vers [3300|3 300] av. J.-C. marque la fin de la [Préhistoire] et le début de l'[Histoire], dont la première période est l'[Antiquité].`}
+  ]});
+
+THEMES.push({ id:"h3q", chapitre:CH3, nom:"Premiers États : le quiz", titre:"Quiz : premiers États, premières écritures", matiere:"Histoire-géo", e:"❓", c:"var(--histoire)", gram:true, muet:true, maitrise:5, unite:"thèmes",
+  gen:quiz({
+    mesopotamie:[
+      ["Uruk est…","l'une des premières cités-États",["une pyramide","un village du Néolithique","un pharaon"]],
+      ["Où se trouve Uruk ?","en Mésopotamie",["en Égypte","en Phénicie","à Carnac"]],
+      ["Qui dirige la cité d'Uruk ?","un roi",["un pharaon","un chef de village","un scribe"]],
+      ["Que font les habitants d'Uruk ?","ils payent des impôts, achètent et vendent au marché",["ils chassent et cueillent","ils sont tous scribes","ils construisent des menhirs"]],
+      ["Qu'est-ce qui protège la ville d'Uruk ?","une muraille",["une pyramide","un menhir","un tumulus"]],
+      ["Uruk est aussi un centre religieux : on y trouve…","des temples",["des pyramides","des dolmens","des tumulus"]],
+      ["Qu'est-ce que l'épopée de Gilgamesh ?","la plus ancienne légende connue",["la première loi","un tombeau","un alphabet"]],
+      ["Gilgamesh est…","un roi légendaire",["un pharaon","un scribe","un dieu égyptien"]],
+      ["Quand se développent les cités-États en Mésopotamie ?","vers 3500 av. J.-C.",["vers 10 000 av. J.-C.","il y a 2,5 millions d'années","il y a 200 000 ans"]],
+      ["Laquelle de ces villes est une cité-État de Mésopotamie ?",["Uruk","Ur","Mari"],["Carnac","Stonehenge","Londres"]],
+      ["Une cité-État, c'est…","un petit État composé d'une ville et de la campagne qui l'entoure",["un grand pays dirigé par un pharaon","un village du Néolithique","un temple"]],
+      ["Quels sont les fleuves de Mésopotamie ?","le Tigre et l'Euphrate",["le Nil et la Tamise","le Nil et le Tigre","la Tamise et l'Euphrate"]],
+      ["Dans quelle région se trouvent la Mésopotamie et l'Égypte ?","le Croissant fertile",["le Royaume-Uni","l'Amérique","Carnac"]]
+    ],
+    egypte:[
+      ["Autour de quel fleuve l'Égypte est-elle organisée ?","le Nil",["le Tigre","l'Euphrate","la Tamise"]],
+      ["Qui dirige l'Égypte ?","le pharaon",["un chef de village","un scribe","un député"]],
+      ["Qui aide le pharaon à diriger le pays ?","des fonctionnaires",["des chefs de village","des chasseurs","des nomades"]],
+      ["Que fait construire le pharaon ?","des temples et des pyramides",["des menhirs et des dolmens","des cercles de pierre","des gratte-ciel"]],
+      ["Que devient le corps du pharaon à sa mort ?","il est momifié",["il est brûlé","il est enterré sous un menhir","il est jeté dans le Nil"]],
+      ["Que croient les Égyptiens à la mort du pharaon ?","qu'il rejoint les dieux",["qu'il devient scribe","qu'il part en Mésopotamie","qu'il devient un roi d'Uruk"]]
+    ],
+    ecritures:[
+      ["Quelle écriture vient en premier ?","les pictogrammes",["l'alphabet","le cunéiforme","les hiéroglyphes"]],
+      ["Quelle écriture vient en dernier ?","l'alphabet",["les pictogrammes","le cunéiforme","les hiéroglyphes"]],
+      ["Les pictogrammes sont des…","dessins",["lettres","rébus","sons"]],
+      ["Où les pictogrammes ont-ils été inventés ?","en Mésopotamie",["en Phénicie","à Stonehenge","à Londres"]],
+      ["Où l'alphabet a-t-il été inventé ?","en Phénicie",["en Mésopotamie","à Carnac","à Stonehenge"]],
+      ["Quel est le principe de l'alphabet ?","1 lettre = 1 son",["des dessins","des rébus","des signes et dessins"]],
+      ["Le cunéiforme et les hiéroglyphes fonctionnent comme des…","rébus",["lettres : 1 lettre = 1 son","simples dessins","nombres"]],
+      ["Quelle écriture utilise des signes et des dessins ?","les hiéroglyphes",["l'alphabet","les pictogrammes","le cunéiforme"]]
+    ],
+    pourquoi:[
+      ["Pourquoi les humains se mettent-ils à écrire ?",["pour compter","pour gouverner","pour raconter"],["pour chasser","pour cultiver","pour se déplacer"]],
+      ["On écrit pour compter…",["les récoltes","les impôts"],["les croyances","les lois","les évènements"]],
+      ["On écrit pour gouverner : on écrit les…",["décisions","lois"],["récoltes","croyances","évènements"]],
+      ["On écrit pour raconter les…",["évènements","croyances"],["impôts","récoltes","lois"]],
+      ["Qui maîtrise les premières écritures ?","seuls les scribes",["tous les habitants","les enfants","les chefs de village"]],
+      ["Sur quoi écrit-on à l'époque ?",["sur l'argile","sur la pierre","sur le papyrus"],["sur du papier","sur un ordinateur","sur du plastique"]],
+      ["Quand l'écriture apparaît-elle ?","vers 3300 av. J.-C.",["vers 10 000 av. J.-C.","il y a 2,5 millions d'années","il y a 200 000 ans"]],
+      ["Que marque la naissance de l'écriture ?","la fin de la Préhistoire et le début de l'Histoire",["le début de la Préhistoire","la fin de l'Antiquité","le début du Néolithique"]],
+      ["Quelle est la première période de l'Histoire ?","l'Antiquité",["le Néolithique","le Paléolithique","la Préhistoire"]]
+    ]
+  }),
+  mots:[ {en:"mesopotamie", fr:"Uruk et la Mésopotamie", e:"🏛️"}, {en:"egypte", fr:"L'Égypte", e:"🔺"}, {en:"ecritures", fr:"Les premières écritures", e:"✍️"}, {en:"pourquoi", fr:"Pourquoi écrire ?", e:"📜"} ]});
+
+/* ============================================================
+   CHAPITRE 5 · Les métropoles et leurs habitants
+   ============================================================ */
+THEMES.push({ id:"g5l", chapitre:CH5, nom:"Métropoles : la leçon", matiere:"Histoire-géo", e:"🏙️", c:"var(--histoire)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"londres", titre:"Habiter Londres", e:"💂",
+     texte:`Localisation : Londres se trouve au [sud] du [Royaume-Uni].
+Le fleuve qui traverse la ville est la [Tamise].
+Activités politiques : [Buckingham Palace], le [Parlement] (Big Ben). C'est la [capitale].
+Activités économiques : la [City].
+Activités culturelles : [musées], concerts, [graffitis].
+Richesse : des [appartements de luxe].
+Pauvreté : [1/3|un tiers] de la population est pauvre ; l'[école] leur distribue des repas.`},
+    {id:"caire", titre:"Habiter Le Caire", e:"🐪",
+     texte:`Localisation : Le Caire se trouve au [nord] de l'[Égypte].
+Le fleuve qui traverse la ville est le [Nil].
+Activités politiques : c'est la [capitale] de l'Égypte.
+Activités économiques : le [tourisme], des [quartiers d'affaires|quartiers d'affaire], de nombreux [commerces].
+Activités culturelles : [universités], musées, [pyramides].
+Richesse : des [quartiers résidentiels fermés].
+Pauvreté : le [cimetière], les [toits].`},
+    {id:"concentration", titre:"Une concentration de population et d'activités", e:"👥",
+     texte:`Les métropoles sont des villes très [peuplées] (Londres [14] millions d'habitants, Le Caire [24] millions).
+Elles rassemblent de nombreuses [activités] (emplois, culture, loisirs, rencontres).
+Les habitants y sont [inégaux] (riches, modestes, pauvres) et les métropoles sont [cosmopolites].
+La population des villes augmente surtout en [Afrique|Asie] et en [Asie|Afrique] avec l'[exode rural].`},
+    {id:"espaces", titre:"Des espaces et paysages variés", e:"🏘️",
+     texte:`Le [centre-ville] : espace central qui concentre les bâtiments historiques, les commerces et les animations.
+Le [bidonville] : quartier pauvre construit en matériaux de récupération.
+Le [quartier d'affaires|quartier d'affaire] : ensemble de tours de bureaux d'entreprises.
+La [zone commerciale] : ensemble de magasins avec grands parkings.
+Le [quartier pavillonnaire] : maisons avec jardins individuels.
+Le [quartier résidentiel fermé] : zone fermée et surveillée, accessible uniquement aux habitants, qui sont aisés.`},
+    {id:"transports", titre:"Se déplacer dans les métropoles", e:"🚇",
+     texte:`Les habitants des métropoles utilisent des moyens de transport variés dont le [tramway|métro|téléphérique|tuk-tuk], le [métro|tramway|téléphérique|tuk-tuk], le [téléphérique|tramway|métro|tuk-tuk], le [tuk-tuk|tramway|métro|téléphérique]...
+Les métropoles sont bien [reliées] entre elles par les [gares|autoroutes|ports|aéroports], [autoroutes|gares|ports|aéroports], [ports|gares|autoroutes|aéroports] et [aéroports|gares|autoroutes|ports].`}
+  ]});
+
+/* ---------- la carte des métropoles (MONDE est dans carte-monde.js) ---------- */
+const CARTE = (() => {
+  const villes = Object.keys(MONDE.P);
+  const ZOOM = [488, 98, 150, 80];               // cadre de l'Europe agrandi
+  const fond = d => `<rect width="${MONDE.W}" height="${MONDE.H}" fill="#DCEFFA"/><path d="${d}" fill="#F3EAD2" stroke="#8A9BB0" stroke-width="1"/>`;
+  const svg = (contenu, label) => `<svg viewBox="0 0 ${MONDE.W} ${MONDE.H}" style="width:100%;max-width:640px;border-radius:12px;display:block;margin:8px auto 0" role="img" aria-label="${label}">${contenu}</svg>`;
+  const point = (v, rouge) => { const [x,y] = MONDE.P[v];
+    return rouge ? `<circle cx="${x}" cy="${y}" r="14" fill="#C0392B" opacity=".25"/><circle cx="${x}" cy="${y}" r="7" fill="#C0392B" stroke="#fff" stroke-width="2"/>`
+                 : `<circle cx="${x}" cy="${y}" r="4.5" fill="#33415C"/>`; };
+  function qui(){
+    const v = pick(villes);
+    const [zx,zy,zw,zh] = ZOOM, k = 1.7, iw = zw*k, ih = zh*k, ix = 12, iy = MONDE.H - ih - 12;
+    const encart = `<rect x="${zx}" y="${zy}" width="${zw}" height="${zh}" fill="none" stroke="#33415C" stroke-dasharray="5 4"/>
+      <svg x="${ix}" y="${iy}" width="${iw}" height="${ih}" viewBox="${zx} ${zy} ${zw} ${zh}">${fond(MONDE.d)}
+        ${villes.map(w => { const [x,y] = MONDE.P[w]; return w===v ? `<circle cx="${x}" cy="${y}" r="4" fill="#C0392B" stroke="#fff" stroke-width="1.2"/>` : `<circle cx="${x}" cy="${y}" r="2.2" fill="#33415C"/>`; }).join("")}</svg>
+      <rect x="${ix}" y="${iy}" width="${iw}" height="${ih}" fill="none" stroke="#33415C" stroke-width="2"/>
+      <text x="${ix+8}" y="${iy+22}" font-size="15" font-family="system-ui" fill="#33415C">Zoom sur l'Europe</text>`;
+    const html = svg(fond(MONDE.d) + villes.filter(w => w!==v).map(w => point(w)).join("") + point(v, true) + encart, "Carte du monde avec une métropole en rouge");
+    return {kind:"qcm", consigne:"Quelle métropole est indiquée par le point rouge ?", html, choix:melange([v, ...melange(villes.filter(w => w!==v)).slice(0,3)]), bonne:v, rappel:`Le point rouge : ${v}`};
+  }
+  function ou(){
+    const pris = [];
+    for (const v of melange(villes)){ const [x,y] = MONDE.P[v];
+      if (pris.every(w => { const [a,b] = MONDE.P[w]; return Math.hypot(a-x, b-y) > 40; })) pris.push(v);
+      if (pris.length===4) break; }
+    const v = pick(pris), L = ["A","B","C","D"];
+    const marques = pris.map((w,i) => { const [x,y] = MONDE.P[w];
+      return `<circle cx="${x}" cy="${y}" r="8" fill="#33415C" stroke="#fff" stroke-width="2"/><text x="${x+11}" y="${y-10}" font-size="42" font-weight="700" font-family="system-ui" fill="#C0392B" stroke="#fff" stroke-width="6" paint-order="stroke">${L[i]}</text>`; }).join("");
+    return {kind:"qcm", consigne:`Où se trouve ${v} ?`, html:`${esc(v)}${svg(fond(MONDE.d) + marques, "Carte du monde avec 4 points A, B, C, D")}`, choix:L, bonne:L[pris.indexOf(v)], rappel:`${v} : point ${L[pris.indexOf(v)]}`};
+  }
+  return { carte:() => Math.random() < .5 ? qui() : ou() };
+})();
+
+THEMES.push({ id:"g5q", chapitre:CH5, nom:"Métropoles : le quiz", titre:"Quiz : les métropoles et leurs habitants", matiere:"Histoire-géo", e:"❓", c:"var(--histoire)", gram:true, muet:true, maitrise:5, unite:"thèmes",
+  gen:{ ...quiz({
+    londres:[
+      ["Où se trouve Londres ?","au sud du Royaume-Uni",["au nord du Royaume-Uni","au nord de l'Égypte","en France"]],
+      ["Quel fleuve traverse Londres ?","la Tamise",["le Nil","le Tigre","l'Euphrate"]],
+      ["Quels lieux politiques trouve-t-on à Londres ?","Buckingham Palace et le Parlement (Big Ben)",["la City","les pyramides","le cimetière"]],
+      ["Quelle activité économique de Londres est citée dans la leçon ?","la City",["Buckingham Palace","les graffitis","les pyramides"]],
+      ["Quelles activités culturelles trouve-t-on à Londres ?","des musées, des concerts, des graffitis",["des pyramides","des universités et des pyramides","des tumulus"]],
+      ["Quel signe de richesse trouve-t-on à Londres ?","des appartements de luxe",["des bidonvilles","le cimetière","les toits"]],
+      ["Quelle part de la population de Londres est pauvre ?","1/3",["la moitié","1/10","personne"]],
+      ["Comment l'école aide-t-elle les enfants pauvres de Londres ?","elle leur distribue des repas",["elle leur donne de l'argent","elle les loge","elle ne fait rien"]],
+      ["Combien d'habitants compte Londres ?","14 millions",["24 millions","1 million","100 millions"]]
+    ],
+    caire:[
+      ["Où se trouve Le Caire ?","au nord de l'Égypte",["au sud de l'Égypte","au sud du Royaume-Uni","en Mésopotamie"]],
+      ["Quel fleuve traverse Le Caire ?","le Nil",["la Tamise","le Tigre","l'Euphrate"]],
+      ["Le Caire est la capitale…","de l'Égypte",["du Royaume-Uni","de la Mésopotamie","de la Phénicie"]],
+      ["Quelles activités économiques trouve-t-on au Caire ?","le tourisme, des quartiers d'affaires, de nombreux commerces",["la City","Buckingham Palace","des graffitis"]],
+      ["Quelles activités culturelles trouve-t-on au Caire ?","des universités, des musées, les pyramides",["des graffitis","Buckingham Palace","la City"]],
+      ["Quel signe de richesse trouve-t-on au Caire ?","des quartiers résidentiels fermés",["le cimetière","les toits","des bidonvilles"]],
+      ["Quels lieux montrent la pauvreté au Caire ?","le cimetière et les toits",["les pyramides","les universités","les quartiers d'affaires"]],
+      ["Combien d'habitants compte Le Caire ?","24 millions",["14 millions","1 million","100 millions"]]
+    ],
+    metropoles:[
+      ["Une métropole est…","une ville très peuplée qui rassemble de nombreuses activités",["un petit village","une cité-État","un pays"]],
+      ["Quelles activités les métropoles rassemblent-elles ?","emplois, culture, loisirs, rencontres",["seulement l'agriculture","seulement des usines","aucune activité"]],
+      ["Les habitants des métropoles sont…","inégaux : riches, modestes, pauvres",["tous riches","tous pauvres","tous agriculteurs"]],
+      ["Vrai ou faux : les métropoles sont cosmopolites.","Vrai",["Faux"]],
+      ["Où la population des villes augmente-t-elle surtout ?","en Afrique et en Asie",["en Europe","en Amérique","en Océanie"]],
+      ["Avec quoi la population des villes augmente-t-elle en Afrique et en Asie ?","l'exode rural",["le tourisme","la City","les pyramides"]],
+      ["Espace central qui concentre les bâtiments historiques, les commerces et les animations :","le centre-ville",["le bidonville","la zone commerciale","le quartier pavillonnaire"]],
+      ["Quartier pauvre construit en matériaux de récupération :","le bidonville",["le centre-ville","le quartier résidentiel fermé","le quartier d'affaires"]],
+      ["Ensemble de tours de bureaux d'entreprises :","le quartier d'affaires",["la zone commerciale","le quartier pavillonnaire","le bidonville"]],
+      ["Ensemble de magasins avec grands parkings :","la zone commerciale",["le centre-ville","le quartier d'affaires","le quartier pavillonnaire"]],
+      ["Maisons avec jardins individuels :","le quartier pavillonnaire",["le quartier résidentiel fermé","le bidonville","le centre-ville"]],
+      ["Zone fermée et surveillée, accessible uniquement aux habitants, qui sont aisés :","le quartier résidentiel fermé",["le quartier pavillonnaire","la zone commerciale","le bidonville"]],
+      ["Lequel de ces moyens de transport est cité dans la leçon ?",["le tramway","le métro","le téléphérique","le tuk-tuk"],["la montgolfière","le sous-marin","la fusée"]],
+      ["Comment les métropoles sont-elles reliées entre elles ?","par les gares, autoroutes, ports et aéroports",["uniquement par des chemins","elles ne sont pas reliées","uniquement par des fleuves"]]
+    ]
+  }), carte:CARTE.carte },
+  mots:[ {en:"londres", fr:"Habiter Londres", e:"💂"}, {en:"caire", fr:"Habiter Le Caire", e:"🐪"}, {en:"metropoles", fr:"Les métropoles", e:"🏙️"}, {en:"carte", fr:"Les métropoles sur la carte", e:"🗺️"} ]});
+
+demarrer({ titre:"Histoire-géo", e:"🌍", chapitres:[CH1, CH2, CH3, CH5] });
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMC · Luka's sticker book</title>
+<link rel="stylesheet" href="../commun/style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<input type="file" id="fichier" accept=".json,application/json" hidden>
+<script src="../commun/moteur.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CONTENU EMC — modifier ici pour ajouter des thèmes.
+   La mécanique (exercices, autocollants) est dans ../commun/moteur.js
+   Leçons à trous : [mot|autre écriture acceptée], la 1re forme est affichée.
+   Quiz : [question, bonne réponse (ou liste de bonnes), [mauvaises réponses]]
+   ============================================================ */
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function quiz(BANQUE){
+  const gen = cle => () => {
+    const [q, b, f] = pick(BANQUE[cle]), bonne = Array.isArray(b) ? pick(b) : b;
+    return {kind:"qcm", consigne:"Choisis la bonne réponse", html:esc(q), choix:melange([bonne, ...f]), bonne, rappel:`${q} → ${bonne}`};
+  };
+  return Object.fromEntries(Object.keys(BANQUE).map(k => [k, gen(k)]));
+}
+
+const CH4 = "Chapitre 4 · Représenter les autres et servir l'intérêt général";
+
+THEMES.push({ id:"e4l", chapitre:CH4, nom:"Intérêt général : la leçon", matiere:"EMC", e:"🗳️", c:"var(--emc)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"democratie", titre:"La démocratie", e:"🗳️",
+     texte:`Dans une [démocratie], le pouvoir appartient au [peuple] : les [citoyens] votent pour élire des [représentants].
+Ceux-ci agissent dans l'[intérêt général] (= ce qui est [avantageux] pour toute la [société]).`},
+    {id:"college", titre:"Nos représentants au collège", e:"🏫",
+     texte:`Le [délégué de classe] représente les élèves de la classe. Exemple : proposer une sortie.
+L'[éco-délégué|eco-délégué] sensibilise les élèves à la protection de l'[environnement]. Exemple : les marches vertes des collégiens.
+L'élève élu au [Conseil de la vie collégienne] ([CVC]) propose des [projets] pour améliorer la vie au collège. Exemple : journées à thème, sonneries.
+L'élève élu au [Conseil d'administration] ([CA]) représente les élèves de l'ensemble du collège. Exemple : voter le [budget] et le [règlement].`},
+    {id:"locale", titre:"Nos représentants à l'échelle locale", e:"🏘️",
+     texte:`Le [conseiller municipal] administre la [commune]. Exemple : la sécurité dans le village, rénover la route.
+Le [conseiller départemental] gère l'action sociale et les [collèges]. Exemple : de nouveaux ordinateurs au collège.
+Le [conseiller régional] gère les [lycées], les transports, l'aménagement. Exemple : la sécurité dans les lycées.`},
+    {id:"nationale", titre:"Échelles nationale et européenne", e:"🇫🇷",
+     texte:`À l'échelle nationale, le [député] représente les citoyens et vote les [lois]. Exemple : l'interdiction du démarchage téléphonique.
+Le [président de la République] veille au bon fonctionnement de la [République]. Exemple : un discours à l'ONU à New-York.
+À l'échelle européenne, le [député européen] débat des enjeux européens et vote les [directives européennes]. Exemple : l'accessibilité numérique (handicap).`},
+    {id:"gaspillage", titre:"Agir pour l'intérêt général", e:"♻️",
+     texte:`L'exemple de la lutte contre le [gaspillage alimentaire] montre que [chacun] peut agir, mais il est nécessaire de prendre des [décisions collectives] comme la [loi] ou la [directive européenne].`}
+  ]});
+
+THEMES.push({ id:"e4q", chapitre:CH4, nom:"Intérêt général : le quiz", titre:"Quiz : représenter les autres", matiere:"EMC", e:"❓", c:"var(--emc)", gram:true, muet:true, maitrise:5, unite:"thèmes",
+  gen:quiz({
+    democratie:[
+      ["Dans une démocratie, à qui appartient le pouvoir ?","au peuple",["au roi","au président seul","aux délégués de classe"]],
+      ["Dans une démocratie, que font les citoyens pour choisir leurs représentants ?","ils votent",["ils tirent au sort","ils se battent","ils ne font rien"]],
+      ["L'intérêt général, c'est…","ce qui est avantageux pour toute la société",["ce qui est avantageux pour soi-même","ce qui plaît à ses copains","ce que décide une seule personne"]],
+      ["Dans l'intérêt de qui agissent les représentants ?","dans l'intérêt général",["dans leur intérêt personnel","dans l'intérêt de leurs amis","dans l'intérêt de leur famille"]]
+    ],
+    vote:[
+      ["Comment appelle-t-on la personne qui se présente à une élection ?","un candidat",["un assesseur","un électeur","un député"]],
+      ["Comment appelle-t-on la boîte dans laquelle on glisse son vote ?","l'urne",["l'isoloir","la liste électorale","le bulletin"]],
+      ["Comment appelle-t-on la cabine à rideaux où l'on choisit son bulletin seul ?","l'isoloir",["l'urne","le dépouillement","la liste électorale"]],
+      ["Comment appelle-t-on le moment où l'on ouvre l'urne et où l'on compte les votes ?","le dépouillement",["l'isoloir","le vote blanc","la liste électorale"]],
+      ["Comment appelle-t-on la personne qui tient le bureau de vote ?","un assesseur",["un candidat","un député","un délégué"]],
+      ["Comment appelle-t-on la liste des personnes qui ont le droit de voter ?","la liste électorale",["l'urne","le bulletin nul","l'isoloir"]],
+      ["Mettre une enveloppe sans choisir de candidat, c'est…","voter blanc",["un bulletin nul","le dépouillement","un isoloir"]],
+      ["Un bulletin sur lequel on a écrit ou dessiné ne compte pas : c'est…","un bulletin nul",["voter blanc","une urne","une liste électorale"]]
+    ],
+    representants:[
+      ["Qui représente les élèves de la classe ?","le délégué de classe",["l'éco-délégué","le conseiller municipal","le député"]],
+      ["Qui sensibilise les élèves à la protection de l'environnement ?","l'éco-délégué",["le délégué de classe","le conseiller régional","le président de la République"]],
+      ["Que fait l'élève élu au Conseil de la vie collégienne (CVC) ?","il propose des projets pour améliorer la vie au collège",["il vote les lois","il administre la commune","il gère les lycées"]],
+      ["Que fait l'élève élu au Conseil d'administration (CA) ?","il représente les élèves de l'ensemble du collège",["il représente seulement sa classe","il gère les transports","il vote les directives européennes"]],
+      ["Exemple de décision prise au Conseil d'administration :","voter le budget et le règlement",["proposer une sortie","des marches vertes","un discours à l'ONU"]],
+      ["Qui administre la commune ?","le conseiller municipal",["le conseiller régional","le député","le délégué de classe"]],
+      ["Qui gère l'action sociale et les collèges ?","le conseiller départemental",["le conseiller municipal","le conseiller régional","le député européen"]],
+      ["Qui gère les lycées, les transports, l'aménagement ?","le conseiller régional",["le conseiller départemental","le conseiller municipal","le président de la République"]],
+      ["Qui représente les citoyens et vote les lois ?","le député",["le conseiller municipal","le délégué de classe","l'éco-délégué"]],
+      ["Qui veille au bon fonctionnement de la République ?","le président de la République",["le député européen","le conseiller régional","le délégué de classe"]],
+      ["Qui débat des enjeux européens et vote les directives européennes ?","le député européen",["le député","le conseiller régional","le président de la République"]],
+      ["À quelle échelle se trouvent les conseillers municipal, départemental et régional ?","l'échelle locale",["l'échelle nationale","l'échelle européenne","l'échelle du collège"]],
+      ["À quelle échelle se trouvent le député et le président de la République ?","l'échelle nationale",["l'échelle locale","l'échelle européenne","l'échelle du collège"]],
+      ["De nouveaux ordinateurs au collège : quel représentant prend cette décision ?","le conseiller départemental",["le conseiller régional","le député européen","le délégué de classe"]],
+      ["La sécurité dans les lycées : quel représentant prend cette décision ?","le conseiller régional",["le conseiller départemental","le conseiller municipal","l'éco-délégué"]],
+      ["L'interdiction du démarchage téléphonique : quel représentant prend cette décision ?","le député",["le conseiller municipal","le délégué de classe","l'éco-délégué"]]
+    ],
+    gaspillage:[
+      ["La lutte contre le gaspillage alimentaire montre que…","chacun peut agir, mais il faut aussi des décisions collectives",["seul le président peut agir","personne ne peut rien faire","il suffit que chacun agisse seul"]],
+      ["Quelles décisions collectives sont citées dans la leçon ?","la loi et la directive européenne",["la pesée des déchets","la liste de courses","le frigo de la cantine"]],
+      ["Comment s'appelle la loi de 2016 contre le gaspillage alimentaire ?","la loi Garot",["la loi Strasbourg","la loi du Sénat","la loi de l'ONU"]],
+      ["Pourquoi s'appelle-t-elle la loi Garot ?","du nom du député qui l'a proposée",["du nom d'un supermarché","du nom d'une ville","du nom d'un président"]],
+      ["Que doivent faire les supermarchés de plus de 400 m² ?","donner leurs invendus à des associations d'aide alimentaire",["jeter leurs invendus","vendre plus cher","fermer le dimanche"]],
+      ["Quel organisme débat et vote la loi après l'Assemblée nationale ?","le Sénat",["le Parlement européen","le conseil municipal","le conseil de classe"]],
+      ["Comment s'appelle l'acte par lequel le président de la République rend une loi officiellement applicable ?","la promulgation",["le dépouillement","la directive","le vote blanc"]],
+      ["Dans quelle ville française se réunissent les députés européens ?","Strasbourg",["Paris","Lyon","Marseille"]],
+      ["Quel texte européen fixe un objectif aux pays ?","une directive",["une loi municipale","un règlement de collège","un bulletin"]],
+      ["Que demande la directive européenne de 2025 ?","réduire le gaspillage alimentaire de 30 % d'ici fin 2030",["interdire les supermarchés","fermer les cantines","supprimer les frigos"]],
+      ["À la cantine, comment un élève peut-il agir contre le gaspillage ?","prendre seulement la quantité qu'il pourra vraiment manger",["se servir le plus possible","jeter ce qu'il n'aime pas","ne jamais goûter"]],
+      ["Comment limiter le gaspillage à la maison ?",["faire une liste de courses","cuisiner les restes","observer et goûter un aliment périmé avant de le jeter"],["acheter beaucoup trop","jeter les restes","jeter tout ce qui est périmé sans regarder"]],
+      ["À quoi sert la pesée des déchets à la cantine ?","à prendre conscience du gaspillage",["à vendre les déchets","à remplir le frigo","à préparer la soupe"]],
+      ["Que deviennent les déchets de la cantine, dans le texte étudié ?","ils sont transformés en gaz dans un méthaniseur",["ils sont jetés à la mer","ils sont brûlés dans la cour","ils sont redonnés aux élèves"]]
+    ]
+  }),
+  mots:[ {en:"democratie", fr:"La démocratie", e:"🗳️"}, {en:"vote", fr:"Le vocabulaire du vote", e:"📦"}, {en:"representants", fr:"Nos représentants", e:"🏛️"}, {en:"gaspillage", fr:"Le gaspillage alimentaire", e:"♻️"} ]});
+
+demarrer({ titre:"EMC", e:"🤝", chapitres:[CH4] });
+</script>
+</body>
+</html>
