@@ -200,8 +200,140 @@ const GRAM = (() => {
   return { GEN };
 })();
 
+/* ============================================================
+   VOCABULAIRE — School supplies (fiche « School supplies » du cahier,
+   orthographe corrigée)
+   ============================================================ */
+THEMES.push({ id:"ss", chapitre:"Vocabulaire du matériel scolaire", nom:"School supplies", e:"🎒", c:"var(--citrouille)",
+  mots:[
+    {en:"pencil",fr:"crayon à papier",e:"✏️"},{en:"pen",fr:"stylo",e:"🖊️"},{en:"rubber",fr:"gomme"},
+    {en:"coloured pencil",fr:"crayon de couleur",e:"🖍️"},{en:"glue stick",fr:"bâton de colle"},
+    {en:"scissors",fr:"ciseaux",e:"✂️"},{en:"schoolbag",fr:"cartable",e:"🎒"},{en:"book",fr:"livre",e:"📖"},
+    {en:"notebook",fr:"cahier",e:"📓"},{en:"pencil case",fr:"trousse",e:"👝"},{en:"highlighter",fr:"surligneur"},
+    {en:"ruler",fr:"règle",e:"📏"},{en:"calculator",fr:"calculatrice",e:"🧮"},{en:"correction mouse",fr:"souris correctrice"},
+    {en:"felt pen",fr:"feutre"},{en:"folders",fr:"classeurs",e:"🗂️"},{en:"lunchbox",fr:"boîte à repas",e:"🍱"},
+    {en:"sharpener",fr:"taille-crayon"},{en:"tape",fr:"ruban adhésif"},{en:"paper",fr:"papier",e:"📄"},
+    {en:"agenda",fr:"agenda",e:"📒"},{en:"fountain pen",fr:"stylo plume",e:"🖋️"},{en:"paintbrush",fr:"pinceau",e:"🖌️"},
+    {en:"paper clips",fr:"trombones",e:"📎"}
+  ],
+  phrases:["I have got a new pencil case","She has got a green schoolbag","I don't have a ruler"]
+});
+
+/* ============================================================
+   GRAMMAIRE — La possession : have got (+ version américaine do / does have)
+   Uniquement ce qui est dans la leçon : affirmatif, négatif, interrogatif.
+   ============================================================ */
+THEMES.push({ id:"th", chapitre:"Le verbe To Have", nom:"Grammar: to have", e:"✍️", c:"var(--grammaire)", gram:true, maitrise:5, unite:"compétences",
+  mots:[
+    {en:"havehas", fr:"have ou has ?", e:"🧩"}, {en:"contractee", fr:"Forme contractée", e:"✂️"},
+    {en:"negative", fr:"Forme négative", e:"🚫"}, {en:"question", fr:"Forme interrogative", e:"❓"},
+    {en:"usneg", fr:"Version américaine : don't / doesn't", e:"🇺🇸"}, {en:"usques", fr:"Version américaine : Do / Does…?", e:"🗽"},
+    {en:"ordre", fr:"Mots dans l'ordre", e:"🔀"}, {en:"erreurs", fr:"Chasse aux erreurs", e:"🕵️"},
+    {en:"traduction", fr:"Traduis en anglais", e:"🇬🇧"}
+  ],
+  gen:(() => {
+    const H = {I:"have",you:"have",he:"has",she:"has",it:"has",we:"have",they:"have"};
+    const D = {have:"do",has:"does"};
+    const SUJ = [
+      {s:"I",p:"I",pron:1},{s:"you",p:"you",pron:1},{s:"he",p:"he",pron:1},{s:"she",p:"she",pron:1},
+      {s:"we",p:"we",pron:1},{s:"they",p:"they",pron:1},
+      {s:"my sister",p:"she"},{s:"my brother",p:"he"},{s:"Leo",p:"he",nom:1},{s:"Chloé",p:"she",nom:1},
+      {s:"my friends",p:"they"},{s:"the teacher",p:"she"},{s:"Max and Nina",p:"they",nom:1},{s:"my dad and I",p:"we"}
+    ];
+    const OBJ = ["a pen","a ruler","a calculator","a pencil case","a red schoolbag","a highlighter","a blue notebook",
+      "a sharpener","a glue stick","scissors","felt pens","paper clips","a fountain pen","a new rubber","coloured pencils","a lunchbox"];
+    const pick = a => a[Math.floor(Math.random()*a.length)];
+    const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+    const modele = f => { for(;;){ const s = pick(SUJ); if (!f || f(s)) return {...s, v:H[s.p], o:pick(OBJ)}; } };
+    const ct = m => m.v==="have" ? "'ve" : "'s";
+    const aff  = m => [`${m.s} ${m.v} got ${m.o}`].concat(m.pron ? [`${m.s}${ct(m)} got ${m.o}`] : []).map(cap);
+    const neg  = m => [`${m.s} ${m.v}n't got ${m.o}`, `${m.s} ${m.v} not got ${m.o}`].map(cap);
+    const ques = m => [`${cap(m.v)} ${m.s} got ${m.o}?`];
+    const usNeg  = m => [`${m.s} ${D[m.v]}n't have ${m.o}`, `${m.s} ${D[m.v]} not have ${m.o}`].map(cap);
+    const usQues = m => [`${cap(D[m.v])} ${m.s} have ${m.o}?`];
+    const pt = s => /[?]$/.test(s) ? s : s + ".";
+    const ASTUCE = "I / you / we / they → have got · he / she / it → has got";
+
+    const TRAD = [
+      {fr:"J'ai une règle.", s:"I",p:"I",pron:1,o:"a ruler",f:"aff"},
+      {fr:"Elle a une calculatrice.", s:"she",p:"she",pron:1,o:"a calculator",f:"aff"},
+      {fr:"Nous avons des ciseaux.", s:"we",p:"we",pron:1,o:"scissors",f:"aff"},
+      {fr:"Il n'a pas de trousse.", s:"he",p:"he",pron:1,o:"a pencil case",f:"neg"},
+      {fr:"Je n'ai pas de stylo plume.", s:"I",p:"I",pron:1,o:"a fountain pen",f:"neg"},
+      {fr:"Ils n'ont pas de feutres.", s:"they",p:"they",pron:1,o:"felt pens",f:"neg"},
+      {fr:"As-tu un taille-crayon ?", s:"you",p:"you",pron:1,o:"a sharpener",f:"q"},
+      {fr:"Est-ce que ta sœur a un agenda ?", s:"your sister",p:"she",o:"an agenda",f:"q"},
+      {fr:"Mon frère a un cartable rouge.", s:"my brother",p:"he",o:"a red schoolbag",f:"aff"},
+      {fr:"Avons-nous des trombones ?", s:"we",p:"we",pron:1,o:"paper clips",f:"q"}
+    ].map(t => ({...t, v:H[t.p]}));
+    /* la traduction accepte aussi la version américaine vue en classe */
+    const tradOk = t => t.f==="aff" ? aff(t).concat([cap(`${t.s} ${t.v} ${t.o}`)])
+      : t.f==="neg" ? neg(t).concat(usNeg(t)) : ques(t).concat(usQues(t));
+
+    return {
+      havehas(){
+        const m = modele();
+        return {kind:"qcm", consigne:"have ou has ?", html:`${esc(cap(m.s))} ____ got ${esc(m.o)}.`,
+          choix:["have","has"], bonne:m.v, rappel:aff(m)[0]+".", astuce:ASTUCE};
+      },
+      contractee(){
+        const p = pick(["I","you","he","she","it","we","they"]), v = H[p], n = Math.random()<.5, versCourt = Math.random()<.6;
+        const long = n ? `${p} ${v} not got` : `${p} ${v} got`;
+        const court = n ? `${p} ${v}n't got` : `${p}${v==="have"?"'ve":"'s"} got`;
+        if (versCourt) return {kind:"texte", consigne:"Écris la forme contractée", html:esc(long), ok:[court], rappel:court,
+          astuce:"have → 've · has → 's · have not → haven't · has not → hasn't"};
+        return {kind:"texte", consigne:"Écris la forme longue (sans apostrophe)", html:esc(court), ok:[long], rappel:long,
+          astuce:"Ici, 's veut dire has (he's got = he has got)."};
+      },
+      negative(){
+        const m = modele(), ok = neg(m);
+        return {kind:"texte", consigne:"Mets la phrase à la forme négative", html:esc(aff(m)[0])+".", ok, rappel:ok[0]+".",
+          astuce:"have got → haven't got · has got → hasn't got"};
+      },
+      question(){
+        const m = modele(), ok = ques(m);
+        return {kind:"texte", consigne:"Transforme en question. N'oublie pas le point d'interrogation !", html:esc(aff(m)[0])+".", ok, rappel:ok[0], q:true,
+          astuce:"On met have ou has devant le sujet : She has got… → Has she got…?"};
+      },
+      usneg(){
+        const m = modele();
+        return {kind:"qcm", consigne:"Version américaine : don't ou doesn't ?", html:`${esc(cap(m.s))} ____ have ${esc(m.o)}.`,
+          choix:["don't","doesn't"], bonne:D[m.v]+"n't", rappel:usNeg(m)[0]+".", astuce:"he / she / it → doesn't have · les autres → don't have"};
+      },
+      usques(){
+        const m = modele();
+        return {kind:"qcm", consigne:"Version américaine : Do ou Does ?", html:`____ ${esc(m.s)} have ${esc(m.o)}?`,
+          choix:["Do","Does"], bonne:cap(D[m.v]), rappel:usQues(m)[0], astuce:"he / she / it → Does…have? · les autres → Do…have?"};
+      },
+      ordre(){
+        const m = modele(), f = pick(["aff","neg","q","usneg","usq"]);
+        const phrase = {aff:aff, neg:neg, q:ques, usneg:usNeg, usq:usQues}[f](m)[0];
+        const mots = phrase.replace("?"," ?").split(" ");
+        if (mots[0]!=="I" && !(m.nom && phrase.startsWith(m.s))) mots[0] = mots[0].toLowerCase();
+        return {kind:"ordre", consigne:"Remets les mots dans l'ordre", mots, cible:mots.join(" "), rappel:pt(phrase)};
+      },
+      erreurs(){
+        const m = modele(), t = pick(["accord","not","qverbe","does","dont"]);
+        const autre = m.v==="have" ? "has" : "have";
+        let faux, ok, astuce;
+        if (t==="accord"){ faux = `${cap(m.s)} ${autre} got ${m.o}.`; ok = aff(m); astuce = ASTUCE; }
+        if (t==="not"){ faux = `${cap(m.s)} ${autre}n't got ${m.o}.`; ok = neg(m); astuce = "haven't got avec I / you / we / they · hasn't got avec he / she / it"; }
+        if (t==="qverbe"){ faux = `${cap(autre)} ${m.s} got ${m.o}?`; ok = ques(m); astuce = ASTUCE; }
+        if (t==="does"){ faux = `${cap(D[m.v])} ${m.s} has ${m.o}?`; ok = usQues(m); astuce = "Après Do ou Does, on écrit toujours have."; }
+        if (t==="dont"){ faux = `${cap(m.s)} ${D[m.v]==="do"?"doesn't":"don't"} have ${m.o}.`; ok = usNeg(m); astuce = "he / she / it → doesn't have · les autres → don't have"; }
+        return {kind:"texte", consigne:"Il y a une erreur : réécris la phrase correctement", html:esc(faux), ok, rappel:pt(ok[0]), astuce};
+      },
+      traduction(){
+        const t = pick(TRAD), ok = tradOk(t);
+        return {kind:"texte", consigne:"Traduis en anglais", html:esc(t.fr), ok, rappel:pt(ok[0]), q:t.f==="q",
+          astuce:"Tu peux utiliser have got ou la version américaine (do / does)."};
+      }
+    };
+  })()
+});
+
 demarrer({ titre:"Anglais", e:"🇬🇧",
-  chapitres:["Le verbe To Be", "Vocabulaire des animaux", "Vocabulaire Halloween"] });
+  chapitres:["Le verbe To Be", "Vocabulaire des animaux", "Vocabulaire Halloween", "Le verbe To Have", "Vocabulaire du matériel scolaire"] });
 </script>
 </body>
 </html>
