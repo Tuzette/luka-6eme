@@ -86,6 +86,161 @@ const FR = (() => {
 THEMES.push({ id:"fq", chapitre:"Molière et Le Médecin malgré lui", nom:"Molière : le quiz", titre:"Quiz Molière", matiere:"Français", e:"❓", c:"var(--francais)", gram:true, muet:true, maitrise:5, unite:"thèmes", gen:FR.GEN,
   mots:[ {en:"vie", fr:"La vie de Molière", e:"👑"}, {en:"medecin", fr:"Le Médecin malgré lui", e:"🩺"}, {en:"ruse", fr:"La ruse", e:"🦊"} ]});
 
+/* ============================================================
+   FRANÇAIS — Langue n°5 · Rappels sur la conjugaison du présent de l'indicatif
+   ============================================================ */
+const CH5 = "Langue n°5 · Rappels sur la conjugaison du présent de l'indicatif";
+
+THEMES.push({ id:"f5l", chapitre:CH5, nom:"Présent : la leçon", matiere:"Français", e:"🖊️", c:"var(--francais)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"groupes", titre:"Les 1er et 2e groupes", e:"🖊️",
+     texte:`1er groupe — aimer : j'[aime], tu [aimes], il [aime], nous [aimons], vous [aimez], ils [aiment].
+2e groupe — finir : je [finis], tu finis, elle [finit], nous [finissons], vous [finissez], ils [finissent].
+Attention à « nous » pour les verbes en -cer : je trace → nous [traçons] (la cédille garde le son « s »).
+Et pour les verbes en -ger : je nage → nous [nageons] (le e garde le son « j »).`},
+    {id:"troisieme", titre:"Le 3e groupe", e:"🧩",
+     texte:`Faire, aller, dire, savoir, être et avoir sont très [irréguliers].
+Ouvrir, cueillir, souffrir se conjuguent comme le [1er groupe|premier groupe] : j'[ouvre], tu [cueilles], il [souffre].
+Pouvoir, vouloir, valoir se terminent par -x : je [veux], tu [peux].
+Les verbes en -ir (sauf le 2e groupe), en -oir (sauf vouloir, pouvoir, savoir, valoir) et en -re se terminent par -s : je [ris], tu [vois], je [lis].
+Les verbes en -dre se terminent par -ds : je [prends], tu prends…
+Sauf les verbes en -indre et -soudre, qui se terminent par -s : je [peins], je [résous].`},
+    {id:"radical", titre:"Les verbes du 1er groupe qui changent", e:"🔀",
+     texte:`Verbes en -yer : le y devient [i], sauf à nous et vous → j'[appuie], nous [appuyons].
+Verbes en -éder, -éter, -érer : le é devient [è], sauf à nous et vous → je [cède], nous [cédons].
+Verbes en -eter, -eler, -ener, -emer : le e devient è, sauf à nous et vous → j'[amène], nous [amenons].
+Appeler, jeter (et rejeter, rappeler, interpeler…) : la consonne est [doublée], sauf à nous et vous → je [jette], nous [jetons].`},
+    {id:"etre", titre:"Être, avoir, aller", e:"🌪️",
+     texte:`Être : je [suis], tu [es], il [est], nous [sommes], vous [êtes], ils [sont].
+Avoir : j'[ai], tu [as], il [a], nous [avons], vous [avez], ils [ont].
+Aller : je [vais], tu [vas], il [va], nous [allons], vous [allez], ils [vont].`},
+    {id:"faire", titre:"Faire, dire, savoir", e:"🌀",
+     texte:`Faire : je [fais], tu fais, il [fait], nous [faisons], vous [faites], ils [font].
+Dire : je [dis], tu dis, il [dit], nous [disons], vous [dites], ils [disent].
+Savoir : je [sais], tu sais, il [sait], nous [savons], vous [savez], ils [savent].`},
+    {id:"pouvoir", titre:"Pouvoir, vouloir, prendre", e:"💪",
+     texte:`Pouvoir : je [peux], tu peux, il [peut], nous [pouvons], vous [pouvez], ils [peuvent].
+Vouloir : je [veux], tu veux, il [veut], nous [voulons], vous [voulez], ils [veulent].
+Prendre : je [prends], tu prends, il [prend], nous [prenons], vous [prenez], ils [prennent].`}
+  ]});
+
+THEMES.push({ id:"f5e", chapitre:CH5, nom:"Présent : je conjugue", matiere:"Français", e:"✍️", c:"var(--francais)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"ex1", titre:"Exercice 1 : à Montréal", e:"✈️",
+     texte:`Nous [partons] (partir) à Montréal.
+Vous [déménagez] (déménager) à Montréal ? Nous [déménageons] (déménager) à Montréal.
+Je vous [entends] (entendre) mal.
+Est-ce que vous [voulez] (vouloir) que je [répète] (répéter) ? Oui, je [veux] (vouloir) bien.
+Vous me [dites] (dire) que vous [emmenez] (emmener) toute la famille ?
+Oui, j'[emmène] (emmener) tout le monde. Est-ce que vous [venez] (venir) avec nous ?`},
+    {id:"ex2", titre:"Exercice 2 : des verbes difficiles", e:"🧗",
+     texte:`Nous [craignons] (craindre) d'arriver en retard et de rater notre avion.
+Un cri strident [rompt] (rompre) le silence.
+Enfin, [apparaissent] (apparaître) des visages familiers.
+Tu [confonds] (confondre) ou bien [oublies] (oublier) systématiquement tout !
+[Veux]-tu (vouloir) que je te [rappelle] (rappeler) où tu [habites] (habiter) ?`},
+    {id:"ex3", titre:"Exercice 3 : la recette des cookies", e:"🍪",
+     texte:`Tu [fais] (faire) fondre 100 g de beurre. Tu [pèses] (peser) 150 g de farine et 150 g de sucre, que tu [mélanges] (mélanger) au beurre dans un saladier.
+Tu [bats] (battre) un œuf, que tu [ajoutes] (ajouter) au reste. Tu [peux] (pouvoir) ajouter une pincée de sel et un peu de vanille.
+Tu [prends] (prendre) ensuite une tablette de chocolat à cuire : tu [réduis] (réduire) 100 g en pépites. Tu [verses] (verser) le chocolat dans la pâte, avec des amandes si tu en [as] (avoir).
+Sur une plaque recouverte de papier cuisson, tu [déposes] (déposer) des boules de pâte : tu n'[appuies] (appuyer) pas dessus !
+Tu [mets] (mettre) au four à 210 °C pendant 12 à 15 minutes et tu [vérifies] (vérifier) de temps en temps.`},
+    {id:"atoi1", titre:"À toi : le 3e groupe", e:"🧩",
+     texte:`Tu [ouvres] (ouvrir) la fenêtre. Elle [cueille] (cueillir) des fleurs. Il [souffre] (souffrir) du froid.
+Ce vélo [vaut] (valoir) cher. Vous [riez] (rire) aux éclats ! Ils [voient] (voir) la mer.
+Je [lis] (lire) un roman. Nous [peignons] (peindre) le mur. Tu [résous] (résoudre) l'énigme.`},
+    {id:"atoi2", titre:"À toi : le 1er groupe qui change", e:"🔀",
+     texte:`Nous [traçons] (tracer) un cercle. Nous [nageons] (nager) vite.
+J'[essuie] (essuyer) la table. Vous [essuyez] (essuyer) la vaisselle.
+Je [cède] (céder) ma place. Il [jette] (jeter) un papier à la poubelle. Nous [jetons] (jeter) les épluchures.
+Elles [appellent] (appeler) leur chien. Tu [amènes] (amener) un gâteau.`},
+    {id:"atoi3", titre:"À toi : les très irréguliers", e:"🌪️",
+     texte:`Vous [êtes] (être) prêts ? Ils [ont] (avoir) faim.
+Nous [allons] (aller) au collège. Elles [font] (faire) leurs devoirs.
+Que [dites]-vous (dire) ? Nous [savons] (savoir) la réponse.
+Ils [peuvent] (pouvoir) venir. Elles [veulent] (vouloir) jouer. Ils [prennent] (prendre) le bus.`}
+  ]});
+
+const PRESENT = (() => {
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const c = (s, b, f) => ["Conjugue au présent : " + s, b, f];
+  const BANQUE = {
+    groupes:[
+      c("nous … (aimer)","nous aimons",["nous aimont","nous aimez","nous aimes"]),
+      c("tu … (aimer)","tu aimes",["tu aime","tu aimez","tu aimé"]),
+      c("ils … (placer)","ils placent",["ils places","ils placont","ils placez"]),
+      c("vous … (nager)","vous nagez",["vous nageez","vous nagé","vous nager"]),
+      c("elle … (finir)","elle finit",["elle finis","elle fini","elle finie"]),
+      c("nous … (finir)","nous finissons",["nous finisons","nous finons","nous finnissons"]),
+      c("vous … (finir)","vous finissez",["vous finisez","vous finez","vous finissiez"]),
+      c("ils … (finir)","ils finissent",["ils finisent","ils finient","ils finit"]),
+      ["À quel groupe appartient le verbe « finir » ?","au 2e groupe",["au 1er groupe","au 3e groupe"]]
+    ],
+    radical:[
+      c("nous … (tracer)","nous traçons",["nous tracons","nous traceons","nous traçont"]),
+      c("nous … (nager)","nous nageons",["nous nagons","nous nagéons","nous najons"]),
+      c("j'… (appuyer)","j'appuie",["j'appuye","j'appuis","j'appui"]),
+      c("nous … (appuyer)","nous appuyons",["nous appuions","nous appuiyons","nous appuyions"]),
+      c("je … (céder)","je cède",["je céde","je cêde","je cedde"]),
+      c("je … (répéter)","je répète",["je répéte","je repète","je répètte"]),
+      c("ils … (emmener)","ils emmènent",["ils emmenent","ils emménent","ils emmennent"]),
+      c("je … (jeter)","je jette",["je jète","je jete","je jettes"]),
+      c("nous … (jeter)","nous jetons",["nous jettons","nous jètons","nous jetont"]),
+      c("tu … (rappeler)","tu rappelles",["tu rappèles","tu rapelles","tu rappeles"]),
+      ["Dans « nous traçons », à quoi sert la cédille ?","à garder le son « s »",["à faire joli","à garder le son « k »","à marquer le pluriel"]],
+      ["Pour les verbes en -yer (j'appuie), quand garde-t-on le y ?","à nous et vous",["à je et tu","à il et ils","jamais"]]
+    ],
+    troisieme:[
+      ["Pouvoir, vouloir, valoir se terminent à « je » par…","-x",["-s","-ds","-e"]],
+      ["Les verbes en -dre (comme prendre) se terminent à « je » par…","-ds",["-s","-x","-e"]],
+      ["Peindre et résoudre se terminent à « je » par…","-s",["-ds","-x","-e"]],
+      ["Ouvrir, cueillir, souffrir se conjuguent comme…","le 1er groupe",["le 2e groupe","être et avoir","les verbes en -dre"]],
+      c("je … (vouloir)","je veux",["je veut","je veus","je voeux"]),
+      c("il … (pouvoir)","il peut",["il peux","il peu","il peus"]),
+      c("je … (valoir)","je vaux",["je vaut","je vaus","je valle"]),
+      c("il … (prendre)","il prend",["il prends","il prent","il pren"]),
+      c("je … (peindre)","je peins",["je peinds","je peind","je pein"]),
+      c("tu … (résoudre)","tu résous",["tu résouds","tu résoud","tu résout"]),
+      c("tu … (cueillir)","tu cueilles",["tu cueillis","tu cueils","tu cueuilles"]),
+      c("je … (rire)","je ris",["je rit","je rix","je rie"])
+    ],
+    irreg:[
+      c("nous … (être)","nous sommes",["nous êtons","nous sont","nous somme"]),
+      c("vous … (être)","vous êtes",["vous étez","vous sommes","vous ête"]),
+      c("tu … (avoir)","tu as",["tu a","tu ai","tu ais"]),
+      c("ils … (avoir)","ils ont",["ils sont","ils avent","ils on"]),
+      c("je … (aller)","je vais",["je vas","je va","je alle"]),
+      c("ils … (aller)","ils vont",["ils allent","ils vons","ils vas"]),
+      c("vous … (faire)","vous faites",["vous faisez","vous faîtes","vous faitez"]),
+      c("ils … (faire)","ils font",["ils faisent","ils fonts","ils faient"]),
+      c("vous … (dire)","vous dites",["vous disez","vous ditez","vous dîtes"]),
+      c("il … (savoir)","il sait",["il sais","il sai","il savoit"])
+    ],
+    cahier:[
+      c("nous … (partir)","nous partons",["nous partissons","nous partont","nous parons"]),
+      c("vous … (vouloir)","vous voulez",["vous voulons","vous veulez","vous voulé"]),
+      c("vous … (venir)","vous venez",["vous viennez","vous venner","vous venés"]),
+      c("nous … (craindre)","nous craignons",["nous craindons","nous craindrons","nous crainons"]),
+      c("il … (rompre)","il rompt",["il romp","il romps","il rompe"]),
+      c("ils … (apparaître)","ils apparaissent",["ils apparaîssent","ils apparaitent","ils apparent"]),
+      c("tu … (confondre)","tu confonds",["tu confond","tu confons","tu confont"]),
+      c("tu … (battre)","tu bats",["tu bat","tu battes","tu bas"]),
+      c("tu … (réduire)","tu réduis",["tu réduit","tu réduits","tu réduire"]),
+      c("tu … (mettre)","tu mets",["tu met","tu mais","tu mettes"])
+    ]
+  };
+  const gen = cle => () => {
+    const [q, b, f] = pick(BANQUE[cle]), bonne = Array.isArray(b) ? pick(b) : b;
+    return {kind:"qcm", consigne:"Choisis la bonne réponse", html:esc(q), choix:melange([bonne, ...f]), bonne, rappel:`${q} → ${bonne}`};
+  };
+  return { GEN:Object.fromEntries(Object.keys(BANQUE).map(k => [k, gen(k)])) };
+})();
+
+THEMES.push({ id:"f5q", chapitre:CH5, nom:"Présent : le quiz", titre:"Quiz : le présent de l'indicatif", matiere:"Français", e:"❓", c:"var(--francais)", gram:true, muet:true, maitrise:5, unite:"thèmes", gen:PRESENT.GEN,
+  mots:[ {en:"groupes", fr:"1er et 2e groupes", e:"🖊️"}, {en:"radical", fr:"Le radical qui change", e:"🔀"},
+         {en:"troisieme", fr:"Le 3e groupe", e:"🧩"}, {en:"irreg", fr:"Les très irréguliers", e:"🌪️"},
+         {en:"cahier", fr:"Les verbes des exercices", e:"✍️"} ]});
+
 demarrer({ titre:"Français", e:"📚" });
 </script>
 </body>

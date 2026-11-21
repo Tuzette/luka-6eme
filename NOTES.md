@@ -14,7 +14,7 @@ Site statique (GitHub Pages). À lire avant toute évolution, au lieu d'explorer
 - Un `id` de thème doit être unique sur tout le site.
 
 ## Ids déjà pris
-anglais : an, vb, tb, th (to have, gen propre), ss (school supplies) · francais : fm, fq · svt : sv, cl · physique : pl, px
+anglais : an, vb, tb, th (to have, gen propre), ss (school supplies) · francais : fm, fq · f5l, f5e, f5q (Langue n°5, présent) · svt : sv, cl · physique : pl, px
 histoire-geo : hl, hq (ch1), h2l, h2q (ch2), h3l, h3q (ch3), g5l, g5q (ch5) · emc : e4l, e4q (ch4)
 Convention : `<lettre matière><n° chapitre><l = leçon | q = quiz>`.
 
