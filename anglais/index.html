@@ -10,6 +10,7 @@
 <main id="app" aria-live="polite"></main>
 <input type="file" id="fichier" accept=".json,application/json" hidden>
 <script src="../commun/moteur.js"></script>
+<script src="../commun/jeux.js"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -332,8 +333,92 @@ THEMES.push({ id:"th", chapitre:"Le verbe To Have", nom:"Grammar: to have", e:"�
   })()
 });
 
+/* ============================================================
+   VOCABULAIRE — Clothes (fiche « Clothes · Label the clothes and accessories »).
+   Les traductions ne sont pas sur la fiche : ajoutées. Dessins originaux (SVG) pour
+   le mode « Le dessin » et les jeux (commun/jeux.js) : étiquettes, mots croisés, mots fléchés.
+   ============================================================ */
+const D = p => `<svg class="dessin" viewBox="0 0 64 64" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const HAUT_LONG = "M24 10Q32 16 40 10L52 16L57 46L49 46L46 27L46 56L18 56L18 27L15 46L7 46L12 16Z";
+const HAUT_COURT = "M24 10Q32 16 40 10L54 18L50 29L46 27L46 56L18 56L18 27L14 29L10 18Z";
+const MANTEAU = "M24 8Q32 14 40 8L52 14L57 48L49 48L46 28L46 60L18 60L18 28L15 48L7 48L12 14Z";
+THEMES.push({ id:"vt", chapitre:"Vocabulaire des vêtements", nom:"Clothes", e:"👕", c:"var(--jungle)", img:true, jeux:true,
+  mots:[
+    {en:"trousers",fr:"pantalon",e:D('<path d="M20 8h24l4 50H37L32 24 27 58H16z"/><path d="M20 14h24"/>')},
+    {en:"dress",fr:"robe",e:D('<path d="M26 6v10M38 6v10M24 16h16l-2 10H26zM26 26L13 56h38L38 26"/><path d="M24 44l2 12M40 44l-2 12M32 42v14"/>')},
+    {en:"skirt",fr:"jupe",e:D('<path d="M22 12h20v6H22zM22 18L11 52h42L42 18"/><path d="M28 18l-5 34M36 18l5 34M32 18v34"/>')},
+    {en:"shirt",fr:"chemise",e:D(`<path d="${HAUT_LONG}"/><path d="M24 10l4 9 4-5 4 5 4-9M32 15v41"/><circle cx="34.5" cy="26" r="1"/><circle cx="34.5" cy="36" r="1"/><circle cx="34.5" cy="46" r="1"/>`)},
+    {en:"blouse",fr:"chemisier",e:D(`<path d="${HAUT_LONG}"/><path d="M25 11q2 7 7 7t7-7"/><path d="M27 20l5 3-5 3zM37 20l-5 3 5 3z"/><path d="M10 40q3 3 6 0M48 40q3 3 6 0"/>`)},
+    {en:"hat",fr:"chapeau, bonnet",e:D('<path d="M14 44c0-14 8-24 18-24s18 10 18 24z"/><rect x="11" y="44" width="42" height="9" rx="3"/><circle cx="32" cy="15" r="5"/><path d="M17 37l6-5 5 5 4-5 4 5 5-5 6 5"/>')},
+    {en:"glasses",fr:"lunettes",e:D('<circle cx="20" cy="36" r="10"/><circle cx="44" cy="36" r="10"/><path d="M30 35q2-3 4 0M10 34L5 24M54 34l5-10"/>')},
+    {en:"jumper",fr:"pull",e:D(`<path d="${HAUT_LONG}"/><path d="M19 34l4 4 4-4 5 4 5-4 4 4 4-4M7 42h8M49 42h8M18 50h28"/>`)},
+    {en:"coat",fr:"manteau",e:D(`<path d="M24 8Q32 0 40 8"/><path d="${MANTEAU}"/><path d="M32 14v46"/><circle cx="36" cy="26" r="1.3"/><circle cx="36" cy="36" r="1.3"/><circle cx="36" cy="46" r="1.3"/><path d="M21 44h7v7M43 44h-7v7"/>`)},
+    {en:"jacket",fr:"veste",e:D(`<path d="${HAUT_LONG}"/><path d="M32 15v41M26 10l6 6 6-6M21 38h7M43 38h-7"/>`)},
+    {en:"blazer",fr:"blazer (veste d'uniforme)",e:D(`<path d="${HAUT_LONG}"/><path d="M24 10l8 22 8-22M32 32v24M38 22h5"/><circle cx="34" cy="40" r="1.3"/><circle cx="34" cy="48" r="1.3"/>`)},
+    {en:"scarf",fr:"écharpe",e:D('<path d="M14 18q18-10 36 0v8q-18-10-36 0z"/><path d="M36 24l3 28h9l-4-30M27 24l-6 24h9l4-24"/><path d="M39 52v4M43 52v4M47 52v4M21 48v4M25 48v4M29 48v4"/>')},
+    {en:"gloves",fr:"gants",e:D('<path d="M20 56V36l-6-7c-2-3 1-6 4-4l3 3V14c0-3 5-3 5 0v12V10c0-3 5-3 5 0v16V12c0-3 5-3 5 0v14V16c0-3 5-3 5 0v24c0 6-3 10-4 16z"/><path d="M20 49h22"/>')},
+    {en:"socks",fr:"chaussettes",e:D('<path d="M18 6h12v24l9 10c4 5-2 12-7 8L18 34z"/><path d="M18 12h12"/><path d="M36 10h12v20l9 10c4 5-2 12-7 8L36 34z" opacity=".55"/>')},
+    {en:"shoes",fr:"chaussures",e:D('<path d="M8 46c0-8 4-14 12-14l10 4c7 3 15 3 24 5 4 1 4 11 0 11H10c-2 0-2-3-2-6z"/><path d="M8 47h48M20 32l2 6"/>')},
+    {en:"boots",fr:"bottes",e:D('<path d="M22 6h16v32l14 7c4 2 4 13 0 13H20z"/><path d="M20 52h34M22 13h16"/>')},
+    {en:"underwear",fr:"sous-vêtements",e:D('<path d="M8 18h48l-5 13c-7 7-13 11-15 21h-8c-2-10-8-14-15-21z"/><path d="M8 25h48"/>')},
+    {en:"bowtie",fr:"nœud papillon",e:D('<path d="M28 32L8 20v24zM36 32l20-12v24z"/><rect x="27" y="26" width="10" height="12" rx="3"/>')},
+    {en:"belt",fr:"ceinture",e:D('<rect x="4" y="26" width="56" height="12" rx="3"/><rect x="34" y="21" width="15" height="22" rx="3"/><path d="M41 32H30"/><circle cx="14" cy="32" r="1.3"/><circle cx="21" cy="32" r="1.3"/>')},
+    {en:"t-shirt",fr:"tee-shirt",e:D(`<path d="${HAUT_COURT}"/><path d="M26 12q6 6 12 0"/>`)},
+    {en:"umbrella",fr:"parapluie",e:D('<path d="M8 32Q32 2 56 32q-6-4-12 0-6-4-12 0-6-4-12 0-6-4-12 0z"/><path d="M32 32v20c0 7-9 7-9 1M32 8V5"/>')},
+    {en:"necklace",fr:"collier",e:D('<path d="M14 8q18 46 36 0"/><circle cx="32" cy="38" r="4"/><circle cx="20" cy="26" r="2"/><circle cx="44" cy="26" r="2"/><circle cx="25" cy="32" r="2"/><circle cx="39" cy="32" r="2"/>')},
+    {en:"trainers",fr:"baskets",e:D('<path d="M8 44c0-8 4-14 12-14l10 4c7 3 15 3 24 5 4 1 4 9 0 9H10c-2 0-2-2-2-4z"/><path d="M7 48h50v5H7zM23 34l3 5M29 36l2 4M35 37l1 4M14 40l8 4"/>')},
+    {en:"tights",fr:"collants",e:D('<path d="M18 6h28v10l-4 36c0 5-10 5-10 0V22h0v30c0 5-10 5-10 0L18 16z"/><path d="M18 12h28"/>')},
+    {en:"swimsuit",fr:"maillot de bain",e:D('<path d="M23 6l2 12q-5 10-3 20L16 56q16-6 32 0l-6-18q2-10-3-20l2-12"/><path d="M25 18q7 8 14 0"/>')},
+    {en:"watch",fr:"montre",e:D('<circle cx="32" cy="32" r="12"/><path d="M26 21V6h12v15M26 43v15h12V43M32 32v-7M32 32l5 3"/>')},
+    {en:"heels",fr:"chaussures à talons",e:D('<path d="M8 22c4 0 7 8 14 14l26 8c6 2 7 9 1 9H30L17 38v16h-5V31c-3-3-5-9-4-9z"/>')},
+    {en:"tracksuit",fr:"survêtement",e:D('<path d="M10 12q5 4 10 0l8 4 2 20h-5l-1-12v20H8V24l-1 12H2l2-20z"/><path d="M15 15v29"/><path d="M38 10h18l2 44h-7l-4-30-4 30h-7z"/><path d="M41 10l-3 44"/>')},
+    {en:"ring",fr:"bague",e:D('<circle cx="32" cy="42" r="14"/><path d="M24 20l4-7h8l4 7-8 8z"/><path d="M24 20h16"/>')},
+    {en:"flip flops",fr:"tongs",e:D('<ellipse cx="20" cy="34" rx="9" ry="21"/><ellipse cx="44" cy="34" rx="9" ry="21"/><path d="M12 32l8-12 8 12M36 32l8-12 8 12"/>')},
+    {en:"tie",fr:"cravate",e:D('<path d="M27 6h10l-2 8h-6zM29 14l-6 36 9 10 9-10-6-36"/><path d="M26 32l11-7M25 42l13-8"/>')},
+    {en:"slippers",fr:"chaussons",e:D('<ellipse cx="20" cy="34" rx="10" ry="20"/><ellipse cx="44" cy="34" rx="10" ry="20"/><path d="M11 28q9-9 18 0M35 28q9-9 18 0"/><path d="M20 24l-2.5-2.5a2 2 0 013-2.5 2 2 0 013 2.5zM44 24l-2.5-2.5a2 2 0 013-2.5 2 2 0 013 2.5z"/>')},
+    {en:"earrings",fr:"boucles d'oreilles",e:D('<path d="M18 6q5 0 2 6M44 6q5 0 2 6"/><circle cx="20" cy="17" r="4"/><circle cx="46" cy="17" r="4"/><path d="M20 22q-9 13 0 22 9-9 0-22zM46 22q-9 13 0 22 9-9 0-22z"/>')}
+  ],
+  phrases:["I am wearing a blue jumper","She is wearing a red dress","He has got black shoes","I have got a new tracksuit"]
+});
+
+/* Textes à trous — vêtements (petits textes écrits pour l'entraînement, avec les mots de la fiche) */
+THEMES.push({ id:"vtx", chapitre:"Vocabulaire des vêtements", nom:"Clothes: texte à trous", e:"🧥", c:"var(--jungle)", trous:true, maitrise:2, unite:"leçons",
+  textes:[
+    {id:"hiver", titre:"It's cold!", e:"❄️", texte:"It's cold today! I am wearing a [jumper] (pull), a [coat] (manteau), a [scarf] (écharpe) and [gloves] (gants). On my head, I have got a [hat] (bonnet). On my feet, I am wearing [socks] (chaussettes) and [boots] (bottes)."},
+    {id:"plage", titre:"At the beach", e:"🏖️", texte:"It's hot! At the beach, Emma is wearing a [swimsuit] (maillot de bain) and [flip flops|flip-flops] (tongs). Tom is wearing a [t-shirt|tshirt|t shirt] (tee-shirt) and [glasses] (lunettes). Oh no, it's raining! Where is my [umbrella] (parapluie)?"},
+    {id:"fete", titre:"The party", e:"🎉", texte:"Tonight, it's a party! Mum is wearing a red [dress] (robe), [heels] (chaussures à talons), a [necklace] (collier), [earrings] (boucles d'oreilles) and a [ring] (bague). Dad is wearing a white [shirt] (chemise), black [trousers] (pantalon), a [belt] (ceinture) and a [tie] (cravate). Grandpa has got a [bowtie|bow tie] (nœud papillon)."},
+    {id:"ecole", titre:"School and home", e:"🏫", texte:"At school in England, Lily has got a uniform: a [blazer] (veste d'uniforme), a [blouse] (chemisier), a [skirt] (jupe), [tights] (collants) and black [shoes] (chaussures). For sport, she is wearing a [tracksuit] (survêtement) and [trainers] (baskets). At home, she is wearing her [slippers] (chaussons). It's time to go: where is my [jacket] (veste)? And my [watch] (montre)?"}
+  ]
+});
+
+/* ============================================================
+   VOCABULAIRE — Outfit of the day (leçon du cahier : vocabulary + I am wearing / He/She is wearing)
+   ============================================================ */
+THEMES.push({ id:"od", chapitre:"Outfit of the day", nom:"Outfit: vocabulary", e:"🕶️", c:"var(--citrouille)",
+  mots:[
+    {en:"to wear",fr:"porter (un vêtement)",e:"👕"},{en:"I am wearing",fr:"je porte",e:"🙋"},
+    {en:"he is wearing",fr:"il porte",e:"👦"},{en:"she is wearing",fr:"elle porte",e:"👧"},
+    {en:"long-sleeved shirt",fr:"t-shirt à manches longues"},{en:"scrunchy",fr:"chouchou"},
+    {en:"bracelet",fr:"bracelet"},{en:"headband",fr:"bandeau, serre-tête"}
+  ],
+  phrases:["I am wearing white trainers","She is wearing a scrunchy","He is wearing a long-sleeved shirt","She is wearing a blue jumper"]
+});
+
+/* ============================================================
+   VOCABULAIRE — Shanny's new school (vocabulary + mots du texte)
+   ============================================================ */
+THEMES.push({ id:"sh", chapitre:"Shanny's new school", nom:"Shanny: vocabulary", e:"🏫", c:"var(--ferme)",
+  mots:[
+    {en:"almost",fr:"presque"},{en:"looking forward to",fr:"avoir hâte de (+ verbe en -ing)",e:"🤩"},
+    {en:"uniform",fr:"uniforme",e:"👔"},{en:"happy",fr:"heureux, heureuse",e:"😀"},
+    {en:"excited",fr:"impatient, excité",e:"🤗"},{en:"nervous",fr:"nerveux, stressé",e:"😬"},
+    {en:"because",fr:"parce que"},{en:"new friends",fr:"nouveaux amis",e:"👫"},{en:"teachers",fr:"professeurs",e:"🧑‍🏫"}
+  ],
+  phrases:["Shanny is almost 12 years old","She has got a new uniform","She is looking forward to meeting new friends","She is happy, excited and nervous"]
+});
+
 demarrer({ titre:"Anglais", e:"🇬🇧",
-  chapitres:["Le verbe To Be", "Vocabulaire des animaux", "Vocabulaire Halloween", "Le verbe To Have", "Vocabulaire du matériel scolaire"] });
+  chapitres:["Le verbe To Be", "Vocabulaire des animaux", "Vocabulaire Halloween", "Le verbe To Have", "Vocabulaire du matériel scolaire", "Vocabulaire des vêtements", "Outfit of the day", "Shanny's new school"] });
 </script>
 </body>
 </html>

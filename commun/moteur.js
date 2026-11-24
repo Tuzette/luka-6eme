@@ -333,6 +333,7 @@ const MODES = [
   {id:"ecrire",nom:"✏️ Lettres manquantes", d:"Écris le mot en entier"},
   {id:"ecoute",nom:"👂 Dictée", d:"Écoute et écris le mot", son:true},
   {id:"phrase",nom:"🧩 Remets la phrase", d:"Clique les mots dans l'ordre"},
+  {id:"image", nom:"🖼️ Le dessin", d:"Regarde le dessin et écris le mot", img:true},   // thèmes avec img:true (un dessin par mot)
 ];
 
 function ecranTheme(t){
@@ -345,14 +346,16 @@ function ecranTheme(t){
     <div class="entete"><h1>${t.e} ${t.nom}</h1><div class="compteur">⭐ ${acquis(t)} / ${t.mots.length}</div></div>
     <div class="modes">
       <button class="mode defi" data-mode="defi"><b>🏆 Le grand défi</b><span>${NB_Q} questions mélangées : c'est là qu'on gagne le plus d'autocollants</span></button>
-      ${MODES.filter(m => !m.son || parle).map(m => `<button class="mode" data-mode="${m.id}"><b>${m.nom}</b><span>${m.d}</span></button>`).join("")}
+      ${MODES.filter(m => (!m.son || parle) && (!m.img || t.img)).map(m => `<button class="mode" data-mode="${m.id}"><b>${m.nom}</b><span>${m.d}</span></button>`).join("")}
+      ${t.jeux && typeof JEUX !== "undefined" ? JEUX.modes.map(m => `<button class="mode" data-mode="${m.id}"><b>${m.nom}</b><span>${m.d}</span></button>`).join("") : ""}
       <button class="mode" data-mode="album"><b>🗂️ Mon album</b><span>Tous les autocollants du thème</span></button>
     </div>
   </div>`;
   $("#ret").onclick = accueil;
   app.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
     const m = b.dataset.mode;
-    if (m==="album") album(t); else if (m==="carte") cartes(t, 0, melange(t.mots)); else serie(t, m);
+    if (m==="album") album(t); else if (m==="carte") cartes(t, 0, melange(t.mots));
+    else if (typeof JEUX !== "undefined" && JEUX[m]) JEUX[m](t); else serie(t, m);
   });
 }
 
@@ -387,7 +390,7 @@ function serie(t, mode){
     const qs = Array.from({length:NB_Q}, (_,n) => { const w = comp[n % comp.length]; return {w, g:(t.gen||GRAM.GEN)[w.en]()}; });
     return question({ t, mode, qs: mode==="defi" ? melange(qs) : qs, i:0, res:[], nouveaux:[] });
   }
-  const types = mode==="defi" ? ["choix","sens","ecrire"].concat(parle?["ecoute"]:[]) : [mode];
+  const types = mode==="defi" ? ["choix","sens","ecrire"].concat(parle?["ecoute"]:[], t.img?["image"]:[]) : [mode];
   let qs;
   if (mode==="phrase") qs = melange(t.phrases).map(p => ({type:"phrase", p}));
   else qs = tirage(t, NB_Q).map((w,n) => ({type: types[n % types.length], w}));
@@ -413,6 +416,10 @@ function question(s){
     const ops = intrus(t, w, "fr");
     corps = `<div class="question"><p class="consigne">Que veut dire ce mot ?</p><div class="mot">${esc(w.en)}</div>${boutonSon(w.en)}</div>
       <div class="choix">${ops.map(o => `<button data-v="${esc(o.fr)}">${esc(o.fr)}</button>`).join("")}</div>`;
+  } else if (q.type==="image"){
+    corps = `<div class="question"><p class="consigne">Écris le nom de ce que tu vois, en anglais</p><div class="emo">${w.e||""}</div>
+        <div class="indice" aria-label="Nombre de lettres">${[...w.en].map(c => /[a-z]/i.test(c) ? "_" : c===" " ? "&nbsp;" : esc(c)).join(" ")}</div></div>
+      <div class="saisie"><input id="rep" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Écris ici…" aria-label="Ta réponse"><button class="btn" style="--c:${t.c}" id="ok">Valider</button></div>`;
   } else if (q.type==="ecrire" || q.type==="ecoute"){
     const indice = q.type==="ecrire" ? lettresCachees(w.en) : "";
     corps = `<div class="question">${q.type==="ecrire"
@@ -435,7 +442,7 @@ function question(s){
       const juste = b.dataset.v === bonne; if (!juste) b.classList.add("ko");
       fin(s, juste, `${esc(w.en)} = ${esc(w.fr)}`, w.en);
     });
-  } else if (q.type==="ecrire" || q.type==="ecoute"){
+  } else if (q.type==="ecrire" || q.type==="ecoute" || q.type==="image"){
     const inp = $("#rep"); inp.focus();
     if (q.type==="ecoute") setTimeout(() => dire(w.en), 300);
     const valide = () => { if (!inp.value.trim()) return; inp.disabled = true; $("#ok").disabled = true;

@@ -180,3 +180,39 @@ a.mat:hover{transform:translateY(-2px)} a.mat:active{transform:translateY(2px);b
 .chap a:hover{text-decoration:underline}
 .chapitre.cible .chap{background:linear-gradient(transparent 55%,var(--fluo) 55%,var(--fluo) 92%,transparent 92%)}
 @media (prefers-color-scheme:dark){.chapitre.cible .chap{color:var(--fluo-texte)}}
+
+/* ---------- dessins (img:true) et jeux de vocabulaire (commun/jeux.js) ---------- */
+.dessin{width:1.15em;height:1.15em;vertical-align:middle;color:var(--encre)}
+.sticker .dessin{width:1em;height:1em}
+.niveaux{display:flex;gap:6px} .hp.eteint{background:var(--carte);color:var(--encre-2);border:2px solid var(--trait)}
+.petit{font-size:.85rem}
+.planche{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.etiq{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--carte);border:2px solid var(--trait);border-radius:16px;padding:12px 8px;box-shadow:var(--ombre);text-align:center}
+.etiq .dess{font-size:4.2rem;line-height:1}
+.etiq .trou{min-width:9ch;text-align:center}
+.etiq .trou-in{width:100%;text-align:center}
+.zoom{display:flex;align-items:center;gap:14px;min-height:76px;padding:8px 14px;border-radius:14px;background:var(--carte);border:2px dashed var(--c)}
+.zoom .gros{font-size:3.6rem;line-height:1}
+.grille{--cs:min(40px,calc((100vw - 76px) / var(--n)));display:grid;grid-template-columns:repeat(var(--n),var(--cs));grid-auto-rows:var(--cs);justify-content:center;gap:0}
+.grille.fl{--cs:min(48px,calc((100vw - 76px) / var(--n)))}
+.case{position:relative;border:1px solid transparent}
+.case:has(input){border-color:var(--encre-2);background:var(--carte)}
+.case input{width:100%;height:100%;border:0;padding:0;background:transparent;color:var(--encre);text-align:center;font:700 calc(var(--cs) * .55) var(--f-texte);text-transform:uppercase;caret-color:var(--c)}
+.case input:focus-visible{outline:3px solid var(--c);outline-offset:-3px;border-radius:0}
+.case.actif{background:color-mix(in srgb,var(--fluo) 55%,var(--carte))}
+.case.ok{background:var(--bon-fond)} .case.ok input{color:var(--bon)}
+.case.ko{background:var(--faux-fond)} .case.ko input{color:var(--faux)}
+.case .num{position:absolute;top:1px;left:2px;font-size:calc(var(--cs) * .28);line-height:1;color:var(--encre-2);pointer-events:none}
+.case.noire{background:var(--trait);border-color:var(--encre-2)}
+.case.cind{display:flex;flex-direction:column;width:100%;height:100%;padding:0;font:inherit;border-color:var(--encre-2);background:color-mix(in srgb,var(--c) 14%,var(--carte));color:var(--encre);border-radius:0}
+.case.cind .ind{flex:1;display:flex;align-items:center;justify-content:center;gap:0;font-size:calc(var(--cs) * .6);line-height:1;min-height:0}
+.case.cind.deux .ind{font-size:calc(var(--cs) * .36)} .case.cind.deux .ind + .ind{border-top:1px solid var(--encre-2)}
+.case.cind .ind b{font-size:.45em;color:var(--c)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.defs{grid-template-columns:1fr}}
+.defs h3{margin:0 0 6px;font-family:var(--f-main)}
+.def{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:6px 10px;margin-bottom:6px;border-radius:12px;background:var(--carte);border:2px solid var(--trait)}
+.def .mini{font-size:1.6rem;line-height:1}
+.def .doux{white-space:nowrap;font-size:.9rem}
+.def .fr{display:none;margin-left:auto;font-weight:700}
+.aide .def .fr{display:inline}

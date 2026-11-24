@@ -7,6 +7,7 @@ Site statique (GitHub Pages). À lire avant toute évolution, au lieu d'explorer
 - `commun/moteur.js` (mécanique) et `commun/style.css` (style, couleurs `--francais --svt --physique --histoire --emc --musique --ferme`, mode sombre). Ne pas toucher sauf nouveau type d'exercice.
 - Un dossier par matière : `anglais/ francais/ svt/ physique/ histoire-geo/ emc/` avec `index.html` = contenu seul.
 - `histoire-geo/carte-monde.js` : fond de carte généré (Natural Earth), `MONDE = {W,H,d,P:{ville:[x,y]}}` pour 11 métropoles.
+- `commun/jeux.js` : jeux de vocabulaire (étiquettes, mots croisés, mots fléchés), chargé seulement par `anglais/` (`<script src="../commun/jeux.js">` après moteur.js).
 - `outils/test.py` : test automatique de tout le site.
 
 ## ⚠ Ne jamais changer
@@ -14,7 +15,7 @@ Site statique (GitHub Pages). À lire avant toute évolution, au lieu d'explorer
 - Un `id` de thème doit être unique sur tout le site.
 
 ## Ids déjà pris
-anglais : an, vb, tb, th (to have, gen propre), ss (school supplies) · francais : fm, fq · f5l, f5e, f5q (Langue n°5, présent) · svt : sv, cl · physique : pl, px
+anglais : an, vb, tb, th (to have, gen propre), ss (school supplies), vt (clothes, dessins + jeux), vtx (clothes, textes à trous), od (outfit of the day), sh (Shanny's new school) · francais : fm, fq · f5l, f5e, f5q (Langue n°5, présent) · svt : sv, cl · physique : pl, px
 histoire-geo : hl, hq (ch1), h2l, h2q (ch2), h3l, h3q (ch3), g5l, g5q (ch5) · emc : e4l, e4q (ch4)
 Convention : `<lettre matière><n° chapitre><l = leçon | q = quiz>`.
 
@@ -38,7 +39,9 @@ Libellé de chapitre : `"Chapitre N · Titre"` tel que dans le cahier.
 2. **Quiz QCM** : `gram:true, muet:true, maitrise:5, unite:"thèmes", titre, gen:{partie:fonction}, mots:[{en:"partie", fr:"Titre", e}]`.
    Dans histoire-geo et emc, helper `quiz({partie:[[question, bonne | [bonnes…], [mauvaises…]], …]})`.
    Un `gen` peut aussi renvoyer un QCM avec du SVG dans `html` (ex. `CARTE.carte` en histoire-geo, courbes en physique).
-3. Autres (ne pas modifier sans besoin) : vocabulaire anglais (cartes, dictée, phrases), grammaire « to be » (tb), clés de détermination SVT (cl).
+3. **Vocabulaire avec dessins** : `img:true` + un dessin SVG par mot dans `e` (helper `D(...)` dans anglais/index.html) → ajoute le mode « 🖼️ Le dessin » (écrire le mot vu, aussi dans le défi).
+   `jeux:true` (avec jeux.js chargé) → ajoute 🏷️ Étiquettes (facile/difficile), ➕ Mots croisés, 🏹 Mots fléchés (grilles de 8 mots générées, mots sans espace ni tiret). Pas d'autocollant pour ces jeux. Non couverts par test.py : à tester à la main.
+4. Autres (ne pas modifier sans besoin) : vocabulaire anglais (cartes, dictée, phrases), grammaire « to be » (tb), clés de détermination SVT (cl).
 
 ## Adresses
 `<matière>/#<slug chapitre>` ouvre la page sur le chapitre ; `<matière>/#<slug nom du thème>` ouvre l'activité.
